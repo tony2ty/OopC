@@ -6,7 +6,7 @@
 #include <malloc.h>
 #include <stdio.h>
 
-//////////////////////////////////////////////////////////////////////////////////
+////OopBase//////////////////////////////////////////////////////////////////////////////
 //
 
 struct Method
@@ -397,6 +397,90 @@ void* AsBase(InstanceChain* pChain, void* pInst, char* pBaseType)
 	return NULL;
 }
 
+void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
+{
+	if (!pChain || !pInst || !pFuncName || !*pFuncName)
+	{
+#ifdef ___DEBUG
+		printf("Null input IN AsBaseByFunc().\n");
+#endif // ___DEBUG
+
+		return NULL;
+	}
+
+	Instance* pRet = NULL;
+	Instance* pFindInst = FindInstance(pChain, pInst);
+
+	if (!pFindInst)
+	{
+#ifdef ___DEBUG
+		printf("No instance found IN AsBaseByFunc().\n");
+#endif // ___DEBUG
+
+		return NULL;
+	}
+
+	//1.先在当前类中查找，确定是否存在指定的方法
+	pRet = FindMethod(pFindInst->pMethods, pFuncName) ? pFindInst : pRet;
+
+	//2.再在子类中查找方法
+	for (Instance* pIterator = pFindInst->pNext; pIterator; pIterator = pIterator->pNext)
+	{
+		pRet = FindMethod(pIterator->pMethods, pFuncName) ? pIterator : pRet;
+	}
+
+	//3.子类中如果包含指定的方法，则执行该方法，
+	//  如果子类中没有，则查找父类是否有继承的方法
+	if (!pRet)
+	{
+		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator->pPrev)
+		{
+			if (FindMethod(pIterator->pMethods, pFuncName))
+			{
+				pRet = pIterator;
+				break;
+			}
+		}
+	}
+
+	if (!pRet)
+	{
+#ifdef ___DEBUG
+		printf("The no valid instance found IN AsBaseByFunc().\n");
+#endif // ___DEBUG
+
+		return NULL;
+	}
+	else
+	{
+		return pRet->pFileds;
+	}
+}
+
+void* AsExactType(InstanceChain* pChain, void* pInst)
+{
+	if (!pChain || !pInst)
+	{
+#ifdef ___DEBUG
+		printf("Null input IN AsExactType().\n");
+#endif // ___DEBUG
+
+		return NULL;
+	}
+
+	Instance* pItrInst = FindInstance(pChain, pInst);
+	do
+	{
+		if (!pItrInst->pNext)
+		{
+			return pItrInst->pFileds;
+		}
+
+		pItrInst = pItrInst->pNext;
+
+	} while (true);
+}
+
 void Delete(InstanceChain* pChain)
 {
 	//迭代释放每个实例
@@ -444,4 +528,74 @@ void Delete(InstanceChain* pChain)
 	free(pChain);
 }
 
+/////Object/////////////////////////////////////////////////////////////////////////////////
+//
 
+struct Object
+{
+	InstanceChain* pChain;
+};
+
+static void Equal(void* pParams)
+{
+	Object* pThis = ((ParamIn*)pParams)->pInst;
+	Object_Equal* pIn = ((ParamIn*)pParams)->pIn;
+
+	*pIn->pRet = AsExactType(pThis->pChain, pThis) == pIn->pToCmpr;
+}
+
+static void ToString(void* pParams)
+{
+	Object* pInst = ((ParamIn*)pParams)->pInst;
+	Object_ToString* pIn = ((ParamIn*)pParams)->pIn;
+
+	printf("%p", AsExactType(pInst->pChain, pInst));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+//
+
+void    Invoke_Object(Object* pInst, char* pFuncName, void* pParams)
+{
+	DOINVOKE(pInst, pFuncName, pParams);
+}
+
+void*   Extend_Object(Object* pInst)
+{
+	return pInst->pChain;
+}
+
+void    Delete_Object(Object** ppInst)
+{
+	//释放当前类数据域中动态分配的内存
+
+	Delete((*ppInst)->pChain);
+}
+
+Object* Create_Object()
+{
+	Object* pCreate = NULL;
+	pCreate = malloc(sizeof(Object));
+
+	if (!pCreate)
+	{
+		goto MemErr;
+	}
+
+	MethodRing* pMethods = NULL;
+	pMethods = GenerateMethodRing();
+	pMethods =
+		InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Equal, "Equal"))
+	  ->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(ToString, "ToString"))
+	  ->pRing;
+	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, "Object", pMethods));
+
+	return pCreate;
+
+MemErr:
+#ifdef ___DEBUG
+	printf("Failed to allocate memory IN Create_Object().\n");
+#endif // ___DEBUG
+
+	return NULL;
+}
