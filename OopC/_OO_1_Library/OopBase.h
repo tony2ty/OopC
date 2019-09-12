@@ -1,6 +1,6 @@
 
-#ifndef BASE_H__
-#define BASE_H__
+#ifndef OOPBASE_H__
+#define OOPBASE_H__
 
 #ifdef OOPLIB_API
 #else
@@ -82,6 +82,6 @@ OOPLIB_API void    DELETE(Object)(Object** ppInst);
 typedef struct { bool* pRet; void* pToCmpr; } Object_Equal;
 typedef ParamNull Object_ToString;
 
-#endif // !BASE_H__
+#endif // !OOPBASE_H__
 
 
