@@ -27,9 +27,15 @@
     <ClCompile Include="Animal.c">
       <Filter>源文件\class</Filter>
     </ClCompile>
+    <ClCompile Include="Penguin.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animal.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="Penguin.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
   </ItemGroup>

@@ -546,10 +546,10 @@ static void Equal(void* pParams)
 
 static void ToString(void* pParams)
 {
-	Object* pInst = ((ParamIn*)pParams)->pInst;
+	Object* pThis = ((ParamIn*)pParams)->pInst;
 	Object_ToString* pIn = ((ParamIn*)pParams)->pIn;
 
-	printf("%p", AsExactType(pInst->pChain, pInst));
+	printf("%p", AsExactType(pThis->pChain, pThis));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

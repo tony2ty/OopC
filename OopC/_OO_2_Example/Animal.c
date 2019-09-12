@@ -63,8 +63,7 @@ void DELETE(Animal)(Animal** ppInst)
 
 Animal* CREATE(Animal)(const char* pName, int nID)
 {
-	Animal* pCreate = NULL;
-	pCreate = malloc(sizeof(Animal));
+	Animal* pCreate = pCreate = malloc(sizeof(Animal));
 	if (pCreate)
 	{
 		pCreate->nID = nID;

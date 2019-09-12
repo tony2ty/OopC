@@ -134,9 +134,11 @@
   <ItemGroup>
     <ClCompile Include="Animal.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="Penguin.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animal.h" />
+    <ClInclude Include="Penguin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
