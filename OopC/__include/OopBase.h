@@ -1,6 +1,6 @@
 
-#ifndef BASE_H__
-#define BASE_H__
+#ifndef OOPBASE_H__
+#define OOPBASE_H__
 
 #ifdef OOPLIB_API
 #else
@@ -64,7 +64,7 @@ OOPLIB_API InstanceChain*   InsertInstance(InstanceChain* pChain, Instance* pIns
 //
 
 OOPLIB_API void  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
-OOPLIB_API void* AsBase(InstanceChain* pChain, void* pInst, char* pBaseType);
+OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType);
 OOPLIB_API void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName);
 OOPLIB_API void* AsExactType(InstanceChain* pChain, void* pInst);
 OOPLIB_API void  Delete(InstanceChain* pChain);
@@ -82,6 +82,6 @@ OOPLIB_API void    DELETE(Object)(Object** ppInst);
 typedef struct { bool* pRet; void* pToCmpr; } Object_Equal;
 typedef ParamNull Object_ToString;
 
-#endif // !BASE_H__
+#endif // !OOPBASE_H__
 
 

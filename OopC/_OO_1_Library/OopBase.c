@@ -100,7 +100,7 @@ struct Instance
 	Instance* pPrev;
 	Instance* pNext;
 
-	void* pFileds;
+	void* pFields;
 	char* pName;
 	MethodRing* pMethods;
 };
@@ -128,7 +128,7 @@ Instance* GenerateInstance(void* pFields, char* pName, MethodRing* pMethods)
 
 	pRet->pPrev = NULL;
 	pRet->pNext = NULL;
-	pRet->pFileds = pFields;
+	pRet->pFields = pFields;
 	pRet->pName = strcpy(pMem, pName);
 	pRet->pMethods = pMethods;
 
@@ -204,7 +204,7 @@ Instance* FindInstance(InstanceChain* pChain, void* pInst)
 	Instance* pIterator = pChain->pHead;
 	do
 	{
-        if (pIterator->pFileds == pInst) { return pIterator; }
+        if (pIterator->pFields == pInst) { return pIterator; }
 		pIterator = pIterator->pNext;
 
 	} while (pIterator != NULL);
@@ -249,23 +249,13 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
     }
 }
 
-void* AsBase(InstanceChain* pChain, void* pInst, char* pBaseType)
+void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType)
 {
-	if (!pChain || !pInst || !pBaseType || !*pBaseType)
-	{
-#ifdef ___DEBUG
-		printf("Null input IN AsBase().\n");
-#endif // ___DEBUG
-
-		return NULL;
-	}
+    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pBaseType || !*pBaseType) { return NULL; }
 
 	for (Instance* pIterator = FindInstance(pChain, pInst); pIterator; pIterator = pIterator->pPrev)
 	{
-		if (!strcmp(pIterator->pName, pBaseType))
-		{
-			return pIterator->pFileds;
-		}
+        if (!strcmp(pIterator->pName, pBaseType)) { return pIterator->pFields; }
 	}
 
 	return NULL;
@@ -273,86 +263,44 @@ void* AsBase(InstanceChain* pChain, void* pInst, char* pBaseType)
 
 void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
 {
-	if (!pChain || !pInst || !pFuncName || !*pFuncName)
-	{
-#ifdef ___DEBUG
-		printf("Null input IN AsBaseByFunc().\n");
-#endif // ___DEBUG
+    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 
-		return NULL;
-	}
-
-	Instance* pRet = NULL;
+	Instance* pTmpInst = NULL;
 	Instance* pFindInst = FindInstance(pChain, pInst);
 
-	if (!pFindInst)
-	{
-#ifdef ___DEBUG
-		printf("No instance found IN AsBaseByFunc().\n");
-#endif // ___DEBUG
+    if (!pFindInst) { return NULL; }
 
-		return NULL;
+	for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
+	{
+        pTmpInst = FindMethod(pIterator->pMethods, pFuncName) ? pIterator : pTmpInst;
 	}
 
-	//1.先在当前类中查找，确定是否存在指定的方法
-	pRet = FindMethod(pFindInst->pMethods, pFuncName) ? pFindInst : pRet;
-
-	//2.再在子类中查找方法
-	for (Instance* pIterator = pFindInst->pNext; pIterator; pIterator = pIterator->pNext)
-	{
-		pRet = FindMethod(pIterator->pMethods, pFuncName) ? pIterator : pRet;
-	}
-
-	//3.子类中如果包含指定的方法，则执行该方法，
-	//  如果子类中没有，则查找父类是否有继承的方法
-	if (!pRet)
+	if (!pTmpInst)
 	{
 		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator->pPrev)
 		{
 			if (FindMethod(pIterator->pMethods, pFuncName))
 			{
-				pRet = pIterator;
+                pTmpInst = pIterator;
 				break;
 			}
 		}
 	}
 
-	if (!pRet)
-	{
-#ifdef ___DEBUG
-		printf("The no valid instance found IN AsBaseByFunc().\n");
-#endif // ___DEBUG
-
-		return NULL;
-	}
-	else
-	{
-		return pRet->pFileds;
-	}
+    return pTmpInst ? pTmpInst->pFields : NULL;
 }
 
 void* AsExactType(InstanceChain* pChain, void* pInst)
 {
-	if (!pChain || !pInst)
-	{
-#ifdef ___DEBUG
-		printf("Null input IN AsExactType().\n");
-#endif // ___DEBUG
+    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst) { return NULL; }
 
-		return NULL;
-	}
+    Instance *pTmpInst = NULL;
+    for (Instance *pIterator = FindInstance(pChain, pInst); pIterator; pIterator = pIterator->pNext)
+    {
+        pTmpInst = pIterator;
+    }
 
-	Instance* pItrInst = FindInstance(pChain, pInst);
-	do
-	{
-		if (!pItrInst->pNext)
-		{
-			return pItrInst->pFileds;
-		}
-
-		pItrInst = pItrInst->pNext;
-
-	} while (true);
+    return pTmpInst ? pTmpInst->pFields : NULL;
 }
 
 void Delete(InstanceChain* pChain)
@@ -362,7 +310,7 @@ void Delete(InstanceChain* pChain)
 	do
 	{
 		//释放实例数据域
-		free(pItrInst->pFileds);
+		free(pItrInst->pFields);
 		//释放类名
 		free(pItrInst->pName);
 		//释放方法环：释放方法名
@@ -429,47 +377,37 @@ static void ToString(void* pParams)
 //////////////////////////////////////////////////////////////////////////////////////
 //
 
-void    Invoke_Object(Object* pInst, char* pFuncName, void* pParams)
+void INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void*   Extend_Object(Object* pInst)
+void* EXTEND(Object)(Object* pInst)
 {
 	return pInst->pChain;
 }
 
-void    Delete_Object(Object** ppInst)
+void DELETE(Object)(Object** ppInst)
 {
 	//释放当前类数据域中动态分配的内存
 
 	Delete((*ppInst)->pChain);
+    *ppInst = NULL;
 }
 
-Object* Create_Object()
+Object* CREATE(Object)()
 {
-	Object* pCreate = NULL;
-	pCreate = malloc(sizeof(Object));
+	Object* pCreate = malloc(sizeof(Object));
+    if (!pCreate) { return NULL; }
 
-	if (!pCreate)
-	{
-		goto MemErr;
-	}
+	MethodRing* pMethods = GenerateMethodRing();
+    if (!pMethods) { return NULL; }
 
-	MethodRing* pMethods = NULL;
-	pMethods = GenerateMethodRing();
 	pMethods =
 		InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Equal, "Equal"))
 	  ->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(ToString, "ToString"))
 	  ->pRing;
-	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, "Object", pMethods));
+	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, TYPE(Object), pMethods));
 
 	return pCreate;
-
-MemErr:
-#ifdef ___DEBUG
-	printf("Failed to allocate memory IN Create_Object().\n");
-#endif // ___DEBUG
-
-	return NULL;
 }
