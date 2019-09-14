@@ -355,7 +355,7 @@ void Delete(InstanceChain* pChain)
 
 struct Object
 {
-	InstanceChain* pChain;
+    CHAINDEF;
 };
 
 static void Equal(void* pParams)

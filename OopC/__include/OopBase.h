@@ -13,23 +13,24 @@
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
 
-#define   TYPE(type) #type			 //获取类型名称字符串
+#define   TYPE(type) #type			   //获取类型名称字符串
 
-#define CREATE(type) Create_ ## type //构造函数实用宏
-#define INVOKE(type) Invoke_ ## type //实例方法调用实用宏
-#define EXTEND(type) Extend_ ## type //继承实用宏
-#define DELETE(type) Delete_ ## type //析构实用宏
+#define CREATE(type) Create_ ## type   //构造函数实用宏
+#define INVOKE(type) Invoke_ ## type   //实例方法调用实用宏
+#define EXTEND(type) Extend_ ## type   //继承实用宏
+#define DELETE(type) Delete_ ## type   //析构实用宏
 #define SWITCH(pInst, theclass, superclass) AsBase(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
-									 //类型转换实用宏
+									   //类型转换实用宏
 #define DOINVOKE(pInst, pFuncName, pParams) Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFunc(pInst->pChain, pInst, pFuncName), pParams })
-									 //方法调用转发
+									   //方法调用转发
 #define CLASSDEF(theclass, ...)                                                    \
 	typedef struct theclass theclass;                                              \
 	theclass* CREATE(theclass)(__VA_ARGS__);                                       \
 	void      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
 	void*     EXTEND(theclass)(theclass*   pInst);                                 \
 	void      DELETE(theclass)(theclass** ppInst);                                 \
-									 //类定义
+									   //类定义
+#define CHAINDEF InstanceChain *pChain //实例链定义
 
 typedef void (*Transit)(void*);
 typedef struct { void* pInst; void* pIn; } ParamIn;

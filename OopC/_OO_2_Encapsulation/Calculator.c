@@ -6,7 +6,7 @@
 
 struct Calculator
 {
-    InstanceChain *pChain;
+    CHAINDEF;
 
     double dblOperandL;
     double dblOperandR;
