@@ -29,9 +29,12 @@
 #define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
 
 //调用该宏实现这样的功能，给定函数参数pParams，通过实例pInst调用名为pFuncName的方法
+//最好不要复合调用，DOINVOKE((...some expr...), ..., ...)
 #define DOINVOKE(pInst, pFuncName, pParams) Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFunc(pInst->pChain, pInst, pFuncName), pParams })
-//调用该宏实现这样的功能，给定函数参数pParams，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
-#define DOINVOKESUPER(pInst, pFuncName, pParams) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncUpward(pInst->pChain, pInst, pFuncName), pParams })
+
+//调用该宏实现这样的功能，给定函数参数pParams(...)，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
+//最好不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)
+#define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncUpward(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
 
 //类定义帮助宏，
 //定义时，给定构造参数，则类没有默认无参构造函数声明
