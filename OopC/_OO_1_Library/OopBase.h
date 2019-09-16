@@ -65,6 +65,7 @@ OOPLIB_API InstanceChain*   InsertInstance(InstanceChain* pChain, Instance* pIns
 //
 
 OOPLIB_API void  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
+OOPLIB_API void  InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
 OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType);
 OOPLIB_API void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName);
 OOPLIB_API void* AsExactType(InstanceChain* pChain, void* pInst);

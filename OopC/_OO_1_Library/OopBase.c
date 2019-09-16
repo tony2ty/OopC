@@ -249,6 +249,11 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
     }
 }
 
+OOPLIB_API void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
+{
+	
+}
+
 void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType)
 {
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pBaseType || !*pBaseType) { return NULL; }
