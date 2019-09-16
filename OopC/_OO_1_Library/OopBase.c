@@ -232,7 +232,7 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 
 	if (!toExecute)
 	{
-		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator->pPrev)
+		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
 		{
             Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
 			if (pFindMthd)
@@ -251,7 +251,27 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 
 OOPLIB_API void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 {
-	
+	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return; }
+
+	Transit toExecute = NULL;
+
+	Instance* pFindInst = FindInstance(pChain, pInst);
+	if (!pFindInst) { return; }
+
+	for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
+	{
+		Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
+		if (pFindMthd)
+		{
+			toExecute = pFindMthd->pAddr;
+			break;
+		}
+	}
+
+	if (toExecute)
+	{
+		toExecute(pParams);
+	}
 }
 
 void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType)
@@ -282,7 +302,7 @@ void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
 
 	if (!pTmpInst)
 	{
-		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator->pPrev)
+		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
 		{
 			if (FindMethod(pIterator->pMethods, pFuncName))
 			{
@@ -293,6 +313,24 @@ void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
 	}
 
     return pTmpInst ? pTmpInst->pFields : NULL;
+}
+
+void* AsBaseByFuncUpward(InstanceChain* pChain, void* pInst, char* pFuncName)
+{
+	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
+
+	Instance* pFindInst = FindInstance(pChain, pInst);
+	if (!pFindInst) { return NULL; }
+
+	for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
+	{
+		if (FindMethod(pIterator->pMethods, pFuncName))
+		{
+			return pIterator->pFields;
+		}
+	}
+
+	return NULL;
 }
 
 void* AsExactType(InstanceChain* pChain, void* pInst)
