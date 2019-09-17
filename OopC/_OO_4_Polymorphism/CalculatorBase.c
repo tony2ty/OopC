@@ -30,6 +30,7 @@ void DELETE(CalculatorBase)(CalculatorBase** ppInst)
 
 	Object* pSuper = SWITCH((*ppInst), CalculatorBase, Object);
 	DELETE(Object)(&pSuper);
+    (*ppInst) = NULL;
 }
 
 CalculatorBase* CREATE(CalculatorBase)()

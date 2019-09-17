@@ -62,6 +62,7 @@ void DELETE(CalculatorExtdCommon)(CalculatorExtdCommon** ppInst)
 
 	CalculatorBase* pSuper = SWITCH((*ppInst), CalculatorExtdCommon, CalculatorBase);
 	DELETE(CalculatorBase)(&pSuper);
+    (*ppInst) = NULL;
 }
 
 CalculatorExtdCommon* CREATE(CalculatorExtdCommon)()
