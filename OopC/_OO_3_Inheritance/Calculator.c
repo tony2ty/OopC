@@ -49,6 +49,14 @@ static void Subtract(void* pParams)
 	*pIn->pdblRet = pIn->dblOpL - pIn->dblOpR;
 }
 
+static void Multiply(void* pParams)
+{
+	Calculator* pThis = ((ParamIn*)pParams)->pInst;
+	Calculator_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+
+	*pIn->pdblRet = pIn->dblOpL * pIn->dblOpR;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 //
 
