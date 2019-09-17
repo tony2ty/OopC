@@ -26,7 +26,8 @@ struct MethodRing
 
 Method* GenerateMethod(Transit pAddr, char* pName)
 {
-    if (!pAddr || !pName || !*pName) { return NULL; }
+    //if (!pAddr || !pName || !*pName) { return NULL; }
+	if (!pName || !*pName) { return NULL; }
 
 	void* pMem = malloc(strlen(pName) + 1);
 	Method* pRet = malloc(sizeof(Method));
@@ -41,7 +42,7 @@ Method* GenerateMethod(Transit pAddr, char* pName)
 
 	pRet->pPrev = NULL;
 	pRet->pNext = NULL;
-	pRet->pAddr = pAddr;
+	pRet->pAddr = pAddr; //¿ÉÄÜÎªnull
 	pRet->pName = strcpy(pMem, pName);
 
 	return pRet;

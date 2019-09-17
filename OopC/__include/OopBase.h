@@ -26,6 +26,7 @@
 #define DELETE(type) Delete_ ## type   
 
 //类型转换帮助宏，该宏将实例从当前类类型转换至指定父类型
+//最好不要复合调用，SWITCH((...some expr...), ..., ...)
 #define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
 
 //调用该宏实现这样的功能，给定函数参数pParams，通过实例pInst调用名为pFuncName的方法

@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <stdio.h>
 
 #include "Calculator.h"
@@ -19,6 +20,8 @@ int main(int argc, char** argv)
 		printf("11 + 13 = ? %f.\n", dblRet);
 		INVOKE(Calculator)(pCalc, "Subtract", &(Calculator_Subtract){10, 12, & dblRet});
 		printf("11 - 12 = ? %f.\n", dblRet);
+
+		DELETE(Calculator)(&pCalc);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,11 +39,16 @@ int main(int argc, char** argv)
 		printf("11 * 7  = ? %f.\n", dblRet);
 		INVOKE(CalculatorExt)(pCalcExt, "Divide", &(CalculatorExt_Divide){11, 1, & dblRet});
 		printf("11 / 1  = ? %f.\n", dblRet);
+
+		DELETE(CalculatorExt)(&pCalcExt);
 	}
 
 	{
-		CalculatorExt* pExact = CREATE(CalculatorExt)();
-		Calculator* pBase = SWITCH(pExact, CalculatorExt, Calculator);
+		Calculator* pBase = NULL;
+		{
+			CalculatorExt* pExact = CREATE(CalculatorExt)();
+			pBase = SWITCH(pExact, CalculatorExt, Calculator);
+		}
 
 		double dblRet = 0;
 		INVOKE(CalculatorExt)(pBase, "Add", &(CalculatorExt_Add){11, 21, & dblRet});
@@ -51,7 +59,11 @@ int main(int argc, char** argv)
 		printf("11 * 7  = ? %f.\n", dblRet);
 		INVOKE(CalculatorExt)(pBase, "Divide", &(CalculatorExt_Divide){11, 1, & dblRet});
 		printf("11 / 1  = ? %f.\n", dblRet);
+
+		DELETE(Calculator)(&pBase);
 	}
+
+	system("pause");
 
 	return 0;
 }

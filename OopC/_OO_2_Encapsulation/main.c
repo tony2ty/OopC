@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
 #include "Calculator.h"
@@ -14,9 +15,11 @@ int main(int argc, char** argv)
     INVOKE(Calculator)(pCalc, "Input", &(Calculator_Input){ 11, 13 });
     INVOKE(Calculator)(pCalc, "Add", NULL);
     INVOKE(Calculator)(pCalc, "Output", &(Calculator_Output){ &dblResult });
-    printf("11 + 13 = ? %f.\n", dblResult);
+    printf("\n11 + 13 = ? %f.\n", dblResult);
 
     DELETE(Calculator)(&pCalc);
+
+	system("pause");
 
 	return 0;
 }
