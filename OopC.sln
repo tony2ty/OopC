@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.779
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_OO_1_Library", "OopC\_OO_1_Library\_OO_1_Library.vcxproj", "{2A48588A-6138-4316-BF1A-1750BCE2F107}"
 EndProject
@@ -21,6 +21,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_OO_4_Polymorphism", "OopC\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_1_Creational_SimpleFactorySample", "OopC\_DP_1_Creational_SimpleFactorySample\_DP_1_Creational_SimpleFactorySample.vcxproj", "{CDF3127B-90C5-45D2-952F-87A2C279C86C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_2_Creational_FactoryMethodSample", "OopC\_DP_2_Creational_FactoryMethodSample\_DP_2_Creational_FactoryMethodSample.vcxproj", "{1FB847F8-B486-4B84-B406-4C12157D4E2A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
 	EndProjectSection
@@ -73,6 +78,14 @@ Global
 		{CDF3127B-90C5-45D2-952F-87A2C279C86C}.Release|x64.Build.0 = Release|x64
 		{CDF3127B-90C5-45D2-952F-87A2C279C86C}.Release|x86.ActiveCfg = Release|Win32
 		{CDF3127B-90C5-45D2-952F-87A2C279C86C}.Release|x86.Build.0 = Release|Win32
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Debug|x64.ActiveCfg = Debug|x64
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Debug|x64.Build.0 = Debug|x64
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Debug|x86.ActiveCfg = Debug|Win32
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Debug|x86.Build.0 = Debug|Win32
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Release|x64.ActiveCfg = Release|x64
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Release|x64.Build.0 = Release|x64
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Release|x86.ActiveCfg = Release|Win32
+		{1FB847F8-B486-4B84-B406-4C12157D4E2A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
