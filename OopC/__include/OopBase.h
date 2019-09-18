@@ -62,6 +62,14 @@ typedef struct { void* pVd; } ParamNull;
 //////////////////////////////////////////////////////////////////////////////////
 //
 
+typedef void (*ExtraMemClear)(void*);
+typedef struct ExtraMemRef ExtraMemRef;
+
+OOPLIB_API ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear);
+
+//////////////////////////////////////////////////////////////////////////////////
+//
+
 typedef struct Method Method;
 typedef struct MethodRing MethodRing;
 typedef struct MethodUtil
@@ -80,7 +88,7 @@ OOPLIB_API MethodUtil*   InsertMethod(MethodUtil* pUtil, Method* pMethod);
 typedef struct Instance Instance;
 typedef struct InstanceChain InstanceChain;
 
-OOPLIB_API Instance*      GenerateInstance(void* pFields, char* pName, MethodRing* pMethods);
+OOPLIB_API Instance*      GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, MethodRing* pMethods);
 OOPLIB_API InstanceChain* GenerateInstanceChain();
 OOPLIB_API InstanceChain*   InsertInstance(InstanceChain* pChain, Instance* pInstance);
 

@@ -38,7 +38,7 @@ void DELETE(ChartPie)(ChartPie **ppInst)
     //
 
     IChart *pSuper = SWITCH((*ppInst), ChartPie, IChart);
-    DELETE(ChartPie)(&pSuper);
+    DELETE(IChart)(&pSuper);
     (*ppInst) = NULL;
 }
 
@@ -53,7 +53,7 @@ ChartPie *CREATE(ChartPie)()
     pMethods =
           InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Display, "Display"))
         ->pRing;
-    pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartPie", pMethods));
+    pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartPie", NULL, pMethods));
 
     printf("´´½¨±ý×´Í¼.\n");
 

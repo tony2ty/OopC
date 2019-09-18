@@ -9,12 +9,32 @@
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
 
+struct ExtraMemRef
+{
+	ExtraMemClear fnExec;
+	void* pToClear;
+};
+
+ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear)
+{
+	ExtraMemRef* pRet = malloc(sizeof(ExtraMemRef));
+	if (!pRet) { return NULL; }
+
+	pRet->fnExec = fnExec;
+	pRet->pToClear = pToClear;
+
+	return pRet;
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+//
+
 struct Method
 {
 	Method* pPrev;
 	Method* pNext;
 
-	Transit pAddr;
+	Transit fnExec;
 	char* pName;
 };
 
@@ -24,7 +44,7 @@ struct MethodRing
 	Method* pTail;
 };
 
-Method* GenerateMethod(Transit pAddr, char* pName)
+Method* GenerateMethod(Transit fnExec, char* pName)
 {
     //if (!pAddr || !pName || !*pName) { return NULL; }
 	if (!pName || !*pName) { return NULL; }
@@ -42,7 +62,7 @@ Method* GenerateMethod(Transit pAddr, char* pName)
 
 	pRet->pPrev = NULL;
 	pRet->pNext = NULL;
-	pRet->pAddr = pAddr; //可能为null
+	pRet->fnExec = fnExec; //可能为null
 	pRet->pName = strcpy(pMem, pName);
 
 	return pRet;
@@ -103,6 +123,7 @@ struct Instance
 
 	void* pFields;
 	char* pName;
+	ExtraMemRef* pExtRef;
 	MethodRing* pMethods;
 };
 
@@ -112,7 +133,7 @@ struct InstanceChain
 	Instance* pTail;
 };
 
-Instance* GenerateInstance(void* pFields, char* pName, MethodRing* pMethods)
+Instance* GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, MethodRing* pMethods)
 {
     if (!pFields || !pName || !*pName || !pMethods) { return NULL; }
 
@@ -131,6 +152,7 @@ Instance* GenerateInstance(void* pFields, char* pName, MethodRing* pMethods)
 	pRet->pNext = NULL;
 	pRet->pFields = pFields;
 	pRet->pName = strcpy(pMem, pName);
+	pRet->pExtRef = pExtRef;
 	pRet->pMethods = pMethods;
 
 	return pRet;
@@ -228,7 +250,7 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 	for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
 	{
         Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
-        toExecute = pFindMthd ? pFindMthd->pAddr : toExecute;
+        toExecute = pFindMthd ? pFindMthd->fnExec : toExecute;
 	}
 
 	if (!toExecute)
@@ -238,7 +260,7 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
             Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
 			if (pFindMthd)
 			{
-				toExecute = pFindMthd->pAddr;
+				toExecute = pFindMthd->fnExec;
 				break;
 			}
 		}
@@ -264,7 +286,7 @@ void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pPar
 		Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
 		if (pFindMthd)
 		{
-			toExecute = pFindMthd->pAddr;
+			toExecute = pFindMthd->fnExec;
 			break;
 		}
 	}
@@ -353,6 +375,9 @@ void Delete(InstanceChain* pChain)
 	Instance* pItrInst = pChain->pHead;
 	do
 	{
+		//
+		pItrInst->pExtRef->fnExec(pItrInst->pExtRef->pToClear);
+		free(pItrInst->pExtRef);
 		//释放实例数据域
 		free(pItrInst->pFields);
 		//释放类名
@@ -451,7 +476,7 @@ Object* CREATE(Object)()
 		InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Equal, "Equal"))
 	  ->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(ToString, "ToString"))
 	  ->pRing;
-	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, TYPE(Object), pMethods));
+	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, TYPE(Object), NULL, pMethods));
 
 	return pCreate;
 }

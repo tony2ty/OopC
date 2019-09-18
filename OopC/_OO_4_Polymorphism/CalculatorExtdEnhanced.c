@@ -79,7 +79,7 @@ CalculatorExtdEnhanced* CREATE(CalculatorExtdEnhanced)()
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Multiply, "Multiply"))
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Divide, "Divide"))
 		->pRing;
-	pCreate->pChain = InsertInstance(EXTEND(CalculatorBase)(CREATE(CalculatorBase)()), GenerateInstance(pCreate, "CalculatorExtdEnhanced", pMethods));
+	pCreate->pChain = InsertInstance(EXTEND(CalculatorBase)(CREATE(CalculatorBase)()), GenerateInstance(pCreate, "CalculatorExtdEnhanced", NULL, pMethods));
 
 	return pCreate;
 }

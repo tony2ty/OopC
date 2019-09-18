@@ -54,7 +54,7 @@ ChartLine *CREATE(ChartLine)()
           InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Display, "Display"))
         ->pRing;
 
-    pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartLine", pMethods));
+    pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartLine", NULL, pMethods));
 
     printf("¥¥Ω®’€œﬂÕº.\n");
 

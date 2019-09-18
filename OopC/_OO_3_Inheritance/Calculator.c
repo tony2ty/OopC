@@ -91,7 +91,7 @@ Calculator* CREATE(Calculator)()
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Output, "Output"))
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Subtract, "Subtract"))
 		->pRing;
-	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "Calculator", pMethods));
+	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "Calculator", NULL, pMethods));
 
 	return pCreate;
 }

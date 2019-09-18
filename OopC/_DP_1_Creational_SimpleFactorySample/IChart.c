@@ -44,7 +44,7 @@ IChart *CREATE(IChart)()
     pMethods =
           InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Display"))
         ->pRing;
-    pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "IChart", pMethods));
+    pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "IChart", NULL, pMethods));
 
     return pCreate;
 }

@@ -75,7 +75,7 @@ CalculatorExt* CREATE(CalculatorExt)()
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Multiply, "Multiply"))
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Divide, "Divide"))
 		->pRing;
-	pCreate->pChain = InsertInstance(EXTEND(Calculator)(CREATE(Calculator)()), GenerateInstance(pCreate, "CalculatorExt", pMethods));
+	pCreate->pChain = InsertInstance(EXTEND(Calculator)(CREATE(Calculator)()), GenerateInstance(pCreate, "CalculatorExt", NULL, pMethods));
 
 	return pCreate;
 }

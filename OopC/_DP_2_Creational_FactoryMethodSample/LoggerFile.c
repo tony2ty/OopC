@@ -53,7 +53,7 @@ LoggerFile* CREATE(LoggerFile)()
 	pMethods =
 		  InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(WriteLog, "WriteLog"))
 		->pRing;
-	pCreate->pChain = InsertInstance(EXTEND(ILogger)(CREATE(ILogger)()), GenerateInstance(pCreate, "LoggerFile", pMethods));
+	pCreate->pChain = InsertInstance(EXTEND(ILogger)(CREATE(ILogger)()), GenerateInstance(pCreate, "LoggerFile", NULL, pMethods));
 
 	return pCreate;
 }

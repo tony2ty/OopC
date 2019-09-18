@@ -38,7 +38,7 @@ void DELETE(LoggerDatabase)(LoggerDatabase** ppInst)
 	//
 
 	ILogger* pSuper = SWITCH((*ppInst), LoggerDatabase, ILogger);
-	DELETE(LoggerDatabase)(&pSuper);
+	DELETE(ILogger)(&pSuper);
 	(*ppInst) = NULL;
 }
 
@@ -53,7 +53,7 @@ LoggerDatabase* CREATE(LoggerDatabase)()
 	pMethods =
 		InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(WriteLog, "WriteLog"))
 		->pRing;
-	pCreate->pChain = InsertInstance(EXTEND(ILogger)(CREATE(ILogger)()), GenerateInstance(pCreate, "LoggerDatabase", pMethods));
+	pCreate->pChain = InsertInstance(EXTEND(ILogger)(CREATE(ILogger)()), GenerateInstance(pCreate, "LoggerDatabase", NULL, pMethods));
 
 	return pCreate;
 }

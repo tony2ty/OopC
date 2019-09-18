@@ -51,13 +51,13 @@ int main(int argc, char** argv)
 		}
 
 		double dblRet = 0;
-		INVOKE(CalculatorExt)(pBase, "Add", &(CalculatorExt_Add){11, 21, & dblRet});
+		INVOKE(Calculator)(pBase, "Add", &(CalculatorExt_Add){11, 21, & dblRet});
 		printf("11 + 21 = ? %f.\n", dblRet);
-		INVOKE(CalculatorExt)(pBase, "Subtract", &(CalculatorExt_Subtract){11, 5, & dblRet});
+		INVOKE(Calculator)(pBase, "Subtract", &(CalculatorExt_Subtract){11, 5, & dblRet});
 		printf("11 - 5  = ? %f.\n", dblRet);
-		INVOKE(CalculatorExt)(pBase, "Multiply", &(CalculatorExt_Multiply){11, 7, & dblRet});
+		INVOKE(Calculator)(pBase, "Multiply", &(CalculatorExt_Multiply){11, 7, & dblRet});
 		printf("11 * 7  = ? %f.\n", dblRet);
-		INVOKE(CalculatorExt)(pBase, "Divide", &(CalculatorExt_Divide){11, 1, & dblRet});
+		INVOKE(Calculator)(pBase, "Divide", &(CalculatorExt_Divide){11, 1, & dblRet});
 		printf("11 / 1  = ? %f.\n", dblRet);
 
 		DELETE(Calculator)(&pBase);

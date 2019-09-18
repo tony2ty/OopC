@@ -47,7 +47,7 @@ CalculatorBase* CREATE(CalculatorBase)()
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Multiply"))
 		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Divide"))
 		->pRing;
-	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "CalculatorBase", pMethods));
+	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "CalculatorBase", NULL, pMethods));
 
 	return pCreate;
 }
