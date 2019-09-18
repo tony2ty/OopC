@@ -250,7 +250,7 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
     }
 }
 
-OOPLIB_API void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
+void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 {
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return; }
 
