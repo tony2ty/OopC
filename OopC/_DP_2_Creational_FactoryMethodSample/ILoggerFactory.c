@@ -41,9 +41,8 @@ ILoggerFactory* CREATE(ILoggerFactory)()
 	MethodRing* pMethods = GenerateMethodRing();
 	if (!pMethods) { return NULL; }
 
-	pMethods =
-		  InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "CreateLogger"))
-		->pRing;
+    pMethods = InsertMethod(pMethods, 1,
+        GenerateMethod(NULL, "CreateLogger"));
 	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "ILoggerFactory", NULL, pMethods));
 
 	return pCreate;

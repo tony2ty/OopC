@@ -50,9 +50,8 @@ LoggerDatabase* CREATE(LoggerDatabase)()
 	MethodRing* pMethods = GenerateMethodRing();
 	if (!pMethods) { return NULL; }
 
-	pMethods =
-		InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(WriteLog, "WriteLog"))
-		->pRing;
+    pMethods = InsertMethod(pMethods, 1,
+        GenerateMethod(WriteLog, "WriteLog"));
 	pCreate->pChain = InsertInstance(EXTEND(ILogger)(CREATE(ILogger)()), GenerateInstance(pCreate, "LoggerDatabase", NULL, pMethods));
 
 	return pCreate;

@@ -17,6 +17,8 @@ struct ExtraMemRef
 
 ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear)
 {
+    if (!fnExec || !pToClear) { return NULL; }
+
 	ExtraMemRef* pRet = malloc(sizeof(ExtraMemRef));
 	if (!pRet) { return NULL; }
 
@@ -80,37 +82,44 @@ MethodRing* GenerateMethodRing()
 	return pRet;
 }
 
-MethodUtil* InsertMethod(MethodUtil* pUtil, Method* pMethod)
+MethodRing * InsertMethod(MethodRing * pMethods, int nMethodNum, ...)
 {
-    if (pUtil && pUtil->InsertMethod && pUtil->pRing && !pMethod) { return pUtil; }
+    if (!pMethods) { return NULL; }
+    if (nMethodNum <= 0) { return pMethods; }
 
-    if (!pUtil || !pUtil->InsertMethod || !pUtil->pRing) { return NULL; }
+    va_list methods;
+    va_start(methods, nMethodNum);
 
-	if (pUtil->pRing->pHead && pUtil->pRing->pTail)
-	{
-		pMethod->pPrev = pUtil->pRing->pTail;
-		pMethod->pNext = pUtil->pRing->pHead;
+    //pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail 属于异常情况
 
-		pUtil->pRing->pHead->pPrev = pMethod;
-		pUtil->pRing->pTail->pNext = pMethod;
+    if (!pMethods->pHead && !pMethods->pTail)
+    {
+        Method *pMethod = va_arg(methods, Method *);
+        pMethod->pNext = pMethod;
+        pMethod->pPrev = pMethod;
 
-		pUtil->pRing->pTail = pMethod;
+        pMethods->pHead = pMethod;
+        pMethods->pTail = pMethod;
 
-		return pUtil;
-	}
+        nMethodNum--;
+    }
 
-	if (!pUtil->pRing->pHead && !pUtil->pRing->pTail)
-	{
-		pMethod->pNext = pMethod;
-		pMethod->pPrev = pMethod;
+    for (int i = 0; i < nMethodNum; i++)
+    {
+        Method *pMethod = va_arg(methods, Method *);
 
-		pUtil->pRing->pHead = pMethod;
-		pUtil->pRing->pTail = pMethod;
+        pMethod->pPrev = pMethods->pTail;
+        pMethod->pNext = pMethods->pHead;
 
-		return pUtil;
-	}
+        pMethods->pHead->pPrev = pMethod;
+        pMethods->pTail->pNext = pMethod;
 
-	return NULL;
+        pMethods->pTail = pMethod;
+    }
+
+    va_end(methods);
+
+    return pMethods;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -472,10 +481,10 @@ Object* CREATE(Object)()
 	MethodRing* pMethods = GenerateMethodRing();
     if (!pMethods) { return NULL; }
 
-	pMethods =
-		InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Equal, "Equal"))
-	  ->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(ToString, "ToString"))
-	  ->pRing;
+    pMethods =
+        InsertMethod(pMethods, 2,
+            GenerateMethod(Equal, "Equal"),
+            GenerateMethod(ToString, "ToString"));
 	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, TYPE(Object), NULL, pMethods));
 
 	return pCreate;

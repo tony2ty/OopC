@@ -41,12 +41,11 @@ CalculatorBase* CREATE(CalculatorBase)()
 	MethodRing* pMethods = GenerateMethodRing();
 	if (!pMethods) { return NULL; }
 
-	pMethods =
-		  InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Add"))
-		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Subtract"))
-		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Multiply"))
-		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(NULL, "Divide"))
-		->pRing;
+    pMethods = InsertMethod(pMethods, 4,
+        GenerateMethod(NULL, "Add"),
+        GenerateMethod(NULL, "Subtract"),
+        GenerateMethod(NULL, "Multiply"),
+        GenerateMethod(NULL, "Divide"));
 	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "CalculatorBase", NULL, pMethods));
 
 	return pCreate;

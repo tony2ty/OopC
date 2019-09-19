@@ -50,9 +50,8 @@ ChartHistogram *CREATE(ChartHistogram)()
     MethodRing *pMethods = GenerateMethodRing();
     if (!pMethods) { return NULL; }
 
-    pMethods =
-          InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Display, "Display"))
-        ->pRing;
+    pMethods = InsertMethod(pMethods, 1,
+        GenerateMethod(Display, "Display"));
     pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartHistogram", NULL, pMethods));
 
     printf("´´½¨Öù×´Í¼.\n");

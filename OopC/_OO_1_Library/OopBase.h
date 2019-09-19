@@ -9,6 +9,7 @@
 
 
 #include <stdbool.h>
+#include <stdarg.h>
 
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
@@ -72,15 +73,10 @@ OOPLIB_API ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear
 
 typedef struct Method Method;
 typedef struct MethodRing MethodRing;
-typedef struct MethodUtil
-{
-	MethodRing* pRing;
-	struct MethodUtil* (*InsertMethod)(struct MethodUtil*, Method*);
-} MethodUtil;
 
 OOPLIB_API Method*     GenerateMethod(Transit pAddr, char* pName);
 OOPLIB_API MethodRing* GenerateMethodRing();
-OOPLIB_API MethodUtil*   InsertMethod(MethodUtil* pUtil, Method* pMethod);
+OOPLIB_API MethodRing*   InsertMethod(MethodRing *pMethods, int nMethodNum, ...);
 
 //////////////////////////////////////////////////////////////////////////////////
 //

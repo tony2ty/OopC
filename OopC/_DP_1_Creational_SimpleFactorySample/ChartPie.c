@@ -50,9 +50,8 @@ ChartPie *CREATE(ChartPie)()
     MethodRing *pMethods = GenerateMethodRing();
     if (!pMethods) { return NULL; }
 
-    pMethods =
-          InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Display, "Display"))
-        ->pRing;
+    pMethods = InsertMethod(pMethods, 1,
+        GenerateMethod(Display, "Display"));
     pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartPie", NULL, pMethods));
 
     printf("´´½¨±ý×´Í¼.\n");

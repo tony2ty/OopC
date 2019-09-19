@@ -73,12 +73,11 @@ CalculatorExtdCommon* CREATE(CalculatorExtdCommon)()
 	MethodRing* pMethods = GenerateMethodRing();
 	if (!pMethods) { return NULL; }
 
-	pMethods =
-		  InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Add, "Add"))
-		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Subtract, "Subtract"))
-		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Multiply, "Multiply"))
-		->InsertMethod(&(MethodUtil) { pMethods, InsertMethod }, GenerateMethod(Divide, "Divide"))
-		->pRing;
+    pMethods = InsertMethod(pMethods, 4,
+        GenerateMethod(Add, "Add"),
+        GenerateMethod(Subtract, "Subtract"),
+        GenerateMethod(Multiply, "Multiply"),
+        GenerateMethod(Divide, "Divide"));
 	pCreate->pChain = InsertInstance(EXTEND(CalculatorBase)(CREATE(CalculatorBase)()), GenerateInstance(pCreate, "CalculatorExtdCommon", NULL, pMethods));
 
 	return pCreate;
