@@ -385,8 +385,11 @@ void Delete(InstanceChain* pChain)
 	do
 	{
 		//
-		pItrInst->pExtRef->fnExec(pItrInst->pExtRef->pToClear);
-		free(pItrInst->pExtRef);
+        if (pItrInst->pExtRef)
+        {
+            pItrInst->pExtRef->fnExec(pItrInst->pExtRef->pToClear);
+            free(pItrInst->pExtRef);
+        }
 		//释放实例数据域
 		free(pItrInst->pFields);
 		//释放类名
