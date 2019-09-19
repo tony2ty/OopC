@@ -11,8 +11,8 @@
 
 struct ExtraMemRef
 {
-	ExtraMemClear fnExec;
 	void* pToClear;
+	ExtraMemClear fnExec;
 };
 
 ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear)
@@ -36,8 +36,8 @@ struct Method
 	Method* pPrev;
 	Method* pNext;
 
-	Transit fnExec;
 	char* pName;
+	Transit fnExec;
 };
 
 struct MethodRing
@@ -48,7 +48,12 @@ struct MethodRing
 
 Method* GenerateMethod(Transit fnExec, char* pName)
 {
-    //if (!pAddr || !pName || !*pName) { return NULL; }
+    //fnExec可能为null，在这种场景下可能会出现
+    //一个类添加了名为pName的方法，
+    //但是没有给出具体实现，
+    //而是让子类实现，
+    //相当于名为pName的方法为抽象方法
+
 	if (!pName || !*pName) { return NULL; }
 
 	void* pMem = malloc(strlen(pName) + 1);
@@ -62,9 +67,9 @@ Method* GenerateMethod(Transit fnExec, char* pName)
 		return NULL;
 	}
 
-	pRet->pPrev = NULL;
-	pRet->pNext = NULL;
-	pRet->fnExec = fnExec; //可能为null
+	pRet->pPrev = NULL; //新产生的 方法结构体 必须将该字段设为null，判断需要用到
+	pRet->pNext = NULL; //新产生的 方法结构体 必须将该字段设为null，判断需要用到
+	pRet->fnExec = fnExec;
 	pRet->pName = strcpy(pMem, pName);
 
 	return pRet;
@@ -76,8 +81,8 @@ MethodRing* GenerateMethodRing()
 
     if (!pRet) { return NULL; }
 
-	pRet->pHead = NULL;
-	pRet->pTail = NULL;
+	pRet->pHead = NULL; //新产生的 方法环结构体 必须将该字段设为null，判断需要用到
+	pRet->pTail = NULL; //新产生的 方法环结构体 必须将该字段设为null，判断需要用到
 
 	return pRet;
 }
@@ -90,7 +95,7 @@ MethodRing * InsertMethod(MethodRing * pMethods, int nMethodNum, ...)
     va_list methods;
     va_start(methods, nMethodNum);
 
-    //pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail 属于异常情况
+    //pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail == true 属于异常情况
 
     if (!pMethods->pHead && !pMethods->pTail)
     {
@@ -130,8 +135,8 @@ struct Instance
 	Instance* pPrev;
 	Instance* pNext;
 
-	void* pFields;
 	char* pName;
+	void* pFields;
 	ExtraMemRef* pExtRef;
 	MethodRing* pMethods;
 };
@@ -144,6 +149,11 @@ struct InstanceChain
 
 Instance* GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, MethodRing* pMethods)
 {
+    //即使类没有成员方法，
+    //方法环也只能说是0元素，
+    //而不能为null，
+    //也就是pMethods不能为null
+
     if (!pFields || !pName || !*pName || !pMethods) { return NULL; }
 
 	void* pMem = malloc(strlen(pName) + 1);
@@ -157,8 +167,8 @@ Instance* GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, Met
 		return NULL;
 	}
 
-	pRet->pPrev = NULL;
-	pRet->pNext = NULL;
+	pRet->pPrev = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
+	pRet->pNext = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
 	pRet->pFields = pFields;
 	pRet->pName = strcpy(pMem, pName);
 	pRet->pExtRef = pExtRef;
@@ -173,8 +183,8 @@ InstanceChain* GenerateInstanceChain()
 
     if (!pRet) { return NULL; }
 
-	pRet->pHead = NULL;
-	pRet->pTail = NULL;
+	pRet->pHead = NULL; //新产生的 实例链结构体 必须将该字段设为null，判断需要用到
+	pRet->pTail = NULL; //新产生的 实例链结构体 必须将该字段设为null，判断需要用到
 
 	return pRet;
 }
@@ -182,8 +192,9 @@ InstanceChain* GenerateInstanceChain()
 InstanceChain* InsertInstance(InstanceChain* pChain, Instance* pInstance)
 {
     if (pChain && !pInstance) { return pChain; }
-
     if (!pChain) { return NULL; }
+
+    //pChain->pHead && !pChain->pTail || !pChain->pHead && pChain->pTail == true 属于异常情况
 
 	if (pChain->pHead && pChain->pTail)
 	{
@@ -254,7 +265,7 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 	Transit toExecute = NULL;
 
 	Instance* pFindInst = FindInstance(pChain, pInst);
-    if (!pFindInst) { return; }
+    if (!pFindInst) { return; } //没有找到，说明给定的实例pInst不是相应的类的实例
 
 	for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
 	{
@@ -384,8 +395,8 @@ void Delete(InstanceChain* pChain)
 	Instance* pItrInst = pChain->pHead;
 	do
 	{
-		//
-        if (pItrInst->pExtRef)
+		//释放类实例的附加存储
+        if (pItrInst->pExtRef && pItrInst->pExtRef->fnExec)
         {
             pItrInst->pExtRef->fnExec(pItrInst->pExtRef->pToClear);
             free(pItrInst->pExtRef);
@@ -470,8 +481,6 @@ void* EXTEND(Object)(Object* pInst)
 
 void DELETE(Object)(Object** ppInst)
 {
-	//释放当前类数据域中动态分配的内存
-
 	Delete((*ppInst)->pChain);
     *ppInst = NULL;
 }
@@ -484,10 +493,9 @@ Object* CREATE(Object)()
 	MethodRing* pMethods = GenerateMethodRing();
     if (!pMethods) { return NULL; }
 
-    pMethods =
-        InsertMethod(pMethods, 2,
-            GenerateMethod(Equal, "Equal"),
-            GenerateMethod(ToString, "ToString"));
+    pMethods = InsertMethod(pMethods, 2,
+        GenerateMethod(Equal, "Equal"),
+        GenerateMethod(ToString, "ToString"));
 	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, TYPE(Object), NULL, pMethods));
 
 	return pCreate;

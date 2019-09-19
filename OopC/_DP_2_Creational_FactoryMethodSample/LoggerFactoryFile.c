@@ -28,9 +28,6 @@ void* EXTEND(LoggerFactoryFile)(LoggerFactoryFile* pInst)
 
 void DELETE(LoggerFactoryFile)(LoggerFactoryFile** ppInst)
 {
-	//
-	//DELETE()
-
 	ILoggerFactory* pSuper = SWITCH((*ppInst), LoggerFactoryFile, ILoggerFactory);
 	DELETE(ILoggerFactory)(&pSuper);
 	(*ppInst) = NULL;

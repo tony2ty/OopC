@@ -35,8 +35,6 @@ void *EXTEND(ChartHistogram)(ChartHistogram *pInst)
 
 void DELETE(ChartHistogram)(ChartHistogram **ppInst)
 {
-    //
-
     IChart *pSuper = SWITCH((*ppInst), ChartHistogram, IChart);
     DELETE(IChart)(&pSuper);
     (*ppInst) = NULL;

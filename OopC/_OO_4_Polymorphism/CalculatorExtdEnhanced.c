@@ -58,8 +58,6 @@ void* EXTEND(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst)
 
 void DELETE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced** ppInst)
 {
-	//
-
 	CalculatorBase* pSuper = SWITCH((*ppInst), CalculatorExtdEnhanced, CalculatorBase);
 	DELETE(CalculatorBase)(&pSuper);
     (*ppInst) = NULL;

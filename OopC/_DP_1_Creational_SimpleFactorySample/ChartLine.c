@@ -35,8 +35,6 @@ void *EXTEND(ChartLine)(ChartLine *pInst)
 
 void DELETE(ChartLine)(ChartLine **ppInst)
 {
-    //
-
     IChart *pSuper = SWITCH((*ppInst), ChartLine, IChart);
     DELETE(IChart)(&pSuper);
     (*ppInst) = NULL;

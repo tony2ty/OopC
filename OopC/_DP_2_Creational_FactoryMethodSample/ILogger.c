@@ -26,8 +26,6 @@ void* EXTEND(ILogger)(ILogger* pInst)
 
 void DELETE(ILogger)(ILogger** ppInst)
 {
-	//
-
 	Object* pSuper = SWITCH((*ppInst), ILogger, Object);
 	DELETE(Object)(&pSuper);
 	(*ppInst) = NULL;
