@@ -56,7 +56,7 @@ void *EXTEND(Calculator)(Calculator *pInst)
 
 void DELETE(Calculator)(Calculator **ppInst)
 {
-    Object *pSuper = AsBaseByType((*ppInst)->pChain, (*ppInst), TYPE(Object));
+    Object *pSuper = SWITCH((*ppInst), Calculator, Object);
     DELETE(Object)(&pSuper);
     *ppInst = NULL;
 }
