@@ -28,7 +28,7 @@ void DELETE(IChart)(IChart **ppInst)
 {
     Object *pSuper = SWITCH((*ppInst), IChart, Object);
     DELETE(Object)(&pSuper);
-    (*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 IChart *CREATE(IChart)()
