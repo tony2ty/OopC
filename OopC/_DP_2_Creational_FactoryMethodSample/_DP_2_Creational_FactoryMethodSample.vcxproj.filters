@@ -39,6 +39,9 @@
     <ClCompile Include="LoggerFactoryFile.c">
       <Filter>源文件\class</Filter>
     </ClCompile>
+    <ClCompile Include="LoggerFactoryDatabase.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILogger.h">
@@ -54,6 +57,9 @@
       <Filter>头文件\class</Filter>
     </ClInclude>
     <ClInclude Include="LoggerFactoryFile.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggerFactoryDatabase.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
   </ItemGroup>

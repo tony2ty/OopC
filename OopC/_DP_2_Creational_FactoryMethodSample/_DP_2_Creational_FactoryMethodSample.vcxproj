@@ -134,6 +134,7 @@
     <ClCompile Include="ILogger.c" />
     <ClCompile Include="ILoggerFactory.c" />
     <ClCompile Include="LoggerDatabase.c" />
+    <ClCompile Include="LoggerFactoryDatabase.c" />
     <ClCompile Include="LoggerFactoryFile.c" />
     <ClCompile Include="LoggerFile.c" />
     <ClCompile Include="main.c" />
@@ -142,6 +143,7 @@
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="ILoggerFactory.h" />
     <ClInclude Include="LoggerDatabase.h" />
+    <ClInclude Include="LoggerFactoryDatabase.h" />
     <ClInclude Include="LoggerFactoryFile.h" />
     <ClInclude Include="LoggerFile.h" />
   </ItemGroup>
