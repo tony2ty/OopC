@@ -37,7 +37,7 @@ void DELETE(LoggerFile)(LoggerFile** ppInst)
 {
 	ILogger* pSuper = SWITCH((*ppInst), LoggerFile, ILogger);
 	DELETE(ILogger)(&pSuper);
-	(*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 LoggerFile* CREATE(LoggerFile)()

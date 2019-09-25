@@ -74,7 +74,7 @@ void DELETE(Calculator)(Calculator** ppInst)
 {
 	Object* pSuper = SWITCH((*ppInst), Calculator, Object);
 	DELETE(Object)(&pSuper);
-    (*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 Calculator* CREATE(Calculator)()

@@ -37,7 +37,7 @@ void DELETE(ChartPie)(ChartPie **ppInst)
 {
     IChart *pSuper = SWITCH((*ppInst), ChartPie, IChart);
     DELETE(IChart)(&pSuper);
-    (*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 ChartPie *CREATE(ChartPie)()

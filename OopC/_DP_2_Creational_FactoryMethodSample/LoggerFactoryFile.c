@@ -2,6 +2,7 @@
 #include "LoggerFactoryFile.h"
 
 #include <malloc.h>
+#include "LoggerFile.h"
 
 struct LoggerFactoryFile
 {
@@ -12,6 +13,15 @@ struct LoggerFactoryFile
 
 /////////////////////////////////////////////////////////////////////////
 //
+
+static void CreateLogger(void* pParams)
+{
+	LoggerFactoryFile* pThis = ((ParamIn*)pParams)->pInst;
+	LoggerFactoryFile_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
+
+	LoggerFile* pLoggerFile = CREATE(LoggerFile)();
+	*pIn->ppRet = SWITCH(pLoggerFile, LoggerFile, ILogger);
+}
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -30,5 +40,20 @@ void DELETE(LoggerFactoryFile)(LoggerFactoryFile** ppInst)
 {
 	ILoggerFactory* pSuper = SWITCH((*ppInst), LoggerFactoryFile, ILoggerFactory);
 	DELETE(ILoggerFactory)(&pSuper);
-	(*ppInst) = NULL;
+	*ppInst = NULL;
+}
+
+LoggerFactoryFile* CREATE(LoggerFactoryFile)()
+{
+	LoggerFactoryFile* pCreate = malloc(sizeof(LoggerFactoryFile));
+	if (!pCreate) { return NULL; }
+
+	MethodRing* pMethods = GenerateMethodRing();
+	if (!pMethods) { return NULL; }
+
+	pMethods = InsertMethod(pMethods, 1,
+		GenerateMethod(CreateLogger, "CreateLogger"));
+	pCreate->pChain = InsertInstance(EXTEND(ILoggerFactory)(CREATE(ILoggerFactory)()), GenerateInstance(pCreate, "LoggerFactoryFile", NULL, pMethods));
+
+	return pCreate;
 }

@@ -37,7 +37,7 @@ void DELETE(LoggerDatabase)(LoggerDatabase** ppInst)
 {
 	ILogger* pSuper = SWITCH((*ppInst), LoggerDatabase, ILogger);
 	DELETE(ILogger)(&pSuper);
-	(*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 LoggerDatabase* CREATE(LoggerDatabase)()

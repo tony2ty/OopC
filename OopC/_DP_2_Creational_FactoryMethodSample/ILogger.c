@@ -28,7 +28,7 @@ void DELETE(ILogger)(ILogger** ppInst)
 {
 	Object* pSuper = SWITCH((*ppInst), ILogger, Object);
 	DELETE(Object)(&pSuper);
-	(*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 ILogger* CREATE(ILogger)()

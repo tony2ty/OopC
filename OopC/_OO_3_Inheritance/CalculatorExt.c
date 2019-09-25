@@ -59,7 +59,7 @@ void DELETE(CalculatorExt)(CalculatorExt** ppInst)
 {
 	Calculator* pSuper = SWITCH((*ppInst), CalculatorExt, Calculator);
 	DELETE(Calculator)(&pSuper);
-    (*ppInst) = NULL;
+	*ppInst = NULL;
 }
 
 CalculatorExt* CREATE(CalculatorExt)()
