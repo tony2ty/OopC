@@ -476,7 +476,7 @@ void INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
 
 void* EXTEND(Object)(Object* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(Object)(Object** ppInst)

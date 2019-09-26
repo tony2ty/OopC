@@ -52,29 +52,20 @@ void INVOKE(CalculatorExt)(CalculatorExt* pInst, char* pFuncName, void* pParams)
 
 void* EXTEND(CalculatorExt)(CalculatorExt* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(CalculatorExt)(CalculatorExt** ppInst)
 {
-	Calculator* pSuper = SWITCH((*ppInst), CalculatorExt, Calculator);
-	DELETE(Calculator)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, CalculatorExt, Calculator);
 }
 
 CalculatorExt* CREATE(CalculatorExt)()
 {
-	CalculatorExt* pCreate = malloc(sizeof(CalculatorExt));
-	if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-	if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 3,
-        GenerateMethod(Add, "Add"),
-        GenerateMethod(Multiply, "Multiply"),
-        GenerateMethod(Divide, "Divide"));
-	pCreate->pChain = InsertInstance(EXTEND(Calculator)(CREATE(Calculator)()), GenerateInstance(pCreate, "CalculatorExt", NULL, pMethods));
+    DOCREATE(pCreate, CalculatorExt, Calculator, NULL,
+        METHOD(Add)
+        METHOD(Multiply)
+        METHOD(Divide));
 
 	return pCreate;
 }

@@ -21,30 +21,21 @@ void INVOKE(CalculatorBase)(CalculatorBase* pInst, char* pFuncName, void* pParam
 
 void* EXTEND(CalculatorBase)(CalculatorBase* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(CalculatorBase)(CalculatorBase** ppInst)
 {
-	Object* pSuper = SWITCH((*ppInst), CalculatorBase, Object);
-	DELETE(Object)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, CalculatorBase, Object);
 }
 
 CalculatorBase* CREATE(CalculatorBase)()
 {
-	CalculatorBase* pCreate = malloc(sizeof(CalculatorBase));
-	if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-	if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 4,
-        GenerateMethod(NULL, "Add"),
-        GenerateMethod(NULL, "Subtract"),
-        GenerateMethod(NULL, "Multiply"),
-        GenerateMethod(NULL, "Divide"));
-	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "CalculatorBase", NULL, pMethods));
+    DOCREATE(pCreate, CalculatorBase, Object, NULL,
+        AMETHOD(Add)
+        AMETHOD(Subtract)
+        AMETHOD(Multiply)
+        AMETHOD(Divide));
 
 	return pCreate;
 }

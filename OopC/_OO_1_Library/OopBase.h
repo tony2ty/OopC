@@ -15,7 +15,11 @@
 //
 
 //获取类型名称字符串
-#define   TYPE(type) #type
+#define    TYPE(type) #type
+//添加方法
+#define  METHOD(name) InsertMethod(pMethods, 1, GenerateMethod(name, #name));
+//添加抽象方法，A前缀表示Abstract
+#define AMETHOD(name) InsertMethod(pMethods, 1, GenerateMethod(NULL, #name));
 
 //构造函数帮助宏
 #define CREATE(type) Create_ ## type   
@@ -26,17 +30,38 @@
 //析构帮助宏
 #define DELETE(type) Delete_ ## type   
 
-//类型转换帮助宏，该宏将实例从当前类类型转换至指定父类型
-//最好不要复合调用，SWITCH((...some expr...), ..., ...)
-#define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
 
 //调用该宏实现这样的功能，给定函数参数pParams，通过实例pInst调用名为pFuncName的方法
 //最好不要复合调用，DOINVOKE((...some expr...), ..., ...)
 #define DOINVOKE(pInst, pFuncName, pParams) Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFunc(pInst->pChain, pInst, pFuncName), pParams })
 
+#define DOEXTEND(pInst) return pInst->pChain
+
+#define DODELETE(ppInst, theclass, superclass) superclass *pSuper = SWITCH((*ppInst), theclass, superclass); DELETE(superclass)(&pSuper); *ppInst = NULL
+
+//创建实例，但并不初始化实例的数据域
+#define DOCREATE(pInst, theclass, superclass, pExtRef, ...)          \
+theclass *pInst = malloc(sizeof(theclass));                          \
+if (!pInst) { return NULL; }                                         \
+MethodRing *pMethods = GenerateMethodRing();                         \
+if (!pMethods) { return NULL; };                                     \
+__VA_ARGS__                                                          \
+pInst->pChain = InsertInstance(                                      \
+        EXTEND(superclass)(CREATE(superclass)()),                    \
+        GenerateInstance(pInst, TYPE(theclass), pExtRef, pMethods))  \
+
+
+//类型转换帮助宏，该宏将实例从当前类类型转换至指定父类型
+//最好不要复合调用，SWITCH((...some expr...), ..., ...)
+#define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
+
 //调用该宏实现这样的功能，给定函数参数pParams(...)，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
 //最好不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)
 #define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncUpward(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
+
+
+//标准实例链定义
+#define CHAINDEF InstanceChain *pChain 
 
 //类定义帮助宏，
 //定义时，给定构造参数，则类没有默认无参构造函数声明
@@ -48,8 +73,6 @@
 	void*     EXTEND(theclass)(theclass*   pInst);                                 \
 	void      DELETE(theclass)(theclass** ppInst);                                 \
 
-//标准实例链定义
-#define CHAINDEF InstanceChain *pChain 
 
 //成员方法标准类型
 typedef void (*Transit)(void*);

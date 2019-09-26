@@ -31,27 +31,18 @@ void INVOKE(LoggerFactoryDatabase)(LoggerFactoryDatabase* pInst, char* pFuncName
 
 void* EXTEND(LoggerFactoryDatabase)(LoggerFactoryDatabase* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(LoggerFactoryDatabase)(LoggerFactoryDatabase** ppInst)
 {
-	ILoggerFactory* pSuper = SWITCH((*ppInst), LoggerFactoryDatabase, ILoggerFactory);
-	DELETE(ILoggerFactory)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, LoggerFactoryDatabase, ILoggerFactory);
 }
 
 LoggerFactoryDatabase* CREATE(LoggerFactoryDatabase)()
 {
-	LoggerFactoryDatabase* pCreate = malloc(sizeof(LoggerFactoryDatabase));
-	if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-	if (!pMethods) { return NULL; }
-
-	pMethods = InsertMethod(pMethods, 1,
-		GenerateMethod(CreateLogger, "CreateLogger"));
-	pCreate->pChain = InsertInstance(EXTEND(ILoggerFactory)(CREATE(ILoggerFactory)()), GenerateInstance(pCreate, "LoggerFactoryDatabase", NULL, pMethods));
+    DOCREATE(pCreate, LoggerFactoryDatabase, ILoggerFactory, NULL,
+        METHOD(CreateLogger));
 
 	return pCreate;
 }

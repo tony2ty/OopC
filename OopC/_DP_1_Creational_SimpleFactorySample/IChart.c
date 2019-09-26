@@ -21,27 +21,18 @@ void INVOKE(IChart)(IChart *pInst, char *pFuncName, void *pParams)
 
 void *EXTEND(IChart)(IChart *pInst)
 {
-    return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(IChart)(IChart **ppInst)
 {
-    Object *pSuper = SWITCH((*ppInst), IChart, Object);
-    DELETE(Object)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, IChart, Object);
 }
 
 IChart *CREATE(IChart)()
 {
-    IChart *pCreate = malloc(sizeof(IChart));
-    if (!pCreate) { return NULL; }
-
-    MethodRing *pMethods = GenerateMethodRing();
-    if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 1,
-        GenerateMethod(NULL, "Display"));
-    pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "IChart", NULL, pMethods));
+    DOCREATE(pCreate, IChart, Object, NULL,
+        AMETHOD(Display));
 
     return pCreate;
 }

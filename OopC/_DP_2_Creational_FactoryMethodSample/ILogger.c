@@ -21,27 +21,18 @@ void INVOKE(ILogger)(ILogger* pInst, char* pFuncName, void* pParams)
 
 void* EXTEND(ILogger)(ILogger* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(ILogger)(ILogger** ppInst)
 {
-	Object* pSuper = SWITCH((*ppInst), ILogger, Object);
-	DELETE(Object)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, ILogger, Object);
 }
 
 ILogger* CREATE(ILogger)()
 {
-	ILogger* pCreate = malloc(sizeof(ILogger));
-	if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-	if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 1,
-        GenerateMethod(NULL, "WriteLog"));
-	pCreate->pChain = InsertInstance(EXTEND(Object)(CREATE(Object)()), GenerateInstance(pCreate, "ILogger", NULL, pMethods));
+    DOCREATE(pCreate, ILogger, Object, NULL,
+        AMETHOD(WriteLog));
 
 	return pCreate;
 }

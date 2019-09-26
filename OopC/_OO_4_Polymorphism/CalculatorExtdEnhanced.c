@@ -53,30 +53,21 @@ void INVOKE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst, char* pFuncNa
 
 void* EXTEND(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced** ppInst)
 {
-	CalculatorBase* pSuper = SWITCH((*ppInst), CalculatorExtdEnhanced, CalculatorBase);
-	DELETE(CalculatorBase)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, CalculatorExtdEnhanced, CalculatorBase);
 }
 
 CalculatorExtdEnhanced* CREATE(CalculatorExtdEnhanced)()
 {
-	CalculatorExtdEnhanced* pCreate = malloc(sizeof(CalculatorExtdEnhanced));
-	if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-	if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 4,
-        GenerateMethod(Add, "Add"),
-        GenerateMethod(Subtract, "Subtract"),
-        GenerateMethod(Multiply, "Multiply"),
-        GenerateMethod(Divide, "Divide"));
-	pCreate->pChain = InsertInstance(EXTEND(CalculatorBase)(CREATE(CalculatorBase)()), GenerateInstance(pCreate, "CalculatorExtdEnhanced", NULL, pMethods));
+    DOCREATE(pCreate, CalculatorExtdEnhanced, CalculatorBase, NULL,
+        METHOD(Add)
+        METHOD(Subtract)
+        METHOD(Multiply)
+        METHOD(Divide));
 
 	return pCreate;
 }

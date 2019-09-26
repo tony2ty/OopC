@@ -30,27 +30,18 @@ void INVOKE(ChartPie)(ChartPie *pInst, char *pFuncName, void *pParams)
 
 void *EXTEND(ChartPie)(ChartPie *pInst)
 {
-    return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(ChartPie)(ChartPie **ppInst)
 {
-    IChart *pSuper = SWITCH((*ppInst), ChartPie, IChart);
-    DELETE(IChart)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, ChartPie, IChart);
 }
 
 ChartPie *CREATE(ChartPie)()
 {
-    ChartPie *pCreate = malloc(sizeof(ChartPie));
-    if (!pCreate) { return NULL; }
-
-    MethodRing *pMethods = GenerateMethodRing();
-    if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 1,
-        GenerateMethod(Display, "Display"));
-    pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartPie", NULL, pMethods));
+    DOCREATE(pCreate, ChartPie, IChart, NULL,
+        METHOD(Display));
 
     printf("´´½¨±ý×´Í¼.\n");
 

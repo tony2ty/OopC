@@ -30,27 +30,18 @@ void INVOKE(ChartHistogram)(ChartHistogram *pInst, char *pFuncName, void *pParam
 
 void *EXTEND(ChartHistogram)(ChartHistogram *pInst)
 {
-    return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(ChartHistogram)(ChartHistogram **ppInst)
 {
-    IChart *pSuper = SWITCH((*ppInst), ChartHistogram, IChart);
-    DELETE(IChart)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, ChartHistogram, IChart);
 }
 
 ChartHistogram *CREATE(ChartHistogram)()
 {
-    ChartHistogram *pCreate = malloc(sizeof(ChartHistogram));
-    if (!pCreate) { return NULL; }
-
-    MethodRing *pMethods = GenerateMethodRing();
-    if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 1,
-        GenerateMethod(Display, "Display"));
-    pCreate->pChain = InsertInstance(EXTEND(IChart)(CREATE(IChart)()), GenerateInstance(pCreate, "ChartHistogram", NULL, pMethods));
+    DOCREATE(pCreate, ChartHistogram, IChart, NULL,
+        METHOD(Display));
 
     printf("´´½¨Öù×´Í¼.\n");
 

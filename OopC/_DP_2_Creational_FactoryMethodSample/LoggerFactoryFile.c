@@ -33,27 +33,18 @@ void INVOKE(LoggerFactoryFile)(LoggerFactoryFile* pInst, char* pFuncName, void* 
 
 void* EXTEND(LoggerFactoryFile)(LoggerFactoryFile* pInst)
 {
-	return pInst->pChain;
+    DOEXTEND(pInst);
 }
 
 void DELETE(LoggerFactoryFile)(LoggerFactoryFile** ppInst)
 {
-	ILoggerFactory* pSuper = SWITCH((*ppInst), LoggerFactoryFile, ILoggerFactory);
-	DELETE(ILoggerFactory)(&pSuper);
-	*ppInst = NULL;
+    DODELETE(ppInst, LoggerFactoryFile, ILoggerFactory);
 }
 
 LoggerFactoryFile* CREATE(LoggerFactoryFile)()
 {
-	LoggerFactoryFile* pCreate = malloc(sizeof(LoggerFactoryFile));
-	if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-	if (!pMethods) { return NULL; }
-
-	pMethods = InsertMethod(pMethods, 1,
-		GenerateMethod(CreateLogger, "CreateLogger"));
-	pCreate->pChain = InsertInstance(EXTEND(ILoggerFactory)(CREATE(ILoggerFactory)()), GenerateInstance(pCreate, "LoggerFactoryFile", NULL, pMethods));
+    DOCREATE(pCreate, LoggerFactoryFile, ILoggerFactory, NULL,
+        METHOD(CreateLogger));
 
 	return pCreate;
 }
