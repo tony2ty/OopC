@@ -111,11 +111,6 @@ OOPLIB_API void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncNam
 //根据函数名称，确定实例链中哪个实例将会被调用，仅向上查找
 OOPLIB_API void* AsBaseByFuncUpward(InstanceChain* pChain, void* pInst, char* pFuncName);
 
-//获取给定实例的实际类型指针
-OOPLIB_API void* AsExactType(InstanceChain* pChain, void* pInst);
-
-OOPLIB_API void  Delete(InstanceChain* pChain);
-
 ////Object//////////////////////////////////////////////////////////////////////////////
 //
 
