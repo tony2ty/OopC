@@ -2,7 +2,7 @@
 #ifndef CALCULATOREXT_H__
 #define CALCULATOREXT_H__
 
-#include <OopBase.h>
+#include "Calculator.h"
 
 CLASSDEF(CalculatorExt)
 
