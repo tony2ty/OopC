@@ -81,7 +81,8 @@ Calculator* CREATE(Calculator)()
         METHOD(Input)
         METHOD(Add)
         METHOD(Output)
-        METHOD(Subtract));
+        METHOD(Subtract)
+        METHOD(Multiply));
 
 	return pCreate;
 }
