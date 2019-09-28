@@ -225,6 +225,21 @@ InstanceChain* InsertInstance(InstanceChain* pChain, Instance* pInstance)
 //////////////////////////////////////////////////////////////////////////////////
 //
 
+bool ContainMethod(MethodRing *pRing, char *pName)
+{
+    if (!pRing || !pRing->pHead || !pRing->pTail || !pName || !*pName) { return false; }
+
+    Method *pIterator = pRing->pHead;
+    do
+    {
+        if (!strcmp(pName, pIterator->pName)) { return true; }
+        pIterator = pIterator->pNext;
+
+    } while (pIterator != pRing->pHead);
+
+    return false;
+}
+
 Method* FindMethod(MethodRing* pRing, char* pName)
 {
     if (!pRing || !pRing->pHead || !pRing->pTail || !pName || !*pName) { return NULL; }
@@ -288,7 +303,25 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 
     if (toExecute)
     {
-        toExecute(pParams);
+        //通过父类指针调用子类方法时，需要保证各层父类中存在该方法的声明
+        if (!pFindInst->pNext)
+        {
+            toExecute(pParams);
+        }
+        else
+        {
+            bool bValidCall = false;
+            for (Instance *pIterator = pFindInst; pIterator; pIterator = pIterator->pPrev)
+            {
+                if (ContainMethod(pIterator->pMethods, pFuncName))
+                {
+                    bValidCall = true;
+                    break;
+                }
+            }
+
+            if (bValidCall) { toExecute(pParams); }
+        }
     }
 }
 
@@ -406,22 +439,25 @@ void Delete(InstanceChain* pChain)
 		//释放类名
 		free(pItrInst->pName);
 		//释放方法环：释放方法名
-		Method* pItrMthd = pItrInst->pMethods->pHead;
-		do
-		{
-			free(pItrMthd->pName);
-			pItrMthd = pItrMthd->pNext;
+        if (pItrInst->pMethods->pHead && pItrInst->pMethods->pTail)
+        {
+            Method* pItrMthd = pItrInst->pMethods->pHead;
+            do
+            {
+                free(pItrMthd->pName);
+                pItrMthd = pItrMthd->pNext;
 
-		} while (pItrMthd != pItrInst->pMethods->pHead);
-		//释放方法环：释放方法结构体
-		pItrMthd = pItrInst->pMethods->pHead;
-		do
-		{
-			void* pVd = pItrMthd->pNext;
-			free(pItrMthd);
-			pItrMthd = pVd;
+            } while (pItrMthd != pItrInst->pMethods->pHead);
+            //释放方法环：释放方法结构体
+            pItrMthd = pItrInst->pMethods->pHead;
+            do
+            {
+                void* pVd = pItrMthd->pNext;
+                free(pItrMthd);
+                pItrMthd = pVd;
 
-		} while (pItrMthd != pItrInst->pMethods->pHead);
+            } while (pItrMthd != pItrInst->pMethods->pHead);
+        }
 		//释放方法环：释放环头
 		free(pItrInst->pMethods);
 
