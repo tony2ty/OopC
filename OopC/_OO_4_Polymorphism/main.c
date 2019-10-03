@@ -24,6 +24,8 @@ int main(int argc, char** argv)
 
 	DELETE(CalculatorBase)(&pBase);
 
+    printf("-----------------------------------------------------------\n");
+
 	{
 		CalculatorExtdEnhanced* pEnhanced = CREATE(CalculatorExtdEnhanced)();
 		pBase = SWITCH(pEnhanced, CalculatorExtdEnhanced, CalculatorBase);

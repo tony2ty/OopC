@@ -1,6 +1,7 @@
 
 #include "CalculatorExtdCommon.h"
 
+#include <stdio.h>
 #include <malloc.h>
 
 struct CalculatorExtdCommon
@@ -16,6 +17,8 @@ static void Add(void* pParams)
 	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
 	CalculatorExtdCommon_Add* pIn = ((ParamIn*)pParams)->pIn;
 
+    printf("Add operation using common calculator.\n");
+
 	*pIn->pdblRet = pIn->dblOpL + pIn->dblOpR;
 }
 
@@ -23,6 +26,8 @@ static void Subtract(void* pParams)
 {
 	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
 	CalculatorExtdCommon_Subtract* pIn = ((ParamIn*)pParams)->pIn;
+
+    printf("Subtract operation using common calculator.\n");
 
 	*pIn->pdblRet = pIn->dblOpL - pIn->dblOpR;
 }
@@ -32,6 +37,8 @@ static void Multiply(void* pParams)
 	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
 	CalculatorExtdCommon_Multiply* pIn = ((ParamIn*)pParams)->pIn;
 
+    printf("Multiply operation using common calculator.\n");
+
 	*pIn->pdblRet = pIn->dblOpL * pIn->dblOpR;
 }
 
@@ -39,6 +46,8 @@ static void Divide(void* pParams)
 {
 	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
 	CalculatorExtdCommon_Divide* pIn = ((ParamIn*)pParams)->pIn;
+
+    printf("Divide operation using common calculator.\n");
 
 	*pIn->pdblRet = pIn->dblOpL / pIn->dblOpR;// */0
 }
