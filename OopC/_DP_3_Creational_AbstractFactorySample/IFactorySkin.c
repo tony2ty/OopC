@@ -21,40 +21,42 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "IFactorySkin.h"
 
 #include <malloc.h>
 
-struct ICtrlButton
+struct IFactorySkin
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(IFactorySkin)(IFactorySkin *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(IFactorySkin)(IFactorySkin *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(IFactorySkin)(IFactorySkin **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, IFactorySkin, Object);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+IFactorySkin *CREATE(IFactorySkin)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, IFactorySkin, Object, NULL,
+        AMETHOD(CreateButton)
+        AMETHOD(CreateTextField)
+        AMETHOD(CreateComboBox));
 
     return pCreate;
 }

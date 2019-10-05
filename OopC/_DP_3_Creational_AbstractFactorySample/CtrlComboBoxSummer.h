@@ -21,40 +21,13 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#ifndef CTRLCOMBOBOXSUMMER_H__
+#define CTRLCOMBOBOXSUMMER_H__
 
-#include <malloc.h>
+#include "ICtrlComboBox.h"
 
-struct ICtrlButton
-{
-    CHAINDEF;
-};
+CLASSDEF(CtrlComboBoxSummer);
 
-//////////////////////////////////////////////////////
-//
+typedef ParamNull CtrlComboBoxSummer_Display;
 
-///////////////////////////////////////////////////////////////
-//
-
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
-{
-    DOINVOKE(pInst, pFuncName, pParams);
-}
-
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
-{
-    DOEXTEND(pInst);
-}
-
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
-{
-    DODELETE(ppInst, ICtrlButton, Object);
-}
-
-ICtrlButton *CREATE(ICtrlButton)()
-{
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
-
-    return pCreate;
-}
+#endif // !CTRLCOMBOBOXSUMMER_H__

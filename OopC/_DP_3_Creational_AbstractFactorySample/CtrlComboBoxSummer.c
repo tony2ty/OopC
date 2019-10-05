@@ -21,40 +21,49 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "CtrlComboBoxSummer.h"
 
 #include <malloc.h>
+#include <stdio.h>
 
-struct ICtrlButton
+struct CtrlComboBoxSummer
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+static void Display(void *pParams)
+{
+    CtrlComboBoxSummer *pThis = ((ParamIn *)pParams)->pInst;
+    CtrlComboBoxSummer_Display *pIn = ((ParamIn *)pParams)->pIn;
+
+    printf("显示蓝色边框组合框.\n");
+}
+
+//////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(CtrlComboBoxSummer)(CtrlComboBoxSummer **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, CtrlComboBoxSummer, ICtrlComboBox);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+CtrlComboBoxSummer *CREATE(CtrlComboBoxSummer)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, CtrlComboBoxSummer, ICtrlComboBox, NULL,
+        METHOD(Display));
 
     return pCreate;
 }

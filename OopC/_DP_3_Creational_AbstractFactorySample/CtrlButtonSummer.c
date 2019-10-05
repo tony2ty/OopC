@@ -21,40 +21,49 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "CtrlButtonSummer.h"
 
 #include <malloc.h>
+#include <stdio.h>
 
-struct ICtrlButton
+struct CtrlButtonSummer
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+static void Display(void *pParams)
+{
+    CtrlButtonSummer *pThis = ((ParamIn *)pParams)->pInst;
+    CtrlButtonSummer_Display *pIn = ((ParamIn *)pParams)->pIn;
+
+    printf("ÏÔÊ¾Ç³À¶É«°´Å¥¡£\n");
+}
+
+/////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(CtrlButtonSummer)(CtrlButtonSummer *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(CtrlButtonSummer)(CtrlButtonSummer *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(CtrlButtonSummer)(CtrlButtonSummer **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, CtrlButtonSummer, ICtrlButton);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+CtrlButtonSummer *CREATE(CtrlButtonSummer)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, CtrlButtonSummer, ICtrlButton, NULL,
+        METHOD(Display));
 
     return pCreate;
 }

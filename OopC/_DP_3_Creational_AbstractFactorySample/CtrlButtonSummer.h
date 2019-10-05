@@ -21,40 +21,13 @@
 //SOFTWARE.
 
 
+#ifndef CTRLBUTTONSUMMER_H__
+#define CTRLBUTTONSUMMER_H__
+
 #include "ICtrlButton.h"
 
-#include <malloc.h>
+CLASSDEF(CtrlButtonSummer);
 
-struct ICtrlButton
-{
-    CHAINDEF;
-};
+typedef ParamNull CtrlButtonSummer_Display;
 
-//////////////////////////////////////////////////////
-//
-
-///////////////////////////////////////////////////////////////
-//
-
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
-{
-    DOINVOKE(pInst, pFuncName, pParams);
-}
-
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
-{
-    DOEXTEND(pInst);
-}
-
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
-{
-    DODELETE(ppInst, ICtrlButton, Object);
-}
-
-ICtrlButton *CREATE(ICtrlButton)()
-{
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
-
-    return pCreate;
-}
+#endif // !CTRLBUTTONSUMMER_H__

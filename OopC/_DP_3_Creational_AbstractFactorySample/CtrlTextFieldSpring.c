@@ -21,40 +21,49 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "CtrlTextFieldSpring.h"
 
 #include <malloc.h>
+#include <stdio.h>
 
-struct ICtrlButton
+struct CtrlTextFieldSpring
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+static void Display(void *pParams)
+{
+    CtrlTextFieldSpring *pThis = ((ParamIn *)pParams)->pInst;
+    CtrlTextFieldSpring_Display *pIn = ((ParamIn *)pParams)->pIn;
+
+    printf("显示绿色边框文本框。\n");
+}
+
+///////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(CtrlTextFieldSpring)(CtrlTextFieldSpring **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, CtrlTextFieldSpring, ICtrlTextField);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+CtrlTextFieldSpring *CREATE(CtrlTextFieldSpring)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, CtrlTextFieldSpring, ICtrlTextField, NULL,
+        METHOD(Display));
 
     return pCreate;
 }

@@ -21,40 +21,49 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "CtrlComboBoxSpring.h"
 
 #include <malloc.h>
+#include <stdio.h>
 
-struct ICtrlButton
+struct CtrlComboBoxSpring
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+static void Display(void *pParams)
+{
+    CtrlComboBoxSpring *pThis = ((ParamIn *)pParams)->pInst;
+    CtrlComboBoxSpring_Display *pIn = ((ParamIn *)pParams)->pIn;
+
+    printf("显示绿色边框组合框.\n");
+}
+
+//////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(CtrlComboBoxSpring)(CtrlComboBoxSpring **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, CtrlComboBoxSpring, ICtrlComboBox);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+CtrlComboBoxSpring *CREATE(CtrlComboBoxSpring)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, CtrlComboBoxSpring, ICtrlComboBox, NULL,
+        METHOD(Display));
 
     return pCreate;
 }

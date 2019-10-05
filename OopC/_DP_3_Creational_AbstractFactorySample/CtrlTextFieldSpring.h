@@ -21,40 +21,13 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#ifndef CTRLTEXTFIELDSPRING_H__
+#define CTRLTEXTFIELDSPRING_H__
 
-#include <malloc.h>
+#include "ICtrlTextField.h"
 
-struct ICtrlButton
-{
-    CHAINDEF;
-};
+CLASSDEF(CtrlTextFieldSpring);
 
-//////////////////////////////////////////////////////
-//
+typedef ParamNull CtrlTextFieldSpring_Display;
 
-///////////////////////////////////////////////////////////////
-//
-
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
-{
-    DOINVOKE(pInst, pFuncName, pParams);
-}
-
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
-{
-    DOEXTEND(pInst);
-}
-
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
-{
-    DODELETE(ppInst, ICtrlButton, Object);
-}
-
-ICtrlButton *CREATE(ICtrlButton)()
-{
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
-
-    return pCreate;
-}
+#endif // !CTRLTEXTFIELDSPRING_H__

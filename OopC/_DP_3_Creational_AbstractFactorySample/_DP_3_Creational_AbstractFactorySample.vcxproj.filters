@@ -24,24 +24,78 @@
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="IButton.c">
+    <ClCompile Include="ICtrlButton.c">
       <Filter>源文件\class</Filter>
     </ClCompile>
-    <ClCompile Include="ITextField.c">
+    <ClCompile Include="ICtrlComboBox.c">
       <Filter>源文件\class</Filter>
     </ClCompile>
-    <ClCompile Include="IComboBox.c">
+    <ClCompile Include="ICtrlTextField.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="IFactorySkin.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlButtonSpring.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlButtonSummer.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlTextFieldSpring.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlTextFieldSummer.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlComboBoxSpring.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlComboBoxSummer.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="FactorySkinSpring.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="FactorySkinSummer.c">
       <Filter>源文件\class</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IButton.h">
+    <ClInclude Include="ICtrlButton.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
-    <ClInclude Include="ITextField.h">
+    <ClInclude Include="ICtrlComboBox.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
-    <ClInclude Include="IComboBox.h">
+    <ClInclude Include="ICtrlTextField.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="IFactorySkin.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlButtonSpring.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlButtonSummer.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlTextFieldSpring.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlTextFieldSummer.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlComboBoxSpring.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlComboBoxSummer.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="FactorySkinSpring.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="FactorySkinSummer.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
   </ItemGroup>

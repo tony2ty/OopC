@@ -21,40 +21,15 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#ifndef FACTORYSKINSPRING_H__
+#define FACTORYSKINSPRING_H__
 
-#include <malloc.h>
+#include "IFactorySkin.h"
 
-struct ICtrlButton
-{
-    CHAINDEF;
-};
+CLASSDEF(FactorySkinSpring);
 
-//////////////////////////////////////////////////////
-//
+typedef struct { ICtrlButton **ppButton; } FactorySkinSpring_CreateButton;
+typedef struct { ICtrlTextField **ppTextField; } FactorySkinSpring_CreateTextField;
+typedef struct { ICtrlComboBox **ppComboBox; } FactorySkinSpring_CreateComboBox;
 
-///////////////////////////////////////////////////////////////
-//
-
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
-{
-    DOINVOKE(pInst, pFuncName, pParams);
-}
-
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
-{
-    DOEXTEND(pInst);
-}
-
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
-{
-    DODELETE(ppInst, ICtrlButton, Object);
-}
-
-ICtrlButton *CREATE(ICtrlButton)()
-{
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
-
-    return pCreate;
-}
+#endif // !FACTORYSKINSPRING_H__

@@ -125,15 +125,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IButton.c" />
-    <ClCompile Include="IComboBox.c" />
-    <ClCompile Include="ITextField.c" />
+    <ClCompile Include="CtrlButtonSpring.c" />
+    <ClCompile Include="CtrlButtonSummer.c" />
+    <ClCompile Include="CtrlComboBoxSpring.c" />
+    <ClCompile Include="CtrlComboBoxSummer.c" />
+    <ClCompile Include="CtrlTextFieldSpring.c" />
+    <ClCompile Include="CtrlTextFieldSummer.c" />
+    <ClCompile Include="FactorySkinSpring.c" />
+    <ClCompile Include="FactorySkinSummer.c" />
+    <ClCompile Include="ICtrlButton.c" />
+    <ClCompile Include="ICtrlComboBox.c" />
+    <ClCompile Include="ICtrlTextField.c" />
+    <ClCompile Include="IFactorySkin.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IButton.h" />
-    <ClInclude Include="IComboBox.h" />
-    <ClInclude Include="ITextField.h" />
+    <ClInclude Include="CtrlButtonSpring.h" />
+    <ClInclude Include="CtrlButtonSummer.h" />
+    <ClInclude Include="CtrlComboBoxSpring.h" />
+    <ClInclude Include="CtrlComboBoxSummer.h" />
+    <ClInclude Include="CtrlTextFieldSpring.h" />
+    <ClInclude Include="CtrlTextFieldSummer.h" />
+    <ClInclude Include="FactorySkinSpring.h" />
+    <ClInclude Include="FactorySkinSummer.h" />
+    <ClInclude Include="ICtrlButton.h" />
+    <ClInclude Include="ICtrlComboBox.h" />
+    <ClInclude Include="ICtrlTextField.h" />
+    <ClInclude Include="IFactorySkin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

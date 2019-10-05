@@ -21,40 +21,49 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "CtrlButtonSpring.h"
 
 #include <malloc.h>
+#include <stdio.h>
 
-struct ICtrlButton
+struct CtrlButtonSpring
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+static void Display(void *pParams)
+{
+    CtrlButtonSpring *pThis = ((ParamIn *)pParams)->pInst;
+    CtrlButtonSpring_Display *pIn = ((ParamIn *)pParams)->pIn;
+
+    printf("ÏÔÊ¾Ç³ÂÌÉ«°´Å¥¡£\n");
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(CtrlButtonSpring)(CtrlButtonSpring *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(CtrlButtonSpring)(CtrlButtonSpring *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(CtrlButtonSpring)(CtrlButtonSpring **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, CtrlButtonSpring, ICtrlButton);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+CtrlButtonSpring *CREATE(CtrlButtonSpring)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, CtrlButtonSpring, ICtrlButton, NULL,
+        METHOD(Display));
 
     return pCreate;
 }

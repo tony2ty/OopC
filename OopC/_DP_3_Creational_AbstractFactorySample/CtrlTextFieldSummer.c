@@ -21,40 +21,49 @@
 //SOFTWARE.
 
 
-#include "ICtrlButton.h"
+#include "CtrlTextFieldSummer.h"
 
 #include <malloc.h>
+#include <stdio.h>
 
-struct ICtrlButton
+struct CtrlTextFieldSummer
 {
     CHAINDEF;
 };
 
-//////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 //
 
-///////////////////////////////////////////////////////////////
+static void Display(void *pParams)
+{
+    CtrlTextFieldSummer *pThis = ((ParamIn *)pParams)->pInst;
+    CtrlTextFieldSummer_Display *pIn = ((ParamIn *)pParams)->pIn;
+
+    printf("显示蓝色边框文本框。\n");
+}
+
+/////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+void INVOKE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+void *EXTEND(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst)
 {
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(CtrlTextFieldSummer)(CtrlTextFieldSummer **ppInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(ppInst, CtrlTextFieldSummer, ICtrlTextField);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+CtrlTextFieldSummer *CREATE(CtrlTextFieldSummer)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+    DOCREATE(pCreate, CtrlTextFieldSummer, ICtrlTextField, NULL,
+        METHOD(Display));
 
     return pCreate;
 }
