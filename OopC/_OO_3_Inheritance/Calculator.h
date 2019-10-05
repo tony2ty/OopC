@@ -26,7 +26,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(Calculator)
+CLASSDEF(Calculator);
 
 typedef struct { double dblOpL; double dblOpR; } Calculator_Input;
 typedef ParamNull Calculator_Add;

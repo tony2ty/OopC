@@ -26,7 +26,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(IButton)
+CLASSDEF(IButton);
 
 typedef ParamNull IButton_Display;
 

@@ -26,7 +26,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(CalculatorBase)
+CLASSDEF(CalculatorBase);
 
 typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorBase_Add;
 typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorBase_Subtract;

@@ -27,7 +27,7 @@
 #include <OopBase.h>
 #include "ILogger.h"
 
-CLASSDEF(ILoggerFactory)
+CLASSDEF(ILoggerFactory);
 
 typedef struct { ILogger** ppRet; } ILoggerFactory_CreateLogger;
 

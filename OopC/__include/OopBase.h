@@ -93,7 +93,7 @@ pInst->pChain = InsertInstance(                                      \
 	theclass* CREATE(theclass)(__VA_ARGS__);                                       \
 	void      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
 	void*     EXTEND(theclass)(theclass*   pInst);                                 \
-	void      DELETE(theclass)(theclass** ppInst);                                 \
+	void      DELETE(theclass)(theclass** ppInst)                                  \
 
 
 //成员方法标准类型

@@ -26,7 +26,7 @@
 
 #include "IChart.h"
 
-CLASSDEF(ChartPie)
+CLASSDEF(ChartPie);
 
 typedef ParamNull ChartPie_Display;
 

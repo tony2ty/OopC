@@ -26,7 +26,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(ILogger)
+CLASSDEF(ILogger);
 
 typedef ParamNull ILogger_WriteLog;
 
