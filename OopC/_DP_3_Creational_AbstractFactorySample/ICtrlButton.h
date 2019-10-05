@@ -21,40 +21,13 @@
 //SOFTWARE.
 
 
-#include "IButton.h"
+#ifndef ICTRLBUTTON_H__
+#define ICTRLBUTTON_H__
 
-#include <malloc.h>
+#include <OopBase.h>
 
-struct IButton
-{
-    CHAINDEF;
-};
+CLASSDEF(ICtrlButton);
 
-//////////////////////////////////////////////////////
-//
+typedef ParamNull ICtrlButton_Display;
 
-///////////////////////////////////////////////////////////////
-//
-
-void INVOKE(IButton)(IButton *pInst, char *pFuncName, void *pParams)
-{
-    DOINVOKE(pInst, pFuncName, pParams);
-}
-
-void *EXTEND(IButton)(IButton *pInst)
-{
-    DOEXTEND(pInst);
-}
-
-void DELETE(IButton)(IButton **ppInst)
-{
-    DODELETE(ppInst, IButton, Object);
-}
-
-IButton *CREATE(IButton)()
-{
-    DOCREATE(pCreate, IButton, Object, NULL,
-        AMETHOD(Display));
-
-    return pCreate;
-}
+#endif // !ICTRLBUTTON_H__

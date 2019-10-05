@@ -30,12 +30,18 @@
     <ClCompile Include="ITextField.c">
       <Filter>源文件\class</Filter>
     </ClCompile>
+    <ClCompile Include="IComboBox.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IButton.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
     <ClInclude Include="ITextField.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="IComboBox.h">
       <Filter>头文件\class</Filter>
     </ClInclude>
   </ItemGroup>
