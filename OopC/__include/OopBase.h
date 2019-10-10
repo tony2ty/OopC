@@ -79,7 +79,7 @@ pInst->pChain = InsertInstance(                                      \
 
 //调用该宏实现这样的功能，给定函数参数pParams(...)，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
 //最好不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)
-#define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncUpward(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
+#define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncSuper(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
 
 
 //标准实例链定义
@@ -154,7 +154,7 @@ OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseTyp
 OOPLIB_API void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName);
 
 //根据函数名称，确定实例链中哪个实例将会被调用，仅向上查找
-OOPLIB_API void* AsBaseByFuncUpward(InstanceChain* pChain, void* pInst, char* pFuncName);
+OOPLIB_API void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFuncName);
 
 ////Object//////////////////////////////////////////////////////////////////////////////
 //

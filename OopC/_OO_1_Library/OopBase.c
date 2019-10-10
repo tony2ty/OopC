@@ -413,7 +413,7 @@ void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
 
-void* AsBaseByFuncUpward(InstanceChain* pChain, void* pInst, char* pFuncName)
+void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFuncName)
 {
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 
