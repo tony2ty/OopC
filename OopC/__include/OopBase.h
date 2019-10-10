@@ -32,6 +32,7 @@
 
 #include <stdbool.h>
 #include <stdarg.h>
+#include <malloc.h>
 
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
@@ -108,6 +109,12 @@ typedef struct { void* pVd; } ParamNull;
 //////////////////////////////////////////////////////////////////////////////////
 //
 
+//调用函数执行失败时，获取失败的信息
+OOPLIB_API char *GetErrorInfo(char *pMemIn);
+
+//////////////////////////////////////////////////////////////////////////////////
+//
+
 typedef void (*ExtraMemClear)(void*);
 typedef struct ExtraMemRef ExtraMemRef;
 
@@ -140,12 +147,12 @@ OOPLIB_API InstanceChain*   InsertInstance(InstanceChain* pChain, Instance* pIns
 //而指定名称的函数可能是pInst实例从父类中继承得到的，
 //因此需要实例链，用以查找函数，
 //在实例链中查找的时候，优先向下查找，然后向上查找
-OOPLIB_API void  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
+OOPLIB_API bool  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
 
 //该函数的目的在于通过实例指针pInst调用名为pFuncName的函数，参数为pParams。
 //实例链pChain用于查找函数，
 //查找时，只会向上查找
-OOPLIB_API void  InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
+OOPLIB_API bool  InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
 
 //该函数从实例链pChain中查找给定的实例指针pInst，然后向上查找，直到找到给定类型的实例为止
 OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType);
