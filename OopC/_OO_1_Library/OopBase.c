@@ -25,10 +25,30 @@
 #include "OopBase.h"
 
 #include <string.h>
-#include <malloc.h>
 #include <stdio.h>
 
 ////OopBase//////////////////////////////////////////////////////////////////////////////
+//
+
+char *pErrorBuffer = NULL;
+
+char * GetErrorInfo(char * pMemIn)
+{
+    if (!pErrorBuffer) { return pMemIn; }
+
+    int nLen = strlen(pErrorBuffer) + 1;
+    return memcpy(realloc(pMemIn, nLen), pErrorBuffer, nLen);
+}
+
+void SetErrorInfo(char *pErrorInfo)
+{
+    if (!pErrorInfo || !*pErrorInfo) { return; }
+    
+    int nLen = strlen(pErrorInfo) + 1;
+    pErrorBuffer = memcpy(realloc(pErrorBuffer, nLen), pErrorInfo, nLen);
+}
+
+///////////////////////////////////////////////////////////////////////////////////
 //
 
 struct ExtraMemRef
@@ -269,6 +289,9 @@ Method* FindMethod(MethodRing* pRing, char* pName)
 	Method* pIterator = pRing->pHead;
 	do
 	{
+        //这里找到的可能是一个抽象方法，
+        //也就是，方法换pRing中存在该方法，但是方法的指针为null，
+        //这也导致了ContainMethod和FindMethod两个函数不能合并为一个函数
         if (!strcmp(pName, pIterator->pName)) { return pIterator; }
 		pIterator = pIterator->pNext;
 
@@ -295,14 +318,22 @@ Instance* FindInstance(InstanceChain* pChain, void* pInst)
 //////////////////////////////////////////////////////////////////////////////////
 //
 
-void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
+bool Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 {
-    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return; }
+    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
+    {
+        SetErrorInfo("Null pChain or pInst or pFuncName.");
+        return false;
+    }
 
 	Transit toExecute = NULL;
 
 	Instance* pFindInst = FindInstance(pChain, pInst);
-    if (!pFindInst) { return; } //没有找到，说明给定的实例pInst不是相应的类的实例
+    if (!pFindInst) //没有找到，说明给定的实例pInst不是相应的类的实例
+    {
+        SetErrorInfo("Given object is not an instance of given type.");
+        return false;
+    }
 
 	for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
 	{
@@ -329,6 +360,8 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
         if (!pFindInst->pNext)
         {
             toExecute(pParams);
+
+            return true;
         }
         else
         {
@@ -342,19 +375,42 @@ void Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
                 }
             }
 
-            if (bValidCall) { toExecute(pParams); }
+            if (bValidCall)
+            {
+                toExecute(pParams);
+
+                return true;
+            }
+            else
+            {
+                SetErrorInfo("Invalid call because the declaration type of instance has no given method.");
+                return false;
+            }
         }
+    }
+    else
+    {
+        SetErrorInfo("Given instance has not given func.");
+        return false;
     }
 }
 
-void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
+bool InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 {
-	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return; }
+	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
+    {
+        SetErrorInfo("Null pChain or pInst or pFuncName.");
+        return false;
+    }
 
 	Transit toExecute = NULL;
 
 	Instance* pFindInst = FindInstance(pChain, pInst);
-	if (!pFindInst) { return; }
+	if (!pFindInst)
+    {
+        SetErrorInfo("Given object is not an instance of given type.");
+        return false;
+    }
 
 	for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
 	{
@@ -369,7 +425,14 @@ void InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pPar
 	if (toExecute)
 	{
 		toExecute(pParams);
-	}
+
+        return true;
+    }
+    else
+    {
+        SetErrorInfo("Given instance has not given func.");
+        return false;
+    }
 }
 
 void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType)
@@ -413,7 +476,7 @@ void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
 
-void* AsBaseByFuncUpward(InstanceChain* pChain, void* pInst, char* pFuncName)
+void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFuncName)
 {
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 

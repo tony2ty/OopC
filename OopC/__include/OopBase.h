@@ -32,6 +32,7 @@
 
 #include <stdbool.h>
 #include <stdarg.h>
+#include <malloc.h>
 
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
@@ -79,7 +80,7 @@ pInst->pChain = InsertInstance(                                      \
 
 //调用该宏实现这样的功能，给定函数参数pParams(...)，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
 //最好不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)
-#define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncUpward(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
+#define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncSuper(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
 
 
 //标准实例链定义
@@ -104,6 +105,12 @@ typedef struct { void* pInst; void* pIn; } ParamIn;
 //成员方法的空参数结构体，
 //用于外部调用
 typedef struct { void* pVd; } ParamNull;
+
+//////////////////////////////////////////////////////////////////////////////////
+//
+
+//调用函数执行失败时，获取失败的信息
+OOPLIB_API char *GetErrorInfo(char *pMemIn);
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -140,12 +147,12 @@ OOPLIB_API InstanceChain*   InsertInstance(InstanceChain* pChain, Instance* pIns
 //而指定名称的函数可能是pInst实例从父类中继承得到的，
 //因此需要实例链，用以查找函数，
 //在实例链中查找的时候，优先向下查找，然后向上查找
-OOPLIB_API void  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
+OOPLIB_API bool  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
 
 //该函数的目的在于通过实例指针pInst调用名为pFuncName的函数，参数为pParams。
 //实例链pChain用于查找函数，
 //查找时，只会向上查找
-OOPLIB_API void  InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
+OOPLIB_API bool  InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
 
 //该函数从实例链pChain中查找给定的实例指针pInst，然后向上查找，直到找到给定类型的实例为止
 OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType);
@@ -154,7 +161,7 @@ OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseTyp
 OOPLIB_API void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName);
 
 //根据函数名称，确定实例链中哪个实例将会被调用，仅向上查找
-OOPLIB_API void* AsBaseByFuncUpward(InstanceChain* pChain, void* pInst, char* pFuncName);
+OOPLIB_API void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFuncName);
 
 ////Object//////////////////////////////////////////////////////////////////////////////
 //
