@@ -23,7 +23,6 @@
 
 #include "CtrlComboBoxSummer.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct CtrlComboBoxSummer

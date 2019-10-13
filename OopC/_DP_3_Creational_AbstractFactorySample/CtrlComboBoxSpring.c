@@ -23,7 +23,6 @@
 
 #include "CtrlComboBoxSpring.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct CtrlComboBoxSpring

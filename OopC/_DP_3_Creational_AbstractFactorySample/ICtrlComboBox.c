@@ -23,7 +23,6 @@
 
 #include "ICtrlComboBox.h"
 
-#include <malloc.h>
 
 struct ICtrlComboBox
 {

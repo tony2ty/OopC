@@ -23,7 +23,6 @@
 
 #include "ILogger.h"
 
-#include <malloc.h>
 
 struct ILogger
 {

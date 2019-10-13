@@ -23,7 +23,6 @@
 
 #include "CalculatorExt.h"
 
-#include <malloc.h>
 
 struct CalculatorExt
 {

@@ -23,7 +23,6 @@
 
 #include "BuilderAngel.h"
 
-#include <malloc.h>
 
 struct BuilderAngel
 {

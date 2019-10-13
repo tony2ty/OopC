@@ -23,7 +23,6 @@
 
 #include "ActorController.h"
 
-#include <malloc.h>
 
 struct ActorController
 {

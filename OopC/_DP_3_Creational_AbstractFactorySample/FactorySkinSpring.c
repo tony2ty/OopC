@@ -23,7 +23,6 @@
 
 #include "FactorySkinSpring.h"
 
-#include <malloc.h>
 #include "CtrlButtonSpring.h"
 #include "CtrlTextFieldSpring.h"
 #include "CtrlComboBoxSpring.h"

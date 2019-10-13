@@ -23,7 +23,6 @@
 
 #include "LoggerFactoryDatabase.h"
 
-#include <malloc.h>
 #include "LoggerDatabase.h"
 
 struct LoggerFactoryDatabase

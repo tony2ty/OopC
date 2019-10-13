@@ -23,7 +23,6 @@
 
 #include "IFactorySkin.h"
 
-#include <malloc.h>
 
 struct IFactorySkin
 {

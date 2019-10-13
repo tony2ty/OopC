@@ -23,7 +23,6 @@
 
 #include "CtrlButtonSummer.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct CtrlButtonSummer

@@ -23,7 +23,6 @@
 
 #include "ICtrlTextField.h"
 
-#include <malloc.h>
 
 struct ICtrlTextField
 {

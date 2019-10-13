@@ -23,7 +23,6 @@
 
 #include "CtrlButtonSpring.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct CtrlButtonSpring

@@ -23,7 +23,6 @@
 
 #include "FactorySkinSummer.h"
 
-#include <malloc.h>
 #include "CtrlButtonSummer.h"
 #include "CtrlTextFieldSummer.h"
 #include "CtrlComboBoxSummer.h"

@@ -23,7 +23,6 @@
 
 #include "IChart.h"
 
-#include <malloc.h>
 
 struct IChart
 {

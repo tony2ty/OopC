@@ -23,7 +23,6 @@
 
 #include "ICtrlButton.h"
 
-#include <malloc.h>
 
 struct ICtrlButton
 {

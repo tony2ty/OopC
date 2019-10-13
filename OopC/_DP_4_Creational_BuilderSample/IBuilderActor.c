@@ -23,7 +23,6 @@
 
 #include "IBuilderActor.h"
 
-#include <malloc.h>
 
 struct IBuilderActor
 {

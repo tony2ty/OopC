@@ -23,7 +23,6 @@
 
 #include "LoggerFactoryFile.h"
 
-#include <malloc.h>
 #include "LoggerFile.h"
 
 struct LoggerFactoryFile

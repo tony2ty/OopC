@@ -24,7 +24,6 @@
 #include "CalculatorExtdCommon.h"
 
 #include <stdio.h>
-#include <malloc.h>
 
 struct CalculatorExtdCommon
 {

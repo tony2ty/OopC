@@ -23,7 +23,6 @@
 
 #include "CtrlTextFieldSpring.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct CtrlTextFieldSpring

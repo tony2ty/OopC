@@ -23,7 +23,6 @@
 
 #include "ChartLine.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct ChartLine

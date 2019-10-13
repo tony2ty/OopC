@@ -23,7 +23,6 @@
 
 #include "ChartPie.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct ChartPie

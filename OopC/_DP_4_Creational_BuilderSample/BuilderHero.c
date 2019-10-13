@@ -23,7 +23,6 @@
 
 #include "BuilderHero.h"
 
-#include <malloc.h>
 
 struct BuilderHero
 {

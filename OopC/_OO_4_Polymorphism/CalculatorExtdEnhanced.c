@@ -24,7 +24,6 @@
 #include "CalculatorExtdEnhanced.h"
 
 #include <stdio.h>
-#include <malloc.h>
 
 struct CalculatorExtdEnhanced
 {

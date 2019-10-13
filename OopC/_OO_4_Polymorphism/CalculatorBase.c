@@ -23,7 +23,6 @@
 
 #include "CalculatorBase.h"
 
-#include <malloc.h>
 
 struct CalculatorBase
 {

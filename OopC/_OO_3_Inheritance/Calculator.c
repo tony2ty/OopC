@@ -23,7 +23,6 @@
 
 #include "Calculator.h"
 
-#include <malloc.h>
 
 struct Calculator
 {

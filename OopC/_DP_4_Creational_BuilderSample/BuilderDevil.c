@@ -23,7 +23,6 @@
 
 #include "BuilderDevil.h"
 
-#include <malloc.h>
 
 struct BuilderDevil
 {

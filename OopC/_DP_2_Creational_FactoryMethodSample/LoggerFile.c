@@ -23,7 +23,6 @@
 
 #include "LoggerFile.h"
 
-#include <malloc.h>
 #include <stdio.h>
 
 struct LoggerFile

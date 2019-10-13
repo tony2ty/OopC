@@ -23,7 +23,6 @@
 
 #include "Calculator.h"
 
-#include <malloc.h>
 #include <stddef.h>
 
 struct Calculator
@@ -81,7 +80,7 @@ void DELETE(Calculator)(Calculator **ppInst)
     DODELETE(ppInst, Calculator, Object);
 }
 
-Calculator *CREATE(Calculator)()
+Calculator *CREATE(Calculator)(double dblOperandL, double dblOperandR)
 {
     DOCREATE(pCreate, Calculator, Object, NULL,
         METHOD(Input)
