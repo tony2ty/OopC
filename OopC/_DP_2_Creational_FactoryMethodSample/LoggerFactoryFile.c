@@ -48,7 +48,7 @@ static void CreateLogger(void* pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(LoggerFactoryFile)(LoggerFactoryFile* pInst, char* pFuncName, void* pParams)
+bool INVOKE(LoggerFactoryFile)(LoggerFactoryFile* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

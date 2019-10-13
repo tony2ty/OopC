@@ -36,7 +36,7 @@ struct ICtrlComboBox
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlComboBox)(ICtrlComboBox *pInst, char *pFuncName, void *pParams)
+bool INVOKE(ICtrlComboBox)(ICtrlComboBox *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

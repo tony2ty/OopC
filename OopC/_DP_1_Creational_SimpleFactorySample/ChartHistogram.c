@@ -45,7 +45,7 @@ static void Display(void *pParams)
 ////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ChartHistogram)(ChartHistogram *pInst, char *pFuncName, void *pParams)
+bool INVOKE(ChartHistogram)(ChartHistogram *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

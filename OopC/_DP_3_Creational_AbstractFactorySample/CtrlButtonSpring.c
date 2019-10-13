@@ -45,7 +45,7 @@ static void Display(void *pParams)
 //////////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CtrlButtonSpring)(CtrlButtonSpring *pInst, char *pFuncName, void *pParams)
+bool INVOKE(CtrlButtonSpring)(CtrlButtonSpring *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

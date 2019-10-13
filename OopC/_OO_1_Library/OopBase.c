@@ -590,7 +590,7 @@ static void ToString(void* pParams)
 //////////////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
+bool INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

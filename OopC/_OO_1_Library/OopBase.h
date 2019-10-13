@@ -56,7 +56,7 @@
 
 //调用该宏实现这样的功能，给定函数参数pParams，通过实例pInst调用名为pFuncName的方法
 //最好不要复合调用，DOINVOKE((...some expr...), ..., ...)
-#define DOINVOKE(pInst, pFuncName, pParams) Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFunc(pInst->pChain, pInst, pFuncName), pParams })
+#define DOINVOKE(pInst, pFuncName, pParams) return Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFunc(pInst->pChain, pInst, pFuncName), pParams })
 
 #define DOEXTEND(pInst) return pInst->pChain
 
@@ -92,7 +92,7 @@ pInst->pChain = InsertInstance(                                      \
 #define CLASSDEF(theclass, ...)                                                    \
 	typedef struct theclass theclass;                                              \
 	theclass* CREATE(theclass)(__VA_ARGS__);                                       \
-	void      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
+	bool      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
 	void*     EXTEND(theclass)(theclass*   pInst);                                 \
 	void      DELETE(theclass)(theclass** ppInst)                                  \
 
@@ -169,7 +169,7 @@ OOPLIB_API void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFu
 typedef struct Object Object;
 
 OOPLIB_API Object* CREATE(Object)();
-OOPLIB_API void    INVOKE(Object)(Object*   pInst, char* pFuncName, void* pParams);
+OOPLIB_API bool    INVOKE(Object)(Object*   pInst, char* pFuncName, void* pParams);
 OOPLIB_API void*   EXTEND(Object)(Object*   pInst);
 OOPLIB_API void    DELETE(Object)(Object** ppInst);
 

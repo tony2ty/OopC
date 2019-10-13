@@ -45,7 +45,7 @@ static void WriteLog(void* pParams)
 //////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(LoggerFile)(LoggerFile* pInst, char* pFuncName, void* pParams)
+bool INVOKE(LoggerFile)(LoggerFile* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

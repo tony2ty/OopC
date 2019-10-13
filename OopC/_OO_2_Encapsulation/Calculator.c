@@ -66,7 +66,7 @@ static void Output(void *pParams)
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(Calculator)(Calculator *pInst, char *pFuncName, void *pParams)
+bool INVOKE(Calculator)(Calculator *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

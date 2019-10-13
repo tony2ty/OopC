@@ -45,7 +45,7 @@ static void Display(void *pParams)
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst, char *pFuncName, void *pParams)
+bool INVOKE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

@@ -91,7 +91,7 @@ static void CreateActor(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(BuilderDevil)(BuilderDevil *pInst, char *pFuncName, void *pParams)
+bool INVOKE(BuilderDevil)(BuilderDevil *pInst, char *pFuncName, void *pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

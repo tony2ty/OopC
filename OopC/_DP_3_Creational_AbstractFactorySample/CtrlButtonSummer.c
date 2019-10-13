@@ -45,7 +45,7 @@ static void Display(void *pParams)
 /////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CtrlButtonSummer)(CtrlButtonSummer *pInst, char *pFuncName, void *pParams)
+bool INVOKE(CtrlButtonSummer)(CtrlButtonSummer *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

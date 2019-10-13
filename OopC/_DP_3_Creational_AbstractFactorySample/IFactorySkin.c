@@ -36,7 +36,7 @@ struct IFactorySkin
 ///////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(IFactorySkin)(IFactorySkin *pInst, char *pFuncName, void *pParams)
+bool INVOKE(IFactorySkin)(IFactorySkin *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

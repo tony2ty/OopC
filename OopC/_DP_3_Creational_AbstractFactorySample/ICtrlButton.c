@@ -36,7 +36,7 @@ struct ICtrlButton
 ///////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+bool INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

@@ -45,7 +45,7 @@ static void Display(void *pParams)
 ///////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ChartLine)(ChartLine *pInst, char *pFuncName, void *pParams)
+bool INVOKE(ChartLine)(ChartLine *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

@@ -66,7 +66,7 @@ static void CreateComboBox(void *pParams)
 ////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(FactorySkinSummer)(FactorySkinSummer *pInst, char *pFuncName, void *pParams)
+bool INVOKE(FactorySkinSummer)(FactorySkinSummer *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

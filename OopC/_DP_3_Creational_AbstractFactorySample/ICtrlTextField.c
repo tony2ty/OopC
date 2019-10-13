@@ -36,7 +36,7 @@ struct ICtrlTextField
 ///////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ICtrlTextField)(ICtrlTextField *pInst, char *pFuncName, void *pParams)
+bool INVOKE(ICtrlTextField)(ICtrlTextField *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

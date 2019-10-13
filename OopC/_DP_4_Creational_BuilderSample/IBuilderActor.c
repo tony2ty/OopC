@@ -36,7 +36,7 @@ struct IBuilderActor
 ////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(IBuilderActor)(IBuilderActor *pInst, char *pFuncName, void *pParams)
+bool INVOKE(IBuilderActor)(IBuilderActor *pInst, char *pFuncName, void *pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

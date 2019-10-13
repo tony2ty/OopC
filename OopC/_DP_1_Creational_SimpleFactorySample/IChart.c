@@ -36,7 +36,7 @@ struct IChart
 ///////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(IChart)(IChart *pInst, char *pFuncName, void *pParams)
+bool INVOKE(IChart)(IChart *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

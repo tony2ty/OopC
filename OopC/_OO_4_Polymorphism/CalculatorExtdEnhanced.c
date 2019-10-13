@@ -77,7 +77,7 @@ static void Divide(void* pParams)
 ///////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst, char* pFuncName, void* pParams)
+bool INVOKE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

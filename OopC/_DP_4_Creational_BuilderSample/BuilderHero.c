@@ -91,7 +91,7 @@ static void CreateActor(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(BuilderHero)(BuilderHero *pInst, char *pFuncName, void *pParams)
+bool INVOKE(BuilderHero)(BuilderHero *pInst, char *pFuncName, void *pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

@@ -36,7 +36,7 @@ struct ILogger
 //////////////////////////////////////////////////////////
 //
 
-void INVOKE(ILogger)(ILogger* pInst, char* pFuncName, void* pParams)
+bool INVOKE(ILogger)(ILogger* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

@@ -45,7 +45,7 @@ static void Display(void *pParams)
 /////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst, char *pFuncName, void *pParams)
+bool INVOKE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

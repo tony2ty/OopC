@@ -141,7 +141,7 @@ static void ClearExtraMem(void *pToClear)
 /////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(Actor)(Actor *pInst, char *pFuncName, void *pParams)
+bool INVOKE(Actor)(Actor *pInst, char *pFuncName, void *pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

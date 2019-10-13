@@ -50,7 +50,7 @@ static void Construct(void *pParams)
 ////////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(ActorController)(ActorController *pInst, char *pFuncName, void *pParams)
+bool INVOKE(ActorController)(ActorController *pInst, char *pFuncName, void *pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }

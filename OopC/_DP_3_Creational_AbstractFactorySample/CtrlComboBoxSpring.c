@@ -45,7 +45,7 @@ static void Display(void *pParams)
 //////////////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst, char *pFuncName, void *pParams)
+bool INVOKE(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst, char *pFuncName, void *pParams)
 {
     DOINVOKE(pInst, pFuncName, pParams);
 }

@@ -36,7 +36,7 @@ struct CalculatorBase
 //////////////////////////////////////////////////////////////////
 //
 
-void INVOKE(CalculatorBase)(CalculatorBase* pInst, char* pFuncName, void* pParams)
+bool INVOKE(CalculatorBase)(CalculatorBase* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }
