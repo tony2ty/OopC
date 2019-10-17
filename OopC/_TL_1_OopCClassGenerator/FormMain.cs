@@ -38,6 +38,10 @@ namespace _TL_1_OopCClassGenerator
             }
 
             this._CreateParams = "";
+            this.BtnAddVariable.Tag = this.DgvVariables;
+            this.BtnAddFunc.Tag = this.DgvFunctions;
+            this.BtnDelVariable.Tag = this.DgvVariables;
+            this.BtnDelFunc.Tag = this.DgvFunctions;
         }
 
         private bool IsValidToken(string strName)
@@ -191,6 +195,48 @@ namespace _TL_1_OopCClassGenerator
             frmLicenseInputer.LicenseContent = this.TxtBxLicense.Text;
             frmLicenseInputer.ShowDialog();
             this.TxtBxLicense.Text = frmLicenseInputer.LicenseContent;
+        }
+
+        private void BtnAdd_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = (sender as Button).Tag as DataGridView;
+            dgv.Rows.Add();
+        }
+
+        private void BtnDel_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = (sender as Button).Tag as DataGridView;
+            for (int i = dgv.Rows.Count - 1; i >= 0; i--)
+            {
+                if ((bool)dgv.Rows[i].Cells[0].EditedFormattedValue)
+                {
+                    dgv.Rows.RemoveAt(i);
+                }
+            }
+        }
+
+        private void Dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex <= 0)
+            {
+                return;
+            }
+
+            DataGridView dgv = sender as DataGridView;
+
+            FormCellContent frmCellContentInputer = new FormCellContent();
+            frmCellContentInputer.CellContent = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Tag != null ? dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Tag.ToString() : "";
+            frmCellContentInputer.ShowDialog();
+            dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Tag = frmCellContentInputer.CellContent;
+            dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = frmCellContentInputer.CellContent.Replace('\n', ' ');
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("确认退出? 请注意保存内容。", "确认退出?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

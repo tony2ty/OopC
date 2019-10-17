@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TxtBxPathHeader = new System.Windows.Forms.TextBox();
@@ -41,12 +42,19 @@
             this.label7 = new System.Windows.Forms.Label();
             this.TxtBxInheritFrom = new System.Windows.Forms.TextBox();
             this.DgvVariables = new System.Windows.Forms.DataGridView();
+            this.ColCheckedVar = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColDataTypeVar = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColNameVar = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
             this.TxtBxCreateParam = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.DgvFunctions = new System.Windows.Forms.DataGridView();
+            this.ColCheckedFunc = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColIsAbstract = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColRetTypeFunc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColParameters = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label12 = new System.Windows.Forms.Label();
             this.TxtBxLicense = new System.Windows.Forms.TextBox();
             this.BtnDelVariable = new System.Windows.Forms.Button();
@@ -169,12 +177,43 @@
             // 
             // DgvVariables
             // 
+            this.DgvVariables.AllowUserToAddRows = false;
+            this.DgvVariables.AllowUserToDeleteRows = false;
+            this.DgvVariables.AllowUserToResizeColumns = false;
+            this.DgvVariables.AllowUserToResizeRows = false;
+            this.DgvVariables.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.DgvVariables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvVariables.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColCheckedVar,
+            this.ColDataTypeVar,
+            this.ColNameVar});
             this.DgvVariables.Location = new System.Drawing.Point(22, 286);
             this.DgvVariables.Name = "DgvVariables";
             this.DgvVariables.RowTemplate.Height = 23;
             this.DgvVariables.Size = new System.Drawing.Size(903, 147);
             this.DgvVariables.TabIndex = 9;
+            this.DgvVariables.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_CellDoubleClick);
+            // 
+            // ColCheckedVar
+            // 
+            this.ColCheckedVar.HeaderText = "";
+            this.ColCheckedVar.Name = "ColCheckedVar";
+            // 
+            // ColDataTypeVar
+            // 
+            this.ColDataTypeVar.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            this.ColDataTypeVar.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ColDataTypeVar.HeaderText = "成员类型";
+            this.ColDataTypeVar.Name = "ColDataTypeVar";
+            this.ColDataTypeVar.Width = 89;
+            // 
+            // ColNameVar
+            // 
+            this.ColNameVar.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColNameVar.HeaderText = "成员名称";
+            this.ColNameVar.Name = "ColNameVar";
+            this.ColNameVar.Width = 89;
             // 
             // label8
             // 
@@ -224,12 +263,47 @@
             // 
             // DgvFunctions
             // 
+            this.DgvFunctions.AllowUserToAddRows = false;
+            this.DgvFunctions.AllowUserToDeleteRows = false;
+            this.DgvFunctions.AllowUserToResizeColumns = false;
+            this.DgvFunctions.AllowUserToResizeRows = false;
+            this.DgvFunctions.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.DgvFunctions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvFunctions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColCheckedFunc,
+            this.ColIsAbstract,
+            this.ColRetTypeFunc,
+            this.ColParameters});
             this.DgvFunctions.Location = new System.Drawing.Point(22, 466);
             this.DgvFunctions.Name = "DgvFunctions";
             this.DgvFunctions.RowTemplate.Height = 23;
             this.DgvFunctions.Size = new System.Drawing.Size(903, 147);
             this.DgvFunctions.TabIndex = 12;
+            this.DgvFunctions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_CellDoubleClick);
+            // 
+            // ColCheckedFunc
+            // 
+            this.ColCheckedFunc.HeaderText = "";
+            this.ColCheckedFunc.Name = "ColCheckedFunc";
+            // 
+            // ColIsAbstract
+            // 
+            this.ColIsAbstract.HeaderText = "抽象方法";
+            this.ColIsAbstract.Name = "ColIsAbstract";
+            // 
+            // ColRetTypeFunc
+            // 
+            this.ColRetTypeFunc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColRetTypeFunc.HeaderText = "返回值类型";
+            this.ColRetTypeFunc.Name = "ColRetTypeFunc";
+            this.ColRetTypeFunc.Width = 103;
+            // 
+            // ColParameters
+            // 
+            this.ColParameters.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColParameters.HeaderText = "方法参数";
+            this.ColParameters.Name = "ColParameters";
+            this.ColParameters.Width = 89;
             // 
             // label12
             // 
@@ -257,6 +331,7 @@
             this.BtnDelVariable.TabIndex = 8;
             this.BtnDelVariable.Text = "删除";
             this.BtnDelVariable.UseVisualStyleBackColor = true;
+            this.BtnDelVariable.Click += new System.EventHandler(this.BtnDel_Click);
             // 
             // BtnAddVariable
             // 
@@ -266,6 +341,7 @@
             this.BtnAddVariable.TabIndex = 7;
             this.BtnAddVariable.Text = "新增";
             this.BtnAddVariable.UseVisualStyleBackColor = true;
+            this.BtnAddVariable.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // BtnDelFunc
             // 
@@ -275,6 +351,7 @@
             this.BtnDelFunc.TabIndex = 11;
             this.BtnDelFunc.Text = "删除";
             this.BtnDelFunc.UseVisualStyleBackColor = true;
+            this.BtnDelFunc.Click += new System.EventHandler(this.BtnDel_Click);
             // 
             // BtnAddFunc
             // 
@@ -284,6 +361,7 @@
             this.BtnAddFunc.TabIndex = 10;
             this.BtnAddFunc.Text = "新增";
             this.BtnAddFunc.UseVisualStyleBackColor = true;
+            this.BtnAddFunc.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // button6
             // 
@@ -331,6 +409,7 @@
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OopC类生成器";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.DgvVariables)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvFunctions)).EndInit();
             this.ResumeLayout(false);
@@ -366,5 +445,12 @@
         private System.Windows.Forms.Button BtnDelFunc;
         private System.Windows.Forms.Button BtnAddFunc;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheckedVar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColDataTypeVar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColNameVar;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheckedFunc;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColIsAbstract;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColRetTypeFunc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColParameters;
     }
 }
