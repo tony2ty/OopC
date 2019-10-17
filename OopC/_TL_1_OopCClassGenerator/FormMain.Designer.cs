@@ -84,7 +84,8 @@
             this.TxtBxPathHeader.Location = new System.Drawing.Point(138, 87);
             this.TxtBxPathHeader.Name = "TxtBxPathHeader";
             this.TxtBxPathHeader.Size = new System.Drawing.Size(653, 23);
-            this.TxtBxPathHeader.TabIndex = 2;
+            this.TxtBxPathHeader.TabIndex = 1;
+            this.TxtBxPathHeader.Leave += new System.EventHandler(this.TxtBxPath_Leave);
             // 
             // BtnGenPath
             // 
@@ -112,6 +113,7 @@
             this.TxtBxPathSource.Name = "TxtBxPathSource";
             this.TxtBxPathSource.Size = new System.Drawing.Size(653, 23);
             this.TxtBxPathSource.TabIndex = 2;
+            this.TxtBxPathSource.Leave += new System.EventHandler(this.TxtBxPath_Leave);
             // 
             // label4
             // 
@@ -145,7 +147,8 @@
             this.TxtBxClassName.Location = new System.Drawing.Point(103, 159);
             this.TxtBxClassName.Name = "TxtBxClassName";
             this.TxtBxClassName.Size = new System.Drawing.Size(219, 23);
-            this.TxtBxClassName.TabIndex = 8;
+            this.TxtBxClassName.TabIndex = 3;
+            this.TxtBxClassName.Leave += new System.EventHandler(this.TxtBxClassName_Leave);
             // 
             // label7
             // 
@@ -161,7 +164,8 @@
             this.TxtBxInheritFrom.Location = new System.Drawing.Point(103, 188);
             this.TxtBxInheritFrom.Name = "TxtBxInheritFrom";
             this.TxtBxInheritFrom.Size = new System.Drawing.Size(219, 23);
-            this.TxtBxInheritFrom.TabIndex = 8;
+            this.TxtBxInheritFrom.TabIndex = 4;
+            this.TxtBxInheritFrom.Leave += new System.EventHandler(this.TxtBxInheritFrom_Leave);
             // 
             // DgvVariables
             // 
@@ -187,7 +191,9 @@
             this.TxtBxCreateParam.Location = new System.Drawing.Point(103, 217);
             this.TxtBxCreateParam.Name = "TxtBxCreateParam";
             this.TxtBxCreateParam.Size = new System.Drawing.Size(219, 23);
-            this.TxtBxCreateParam.TabIndex = 8;
+            this.TxtBxCreateParam.TabIndex = 5;
+            this.TxtBxCreateParam.Leave += new System.EventHandler(this.TxtBxCreateParam_Leave);
+            this.TxtBxCreateParam.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtBxCreateParam_MouseDoubleClick);
             // 
             // label9
             // 
@@ -223,7 +229,7 @@
             this.DgvFunctions.Name = "DgvFunctions";
             this.DgvFunctions.RowTemplate.Height = 23;
             this.DgvFunctions.Size = new System.Drawing.Size(903, 147);
-            this.DgvFunctions.TabIndex = 9;
+            this.DgvFunctions.TabIndex = 12;
             // 
             // label12
             // 
@@ -240,14 +246,15 @@
             this.TxtBxLicense.Location = new System.Drawing.Point(427, 159);
             this.TxtBxLicense.Name = "TxtBxLicense";
             this.TxtBxLicense.Size = new System.Drawing.Size(219, 23);
-            this.TxtBxLicense.TabIndex = 8;
+            this.TxtBxLicense.TabIndex = 6;
+            this.TxtBxLicense.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtBxLicense_MouseDoubleClick);
             // 
             // BtnDelVariable
             // 
             this.BtnDelVariable.Location = new System.Drawing.Point(861, 263);
             this.BtnDelVariable.Name = "BtnDelVariable";
             this.BtnDelVariable.Size = new System.Drawing.Size(65, 23);
-            this.BtnDelVariable.TabIndex = 3;
+            this.BtnDelVariable.TabIndex = 8;
             this.BtnDelVariable.Text = "删除";
             this.BtnDelVariable.UseVisualStyleBackColor = true;
             // 
@@ -256,7 +263,7 @@
             this.BtnAddVariable.Location = new System.Drawing.Point(790, 263);
             this.BtnAddVariable.Name = "BtnAddVariable";
             this.BtnAddVariable.Size = new System.Drawing.Size(65, 23);
-            this.BtnAddVariable.TabIndex = 3;
+            this.BtnAddVariable.TabIndex = 7;
             this.BtnAddVariable.Text = "新增";
             this.BtnAddVariable.UseVisualStyleBackColor = true;
             // 
@@ -265,7 +272,7 @@
             this.BtnDelFunc.Location = new System.Drawing.Point(861, 443);
             this.BtnDelFunc.Name = "BtnDelFunc";
             this.BtnDelFunc.Size = new System.Drawing.Size(65, 23);
-            this.BtnDelFunc.TabIndex = 3;
+            this.BtnDelFunc.TabIndex = 11;
             this.BtnDelFunc.Text = "删除";
             this.BtnDelFunc.UseVisualStyleBackColor = true;
             // 
@@ -274,7 +281,7 @@
             this.BtnAddFunc.Location = new System.Drawing.Point(790, 443);
             this.BtnAddFunc.Name = "BtnAddFunc";
             this.BtnAddFunc.Size = new System.Drawing.Size(65, 23);
-            this.BtnAddFunc.TabIndex = 3;
+            this.BtnAddFunc.TabIndex = 10;
             this.BtnAddFunc.Text = "新增";
             this.BtnAddFunc.UseVisualStyleBackColor = true;
             // 
@@ -283,7 +290,7 @@
             this.button6.Location = new System.Drawing.Point(820, 622);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(106, 38);
-            this.button6.TabIndex = 3;
+            this.button6.TabIndex = 13;
             this.button6.Text = "生  成";
             this.button6.UseVisualStyleBackColor = true;
             // 
