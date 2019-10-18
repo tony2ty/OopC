@@ -23,7 +23,6 @@
 
 #include "Calculator.h"
 
-#include <stddef.h>
 
 struct Calculator
 {
