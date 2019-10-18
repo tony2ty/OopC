@@ -106,8 +106,9 @@ namespace _TL_1_OopCClassGenerator
                 {
                     strContent.AppendLine("#include " + "\"" + this.TxtBxInheritFrom.Text.Trim() + "\"");
                 }
+                strContent.AppendLine();
                 //CLASSDEF
-                strContent.AppendLine("CLASSDEF(" + this.TxtBxClassName.Text.Trim() + ")");
+                strContent.AppendLine("CLASSDEF(" + this.TxtBxClassName.Text.Trim() + ");");
                 strContent.AppendLine();
                 //Method
                 for (int i = 0; i < DgvFunctions.Rows.Count; i++)
@@ -130,9 +131,10 @@ namespace _TL_1_OopCClassGenerator
                     }
                     else
                     {
-                        strContent.AppendLine("typedef struct { " + strMethodParams + " }" + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
+                        strContent.AppendLine("typedef struct { " + strMethodParams + " } " + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
                     }
                 }
+                strContent.AppendLine();
                 //#endif
                 strContent.AppendLine("#endif // !" + this.TxtBxClassName.Text.Trim() + "_H__");
 
@@ -179,13 +181,13 @@ namespace _TL_1_OopCClassGenerator
                     strContent.AppendLine();
                 }
                 //include header
-                strContent.AppendLine("#include \"" + this.TxtBxClassName.Text.Trim() + "\"");
+                strContent.AppendLine("#include \"" + this.TxtBxClassName.Text.Trim() + ".h\"");
                 strContent.AppendLine();
                 strContent.AppendLine();
                 //field
                 strContent.AppendLine("struct " + this.TxtBxClassName.Text.Trim());
                 strContent.AppendLine("{");
-                strContent.AppendLine("\tCHAINDEF");
+                strContent.AppendLine("\tCHAINDEF;");
                 strContent.AppendLine();
                 for (int i = 0; i < DgvVariables.Rows.Count; i++)
                 {
@@ -201,9 +203,11 @@ namespace _TL_1_OopCClassGenerator
                     strContent.AppendLine("\t" + strDataType + " " + strName + ";");
                 }
                 strContent.AppendLine("};");
+                strContent.AppendLine();
                 //分割
                 strContent.AppendLine("/////////////////////////////////////////////////////////////////////////");
                 strContent.AppendLine("//");
+                strContent.AppendLine();
                 //method
                 string strMethodInCreate = "";
                 for (int i = 0; i < DgvFunctions.Rows.Count; i++)
@@ -222,21 +226,22 @@ namespace _TL_1_OopCClassGenerator
                     {
                         strContent.AppendLine("static void " + strMethodName + "(void *pParams)");
                         strContent.AppendLine("{");
-                        strContent.AppendLine(this.TxtBxClassName.Text.Trim() + " *pThis = ((ParamIn *)pParams)->pInst;");
-                        strContent.AppendLine(this.TxtBxClassName.Text.Trim() + "_" + strMethodName + " *pIn = ((ParamIn *)pParams)->pIn;");
+                        strContent.AppendLine("\t" + this.TxtBxClassName.Text.Trim() + " *pThis = ((ParamIn *)pParams)->pInst;");
+                        strContent.AppendLine("\t" + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + " *pIn = ((ParamIn *)pParams)->pIn;");
                         strContent.AppendLine();
-                        strContent.AppendLine("//Todo: ");
+                        strContent.AppendLine("\t//Todo: ");
                         strContent.AppendLine("}");
                     }
 
                     strMethodInCreate += "\t\t" + (bIsAbstract ? "A" : "") + "METHOD(" + strMethodName + ")\n";
                 }
+                strContent.AppendLine();
                 //分割
                 strContent.AppendLine("/////////////////////////////////////////////////////////////////////////");
                 strContent.AppendLine("//");
                 strContent.AppendLine();
                 //控制函数
-                strContent.AppendLine("bool INVOKE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " *pInst, char *pFuncName, void *pParams");
+                strContent.AppendLine("bool INVOKE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " *pInst, char *pFuncName, void *pParams)");
                 strContent.AppendLine("{");
                 strContent.AppendLine("\tDOINVOKE(pInst, pFuncName, pParams);");
                 strContent.AppendLine("}");
@@ -250,12 +255,21 @@ namespace _TL_1_OopCClassGenerator
                 strContent.AppendLine("{");
                 strContent.AppendLine("\tDODELETE(ppInst, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ");");
                 strContent.AppendLine("}");
+                strContent.AppendLine();
                 strContent.AppendLine(this.TxtBxClassName.Text.Trim() + " *CREATE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxCreateParam.Text.Trim() + ")");
                 strContent.AppendLine("{");
-                strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "NULL,");
-                strContent.AppendLine(strMethodInCreate.TrimEnd() + ");");
+                if (string.IsNullOrEmpty(strMethodInCreate.Trim()))
+                {
+                    strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "NULL);");
+                }
+                else
+                {
+                    strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "NULL,");
+                    strContent.AppendLine(strMethodInCreate.Substring(0, strMethodInCreate.Length - 1) + ");");
+                }
                 strContent.AppendLine();
-                strContent.AppendLine("return pCreate;");
+                strContent.AppendLine("\treturn pCreate;");
+                strContent.AppendLine("}");
 
                 streamWriter.Write(strContent);
                 streamWriter.Flush();
