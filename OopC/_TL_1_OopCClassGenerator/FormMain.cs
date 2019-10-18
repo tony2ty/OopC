@@ -42,6 +42,7 @@ namespace _TL_1_OopCClassGenerator
             this.BtnAddFunc.Tag = this.DgvFunctions;
             this.BtnDelVariable.Tag = this.DgvVariables;
             this.BtnDelFunc.Tag = this.DgvFunctions;
+            this.ColPlaceholder.Visible = false;
         }
 
         private bool IsValidToken(string strName)
@@ -63,6 +64,211 @@ namespace _TL_1_OopCClassGenerator
             }
 
             return bValid;
+        }
+
+        private bool GenHeader(ref string strErr)
+        {
+            string strPath = this.TxtBxPathHeader.Text.Trim();
+            if (!strPath.EndsWith("\\"))
+            {
+                strPath += "\\";
+            }
+            FileStream fileStream = null;
+            StreamWriter streamWriter = null;
+            try
+            {
+                fileStream = new FileStream(strPath + this.TxtBxClassName.Text.Trim() + ".h", FileMode.Create, FileAccess.Write);
+                if (fileStream == null)
+                {
+                    strErr = "创建文件流失败。";
+                    return false;
+                }
+                streamWriter = new StreamWriter(fileStream);
+
+                StringBuilder strContent = new StringBuilder();
+                //License
+                if (!string.IsNullOrEmpty(this.TxtBxLicense.Text.Trim()))
+                {
+                    strContent.Append(this.TxtBxLicense.Text.Trim());
+                    strContent.AppendLine();
+                    strContent.AppendLine();
+                }
+                //#ifndef条件编译宏
+                strContent.AppendLine("#ifndef " + this.TxtBxClassName.Text.Trim().ToUpper() + "_H__");
+                strContent.AppendLine("#define " + this.TxtBxClassName.Text.Trim().ToUpper() + "_H__");
+                strContent.AppendLine();
+                //父类头文件
+                if (this.TxtBxInheritFrom.Text.Trim().Equals("Object"))
+                {
+                    strContent.AppendLine("#include <OopBase.h>");
+                }
+                else
+                {
+                    strContent.AppendLine("#include " + "\"" + this.TxtBxInheritFrom.Text.Trim() + "\"");
+                }
+                //CLASSDEF
+                strContent.AppendLine("CLASSDEF(" + this.TxtBxClassName.Text.Trim() + ")");
+                strContent.AppendLine();
+                //Method
+                for (int i = 0; i < DgvFunctions.Rows.Count; i++)
+                {
+                    string strMethodName = DgvFunctions.Rows[i].Cells[2].Value.ToString().Trim();
+                    strMethodName = strMethodName.Replace("\n", " ");
+                    string strMethodParams = DgvFunctions.Rows[i].Cells[3].Value.ToString().Trim();
+                    strMethodParams = strMethodParams.Replace("\n", " ");
+                    if (string.IsNullOrEmpty(strMethodName))
+                    {
+                        strErr = "第" + (i + 1) + "行方法名称为空!";
+                        streamWriter.Close();
+                        fileStream.Close();
+                        return false;
+                    }
+
+                    if (string.IsNullOrEmpty(strMethodParams))
+                    {
+                        strContent.AppendLine("typedef ParamNull " + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
+                    }
+                    else
+                    {
+                        strContent.AppendLine("typedef struct { " + strMethodParams + " }" + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
+                    }
+                }
+                //#endif
+                strContent.AppendLine("#endif // !" + this.TxtBxClassName.Text.Trim() + "_H__");
+
+                streamWriter.Write(strContent.ToString());
+                streamWriter.Flush();
+                streamWriter.Close();
+                fileStream.Close();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                strErr = ex.Message;
+                return false;
+            }
+        }
+        
+        private bool GenSource(ref string strErr)
+        {
+            string strPath = this.TxtBxPathSource.Text.Trim();
+            if (!strPath.EndsWith("\\"))
+            {
+                strPath += "\\";
+            }
+            FileStream fileStream = null;
+            StreamWriter streamWriter = null;
+            try
+            {
+                fileStream = new FileStream(strPath + this.TxtBxClassName.Text.Trim() + ".c", FileMode.Create, FileAccess.Write);
+                if (fileStream == null)
+                {
+                    strErr = "打开文件流失败。";
+                    return false;
+                }
+                streamWriter = new StreamWriter(fileStream);
+
+                StringBuilder strContent = new StringBuilder();
+
+                //License
+                if (!string.IsNullOrEmpty(this.TxtBxLicense.Text.Trim()))
+                {
+                    strContent.AppendLine(this.TxtBxLicense.Text.Trim());
+                    strContent.AppendLine();
+                    strContent.AppendLine();
+                }
+                //include header
+                strContent.AppendLine("#include \"" + this.TxtBxClassName.Text.Trim() + "\"");
+                strContent.AppendLine();
+                strContent.AppendLine();
+                //field
+                strContent.AppendLine("struct " + this.TxtBxClassName.Text.Trim());
+                strContent.AppendLine("{");
+                strContent.AppendLine("\tCHAINDEF");
+                strContent.AppendLine();
+                for (int i = 0; i < DgvVariables.Rows.Count; i++)
+                {
+                    string strDataType = DgvVariables.Rows[i].Cells[2].Value.ToString().Trim();
+                    string strName = DgvVariables.Rows[i].Cells[3].Value.ToString().Trim();
+                    if (string.IsNullOrEmpty(strDataType) || string.IsNullOrEmpty(strName))
+                    {
+                        strErr = "第" + (i + 1) + "行为空!";
+                        streamWriter.Close();
+                        fileStream.Close();
+                        return false;
+                    }
+                    strContent.AppendLine("\t" + strDataType + " " + strName + ";");
+                }
+                strContent.AppendLine("};");
+                //分割
+                strContent.AppendLine("/////////////////////////////////////////////////////////////////////////");
+                strContent.AppendLine("//");
+                //method
+                string strMethodInCreate = "";
+                for (int i = 0; i < DgvFunctions.Rows.Count; i++)
+                {
+                    bool bIsAbstract = (bool)DgvFunctions.Rows[i].Cells[1].EditedFormattedValue;
+                    string strMethodName = DgvFunctions.Rows[i].Cells[2].Value.ToString().Trim();
+                    strMethodName = strMethodName.Replace("\n", " ");
+                    if (string.IsNullOrEmpty(strMethodName))
+                    {
+                        strErr = "第" + (i + 1) + "行方法名称为空!";
+                        streamWriter.Close();
+                        fileStream.Close();
+                        return false;
+                    }
+                    if (!bIsAbstract)
+                    {
+                        strContent.AppendLine("static void " + strMethodName + "(void *pParams)");
+                        strContent.AppendLine("{");
+                        strContent.AppendLine(this.TxtBxClassName.Text.Trim() + " *pThis = ((ParamIn *)pParams)->pInst;");
+                        strContent.AppendLine(this.TxtBxClassName.Text.Trim() + "_" + strMethodName + " *pIn = ((ParamIn *)pParams)->pIn;");
+                        strContent.AppendLine();
+                        strContent.AppendLine("//Todo: ");
+                        strContent.AppendLine("}");
+                    }
+
+                    strMethodInCreate += "\t\t" + (bIsAbstract ? "A" : "") + "METHOD(" + strMethodName + ")\n";
+                }
+                //分割
+                strContent.AppendLine("/////////////////////////////////////////////////////////////////////////");
+                strContent.AppendLine("//");
+                strContent.AppendLine();
+                //控制函数
+                strContent.AppendLine("bool INVOKE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " *pInst, char *pFuncName, void *pParams");
+                strContent.AppendLine("{");
+                strContent.AppendLine("\tDOINVOKE(pInst, pFuncName, pParams);");
+                strContent.AppendLine("}");
+                strContent.AppendLine();
+                strContent.AppendLine("void *EXTEND(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " *pInst)");
+                strContent.AppendLine("{");
+                strContent.AppendLine("\tDOEXTEND(pInst);");
+                strContent.AppendLine("}");
+                strContent.AppendLine();
+                strContent.AppendLine("void DELETE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " **ppInst)");
+                strContent.AppendLine("{");
+                strContent.AppendLine("\tDODELETE(ppInst, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ");");
+                strContent.AppendLine("}");
+                strContent.AppendLine(this.TxtBxClassName.Text.Trim() + " *CREATE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxCreateParam.Text.Trim() + ")");
+                strContent.AppendLine("{");
+                strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "NULL,");
+                strContent.AppendLine(strMethodInCreate.TrimEnd() + ");");
+                strContent.AppendLine();
+                strContent.AppendLine("return pCreate;");
+
+                streamWriter.Write(strContent);
+                streamWriter.Flush();
+                streamWriter.Close();
+                fileStream.Close();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                strErr = ex.Message;
+                return false;
+            }
         }
 
         private void BtnGenPath_Click(object sender, EventArgs e)
@@ -217,7 +423,7 @@ namespace _TL_1_OopCClassGenerator
 
         private void Dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex <= 0)
+            if (e.RowIndex < 0 || e.ColumnIndex <= 1)
             {
                 return;
             }
@@ -237,6 +443,40 @@ namespace _TL_1_OopCClassGenerator
             {
                 e.Cancel = true;
             }
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void BtnGenFile_Click(object sender, EventArgs e)
+        {
+            //验证
+            if (string.IsNullOrEmpty(this.TxtBxPathHeader.Text.Trim()) || string.IsNullOrEmpty(this.TxtBxPathSource.Text.Trim()))
+            {
+                MessageBox.Show("路径不能为空!");
+                return;
+            }
+            if (string.IsNullOrEmpty(this.TxtBxClassName.Text.Trim()) || string.IsNullOrEmpty(this.TxtBxInheritFrom.Text.Trim()))
+            {
+                MessageBox.Show("类名不能为空!");
+                return;
+            }
+
+            string strErr = "";
+            if (!this.GenHeader(ref strErr))
+            {
+                MessageBox.Show("生成头文件失败: " + strErr);
+                return;
+            }
+            if (!this.GenSource(ref strErr))
+            {
+                MessageBox.Show("生成源文件失败: " + strErr);
+                return;
+            }
+
+            MessageBox.Show("生成成功! ^_^");
         }
     }
 }

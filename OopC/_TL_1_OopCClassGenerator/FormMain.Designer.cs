@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TxtBxPathHeader = new System.Windows.Forms.TextBox();
@@ -43,6 +43,7 @@
             this.TxtBxInheritFrom = new System.Windows.Forms.TextBox();
             this.DgvVariables = new System.Windows.Forms.DataGridView();
             this.ColCheckedVar = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColPlaceholder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDataTypeVar = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColNameVar = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
@@ -51,17 +52,18 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.DgvFunctions = new System.Windows.Forms.DataGridView();
-            this.ColCheckedFunc = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColIsAbstract = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColRetTypeFunc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColParameters = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label12 = new System.Windows.Forms.Label();
             this.TxtBxLicense = new System.Windows.Forms.TextBox();
             this.BtnDelVariable = new System.Windows.Forms.Button();
             this.BtnAddVariable = new System.Windows.Forms.Button();
             this.BtnDelFunc = new System.Windows.Forms.Button();
             this.BtnAddFunc = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.BtnGenFile = new System.Windows.Forms.Button();
+            this.BtnClose = new System.Windows.Forms.Button();
+            this.ColCheckedFunc = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColIsAbstract = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColNameFunc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColParameters = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DgvVariables)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvFunctions)).BeginInit();
             this.SuspendLayout();
@@ -185,6 +187,7 @@
             this.DgvVariables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvVariables.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColCheckedVar,
+            this.ColPlaceholder,
             this.ColDataTypeVar,
             this.ColNameVar});
             this.DgvVariables.Location = new System.Drawing.Point(22, 286);
@@ -199,11 +202,16 @@
             this.ColCheckedVar.HeaderText = "";
             this.ColCheckedVar.Name = "ColCheckedVar";
             // 
+            // ColPlaceholder
+            // 
+            this.ColPlaceholder.HeaderText = "";
+            this.ColPlaceholder.Name = "ColPlaceholder";
+            // 
             // ColDataTypeVar
             // 
             this.ColDataTypeVar.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            this.ColDataTypeVar.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.ColDataTypeVar.DefaultCellStyle = dataGridViewCellStyle1;
             this.ColDataTypeVar.HeaderText = "成员类型";
             this.ColDataTypeVar.Name = "ColDataTypeVar";
             this.ColDataTypeVar.Width = 89;
@@ -272,7 +280,7 @@
             this.DgvFunctions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColCheckedFunc,
             this.ColIsAbstract,
-            this.ColRetTypeFunc,
+            this.ColNameFunc,
             this.ColParameters});
             this.DgvFunctions.Location = new System.Drawing.Point(22, 466);
             this.DgvFunctions.Name = "DgvFunctions";
@@ -280,30 +288,6 @@
             this.DgvFunctions.Size = new System.Drawing.Size(903, 147);
             this.DgvFunctions.TabIndex = 12;
             this.DgvFunctions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_CellDoubleClick);
-            // 
-            // ColCheckedFunc
-            // 
-            this.ColCheckedFunc.HeaderText = "";
-            this.ColCheckedFunc.Name = "ColCheckedFunc";
-            // 
-            // ColIsAbstract
-            // 
-            this.ColIsAbstract.HeaderText = "抽象方法";
-            this.ColIsAbstract.Name = "ColIsAbstract";
-            // 
-            // ColRetTypeFunc
-            // 
-            this.ColRetTypeFunc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ColRetTypeFunc.HeaderText = "返回值类型";
-            this.ColRetTypeFunc.Name = "ColRetTypeFunc";
-            this.ColRetTypeFunc.Width = 103;
-            // 
-            // ColParameters
-            // 
-            this.ColParameters.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ColParameters.HeaderText = "方法参数";
-            this.ColParameters.Name = "ColParameters";
-            this.ColParameters.Width = 89;
             // 
             // label12
             // 
@@ -363,14 +347,49 @@
             this.BtnAddFunc.UseVisualStyleBackColor = true;
             this.BtnAddFunc.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
-            // button6
+            // BtnGenFile
             // 
-            this.button6.Location = new System.Drawing.Point(820, 622);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(106, 38);
-            this.button6.TabIndex = 13;
-            this.button6.Text = "生  成";
-            this.button6.UseVisualStyleBackColor = true;
+            this.BtnGenFile.Location = new System.Drawing.Point(820, 622);
+            this.BtnGenFile.Name = "BtnGenFile";
+            this.BtnGenFile.Size = new System.Drawing.Size(106, 38);
+            this.BtnGenFile.TabIndex = 13;
+            this.BtnGenFile.Text = "生  成";
+            this.BtnGenFile.UseVisualStyleBackColor = true;
+            this.BtnGenFile.Click += new System.EventHandler(this.BtnGenFile_Click);
+            // 
+            // BtnClose
+            // 
+            this.BtnClose.Location = new System.Drawing.Point(708, 622);
+            this.BtnClose.Name = "BtnClose";
+            this.BtnClose.Size = new System.Drawing.Size(106, 38);
+            this.BtnClose.TabIndex = 13;
+            this.BtnClose.Text = "关  闭";
+            this.BtnClose.UseVisualStyleBackColor = true;
+            this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click);
+            // 
+            // ColCheckedFunc
+            // 
+            this.ColCheckedFunc.HeaderText = "";
+            this.ColCheckedFunc.Name = "ColCheckedFunc";
+            // 
+            // ColIsAbstract
+            // 
+            this.ColIsAbstract.HeaderText = "抽象方法";
+            this.ColIsAbstract.Name = "ColIsAbstract";
+            // 
+            // ColNameFunc
+            // 
+            this.ColNameFunc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColNameFunc.HeaderText = "方法名称";
+            this.ColNameFunc.Name = "ColNameFunc";
+            this.ColNameFunc.Width = 89;
+            // 
+            // ColParameters
+            // 
+            this.ColParameters.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColParameters.HeaderText = "方法参数";
+            this.ColParameters.Name = "ColParameters";
+            this.ColParameters.Width = 89;
             // 
             // FormMain
             // 
@@ -396,7 +415,8 @@
             this.Controls.Add(this.BtnDelFunc);
             this.Controls.Add(this.BtnAddVariable);
             this.Controls.Add(this.BtnDelVariable);
-            this.Controls.Add(this.button6);
+            this.Controls.Add(this.BtnClose);
+            this.Controls.Add(this.BtnGenFile);
             this.Controls.Add(this.BtnGenPath);
             this.Controls.Add(this.TxtBxPathSource);
             this.Controls.Add(this.TxtBxPathHeader);
@@ -444,13 +464,15 @@
         private System.Windows.Forms.Button BtnAddVariable;
         private System.Windows.Forms.Button BtnDelFunc;
         private System.Windows.Forms.Button BtnAddFunc;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button BtnGenFile;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheckedVar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColPlaceholder;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDataTypeVar;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColNameVar;
+        private System.Windows.Forms.Button BtnClose;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheckedFunc;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColIsAbstract;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColRetTypeFunc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColNameFunc;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColParameters;
     }
 }
