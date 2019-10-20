@@ -104,7 +104,7 @@ namespace _TL_1_OopCClassGenerator
                 }
                 else
                 {
-                    strContent.AppendLine("#include " + "\"" + this.TxtBxInheritFrom.Text.Trim() + "\"");
+                    strContent.AppendLine("#include " + "\"" + this.TxtBxInheritFrom.Text.Trim() + ".h\"");
                 }
                 strContent.AppendLine();
                 //CLASSDEF
