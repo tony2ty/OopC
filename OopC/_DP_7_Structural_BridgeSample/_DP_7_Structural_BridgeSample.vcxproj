@@ -125,7 +125,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IImage.c" />
+    <ClCompile Include="ImageBmp.c" />
+    <ClCompile Include="ImageGif.c" />
+    <ClCompile Include="ImageJpg.c" />
+    <ClCompile Include="ImagePng.c" />
+    <ClCompile Include="IOprtSys.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="Matrix.c" />
+    <ClCompile Include="OprtSysLinux.c" />
+    <ClCompile Include="OprtSysUnix.c" />
+    <ClCompile Include="OprtSysWindows.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IImage.h" />
+    <ClInclude Include="ImageBmp.h" />
+    <ClInclude Include="ImageGif.h" />
+    <ClInclude Include="ImageJpg.h" />
+    <ClInclude Include="ImagePng.h" />
+    <ClInclude Include="IOprtSys.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="OprtSysLinux.h" />
+    <ClInclude Include="OprtSysUnix.h" />
+    <ClInclude Include="OprtSysWindows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

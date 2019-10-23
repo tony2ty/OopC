@@ -13,10 +13,81 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\class">
+      <UniqueIdentifier>{6c6bc0df-6010-4bb1-bc9f-98f277afbf1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\class">
+      <UniqueIdentifier>{27a248e6-26c9-4972-aec2-4028634dacdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\interface">
+      <UniqueIdentifier>{924518e0-1228-41d2-afff-9f99bf65967d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="IOprtSys.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="IImage.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="OprtSysLinux.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="OprtSysUnix.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="OprtSysWindows.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageBmp.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageGif.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageJpg.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePng.c">
+      <Filter>源文件\class</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Matrix.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="IOprtSys.h">
+      <Filter>头文件\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IImage.h">
+      <Filter>头文件\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="OprtSysLinux.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="OprtSysUnix.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="OprtSysWindows.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageBmp.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageGif.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageJpg.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
+    <ClInclude Include="ImagePng.h">
+      <Filter>头文件\class</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
