@@ -40,7 +40,7 @@ static void DoPaint(void *pParams)
 	OprtSysLinux_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
-    printf("在Linux操作系统中显示图像：\n");
+    printf("在Linux操作系统中显示图像.\n");
 }
 
 /////////////////////////////////////////////////////////////////////////

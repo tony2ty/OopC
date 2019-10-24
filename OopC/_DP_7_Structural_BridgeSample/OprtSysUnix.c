@@ -40,7 +40,7 @@ static void DoPaint(void *pParams)
 	OprtSysUnix_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
-    printf("在Unix操作系统中显示图像：\n");
+    printf("在Unix操作系统中显示图像.\n");
 }
 
 /////////////////////////////////////////////////////////////////////////

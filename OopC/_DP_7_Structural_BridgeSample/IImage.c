@@ -61,6 +61,7 @@ static void ClearExtraMem(void *pToClear)
     {
         DELETE(IOprtSys)(&pInst->pOS);
     }
+    pInst->pOS = NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////

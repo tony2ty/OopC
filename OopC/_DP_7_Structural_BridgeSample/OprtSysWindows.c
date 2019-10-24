@@ -40,7 +40,7 @@ static void DoPaint(void *pParams)
 	OprtSysWindows_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
-    printf("在Windows操作系统中显示图像：\n");
+    printf("在Windows操作系统中显示图像.\n");
 }
 
 /////////////////////////////////////////////////////////////////////////

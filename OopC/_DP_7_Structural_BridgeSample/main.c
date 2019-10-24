@@ -39,19 +39,19 @@ int main(int argc, char **argv)
         //pImage = SWITCH(pBmp, ImageBmp, IImage);//Bmp
         //ImageGif *pGif = CREATE(ImageGif)();
         //pImage = SWITCH(pGif, ImageGif, IImage);//Gif
-        //ImageJpg *pJpg = CREATE(ImageJpg)();
-        //pImage = SWITCH(pJpg, ImageJpg, IImage);//Jpg
-        ImagePng *pPng = CREATE(ImagePng)();
-        pImage = SWITCH(pPng, ImagePng, IImage);//Png
+        ImageJpg *pJpg = CREATE(ImageJpg)();
+        pImage = SWITCH(pJpg, ImageJpg, IImage);//Jpg
+        //ImagePng *pPng = CREATE(ImagePng)();
+        //pImage = SWITCH(pPng, ImagePng, IImage);//Png
 
         IOprtSys *pOS = NULL;
         {
             //OprtSysLinux *pLinux = CREATE(OprtSysLinux)();
             //pOS = SWITCH(pLinux, OprtSysLinux, IOprtSys);//Linux
-            //OprtSysUnix *pUnix = CREATE(OprtSysUnix)();
-            //pOS = SWITCH(pUnix, OprtSysUnix, IOprtSys);//Unix
-            OprtSysWindows *pWindows = CREATE(OprtSysWindows)();
-            pOS = SWITCH(pWindows, OprtSysWindows, IOprtSys);//Windows
+            OprtSysUnix *pUnix = CREATE(OprtSysUnix)();
+            pOS = SWITCH(pUnix, OprtSysUnix, IOprtSys);//Unix
+            //OprtSysWindows *pWindows = CREATE(OprtSysWindows)();
+            //pOS = SWITCH(pWindows, OprtSysWindows, IOprtSys);//Windows
         }
 
         INVOKE(IImage)(pImage, "SetOprtSys", &(IImage_SetOprtSys){pOS});
