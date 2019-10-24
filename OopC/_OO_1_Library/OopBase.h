@@ -37,6 +37,8 @@
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
 
+//抽象方法注释符号
+#define ABSTRACT
 //获取类型名称字符串
 #define    TYPE(type) #type
 //添加方法
@@ -89,7 +91,7 @@ pInst->pChain = InsertInstance(                                      \
 //类定义帮助宏，
 //定义时，给定构造参数，则类没有默认无参构造函数声明
 //反之，没有给定构造参数，则类有默认构造函数声明
-#define CLASSDEF(theclass, ...)                                                    \
+#define CLASSDEF(theclass, superclass, ...)                                        \
 	typedef struct theclass theclass;                                              \
 	theclass* CREATE(theclass)(__VA_ARGS__);                                       \
 	bool      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
