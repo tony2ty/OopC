@@ -26,7 +26,7 @@
 
 #include "CalculatorBase.h"
 
-CLASSDEF(CalculatorExtdEnhanced);
+CLASSDEF(CalculatorExtdEnhanced, CalculatorBase);
 
 typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExtdEnhanced_Add;
 typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExtdEnhanced_Subtract;
