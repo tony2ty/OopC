@@ -37,10 +37,7 @@ static void Add(void* pParams)
 	CalculatorExt* pThis = ((ParamIn*)pParams)->pInst;
 	CalculatorExt_Add* pIn = ((ParamIn*)pParams)->pIn;
 
-	//这里类似于对象组合技术中的调用转发
-	DOINVOKESUPER(pThis, "Input", &(Calculator_Input) { pIn->dblOpL, pIn->dblOpR });
-	DOINVOKESUPER(pThis, "Add", NULL);
-	DOINVOKESUPER(pThis, "Output", &(Calculator_Output){pIn->pdblRet});
+    *pIn->pdblRet = pIn->dblOpL + pIn->dblOpR;
 }
 
 //static void Subtract(void* pParams);//直接继承

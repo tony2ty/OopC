@@ -36,11 +36,7 @@ int main(int argc, char** argv)
 		Calculator* pCalc = CREATE(Calculator)();
 
 		double dblRet = 0;
-		INVOKE(Calculator)(pCalc, "Input", &(Calculator_Input){11, 13});
-		INVOKE(Calculator)(pCalc, "Add", NULL);
-		INVOKE(Calculator)(pCalc, "Output", &(Calculator_Output){&dblRet});
-		printf("11 + 13 = ? %f.\n", dblRet);
-		INVOKE(Calculator)(pCalc, "Subtract", &(Calculator_Subtract){10, 12, & dblRet});
+		INVOKE(Calculator)(pCalc, "Subtract", &(Calculator_Subtract){10, 12, &dblRet});
 		printf("10 - 12 = ? %f.\n", dblRet);
 
 		DELETE(Calculator)(&pCalc);
@@ -73,8 +69,6 @@ int main(int argc, char** argv)
 		}
 
 		double dblRet = 0;
-		//INVOKE(Calculator)(pBase, "Add", NULL);
-		//printf("11 + 21 = ? %f.\n", dblRet);
 		INVOKE(Calculator)(pBase, "Subtract", &(Calculator_Subtract){11, 5, & dblRet});
 		printf("11 - 5  = ? %f.\n", dblRet);
 		INVOKE(Calculator)(pBase, "Multiply", &(Calculator_Multiply){11, 7, & dblRet});

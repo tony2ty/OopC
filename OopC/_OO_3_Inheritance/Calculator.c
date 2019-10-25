@@ -28,39 +28,10 @@ struct Calculator
 {
 	CHAINDEF;
 
-	double dblOperandL;
-	double dblOperandR;
-
-	double dblResult;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
-
-static void Input(void* pParams)
-{
-	Calculator* pThis = ((ParamIn*)pParams)->pInst;
-	Calculator_Input* pIn = ((ParamIn*)pParams)->pIn;
-
-	pThis->dblOperandL = pIn->dblOpL;
-	pThis->dblOperandR = pIn->dblOpR;
-}
-
-static void Add(void* pParams)
-{
-	Calculator* pThis = ((ParamIn*)pParams)->pInst;
-	Calculator_Add* pIn = ((ParamIn*)pParams)->pIn;
-
-	pThis->dblResult = pThis->dblOperandL + pThis->dblOperandR;
-}
-
-static void Output(void* pParams)
-{
-	Calculator* pThis = ((ParamIn*)pParams)->pInst;
-	Calculator_Output* pIn = ((ParamIn*)pParams)->pIn;
-
-	*pIn->pdblRet = pThis->dblResult;
-}
 
 static void Subtract(void* pParams)
 {
@@ -99,9 +70,6 @@ void DELETE(Calculator)(Calculator** ppInst)
 Calculator* CREATE(Calculator)()
 {
     DOCREATE(pCreate, Calculator, Object, NULL,
-        METHOD(Input)
-        METHOD(Add)
-        METHOD(Output)
         METHOD(Subtract)
         METHOD(Multiply));
 
