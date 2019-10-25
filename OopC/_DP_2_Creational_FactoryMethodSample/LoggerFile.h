@@ -26,7 +26,7 @@
 
 #include "ILogger.h"
 
-CLASSDEF(LoggerFile);
+CLASSDEF(LoggerFile, ILogger);
 
 typedef ParamNull LoggerFile_WriteLog;
 
