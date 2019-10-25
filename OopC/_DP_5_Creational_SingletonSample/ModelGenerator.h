@@ -25,7 +25,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(ModelGenerator);
+CLASSDEF(ModelGenerator, Object);
 
 typedef struct { int *pIntRetAsModel; } ModelGenerator_GetModel;
 #endif // !ModelGenerator_H__
