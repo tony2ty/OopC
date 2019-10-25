@@ -29,7 +29,7 @@
 #include "Actor.h"
 #include "IBuilderActor.h"
 
-CLASSDEF(ActorController);
+CLASSDEF(ActorController, Object);
 
 typedef struct { Actor **ppRet; IBuilderActor *pBuilder; } ActorController_Construct;
 

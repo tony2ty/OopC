@@ -26,7 +26,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(Actor);
+CLASSDEF(Actor, Object);
 
 typedef struct { bool bSetter; char **ppType; } Actor_Type;
 typedef struct { bool bSetter; char **ppGender; } Actor_Gender;

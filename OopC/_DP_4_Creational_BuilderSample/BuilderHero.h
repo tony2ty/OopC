@@ -26,7 +26,7 @@
 
 #include "IBuilderActor.h"
 
-CLASSDEF(BuilderHero);
+CLASSDEF(BuilderHero, IBuilderActor);
 
 typedef ParamNull BuilderHero_BuildType;
 typedef ParamNull BuilderHero_BuildGender;
