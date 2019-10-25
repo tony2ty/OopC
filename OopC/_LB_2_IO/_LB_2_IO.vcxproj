@@ -80,6 +80,11 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>copy $(TargetDir)*.lib /Y /V $(SolutionDir)$(SolutionName)\__lib\
+copy $(TargetDir)*.dll /Y /V $(SolutionDir)$(SolutionName)\__dll\
+copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
