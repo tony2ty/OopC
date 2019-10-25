@@ -26,7 +26,7 @@
 
 #include "IChart.h"
 
-CLASSDEF(ChartLine);
+CLASSDEF(ChartLine, IChart);
 
 typedef ParamNull ChartLine_Display;
 

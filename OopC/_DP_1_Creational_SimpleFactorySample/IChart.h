@@ -26,8 +26,8 @@
 
 #include <OopBase.h>
 
-CLASSDEF(IChart);
+CLASSDEF(IChart, Object);
 
-typedef ParamNull IChart_Display;
+ABSTRACT typedef ParamNull IChart_Display;
 
 #endif // !ICHART_H__

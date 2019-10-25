@@ -26,7 +26,7 @@
 
 #include "IChart.h"
 
-CLASSDEF(ChartHistogram);
+CLASSDEF(ChartHistogram, IChart);
 
 typedef ParamNull ChartHistogram_Display;
 
