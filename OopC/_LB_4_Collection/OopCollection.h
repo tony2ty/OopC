@@ -29,8 +29,18 @@
     #define OOPCOLLECTION_API __declspec(dllimport)
 #endif // OOPCOLLECTION_API
 
-//dummy
-OOPCOLLECTION_API void Dummy();
+#include <OopBase.h>
+
+////List////////////////////////////////////////////////////////////////////////////////////
+//
+
+typedef struct List List;
+
+OOPCOLLECTION_API List* CREATE(List)();
+OOPCOLLECTION_API bool  INVOKE(List)(List*   pInst, char* pFuncName, void* pParams);
+OOPCOLLECTION_API void* EXTEND(List)(List*   pInst);
+OOPCOLLECTION_API void  DELETE(List)(List** ppInst);
+
 
 #endif // !OOPCOLLECTION_H__
 

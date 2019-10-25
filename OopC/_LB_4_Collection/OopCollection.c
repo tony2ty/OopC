@@ -24,7 +24,7 @@
 #define OOPCOLLECTION_API __declspec(dllexport)
 #include "OopCollection.h"
 
-void Dummy()
-{
-    return;
-}
+////List////////////////////////////////////////////////////////////////////////////////////
+//
+
+
