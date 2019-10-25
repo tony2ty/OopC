@@ -26,7 +26,7 @@
 
 #include "ICtrlTextField.h"
 
-CLASSDEF(CtrlTextFieldSummer);
+CLASSDEF(CtrlTextFieldSummer, ICtrlTextField);
 
 typedef ParamNull CtrlTextFieldSummer_Display;
 

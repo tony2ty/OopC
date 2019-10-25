@@ -26,7 +26,7 @@
 
 #include "IFactorySkin.h"
 
-CLASSDEF(FactorySkinSummer);
+CLASSDEF(FactorySkinSummer, IFactorySkin);
 
 typedef struct { ICtrlButton **ppButton; } FactorySkinSummer_CreateButton;
 typedef struct { ICtrlTextField **ppTextField; } FactorySkinSummer_CreateTextField;

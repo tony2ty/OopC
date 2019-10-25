@@ -26,7 +26,7 @@
 
 #include "ICtrlButton.h"
 
-CLASSDEF(CtrlButtonSummer);
+CLASSDEF(CtrlButtonSummer, ICtrlButton);
 
 typedef ParamNull CtrlButtonSummer_Display;
 

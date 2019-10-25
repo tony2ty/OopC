@@ -26,7 +26,7 @@
 
 #include "ICtrlButton.h"
 
-CLASSDEF(CtrlButtonSpring);
+CLASSDEF(CtrlButtonSpring, ICtrlButton);
 
 typedef ParamNull CtrlButtonSpring_Display;
 

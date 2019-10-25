@@ -26,7 +26,7 @@
 
 #include "ICtrlTextField.h"
 
-CLASSDEF(CtrlTextFieldSpring);
+CLASSDEF(CtrlTextFieldSpring, ICtrlTextField);
 
 typedef ParamNull CtrlTextFieldSpring_Display;
 

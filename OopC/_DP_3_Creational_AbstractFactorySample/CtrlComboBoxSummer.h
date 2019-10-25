@@ -26,7 +26,7 @@
 
 #include "ICtrlComboBox.h"
 
-CLASSDEF(CtrlComboBoxSummer);
+CLASSDEF(CtrlComboBoxSummer, ICtrlComboBox);
 
 typedef ParamNull CtrlComboBoxSummer_Display;
 
