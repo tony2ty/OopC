@@ -108,11 +108,12 @@ namespace _TL_1_OopCClassGenerator
                 }
                 strContent.AppendLine();
                 //CLASSDEF
-                strContent.AppendLine("CLASSDEF(" + this.TxtBxClassName.Text.Trim() + ");");
+                strContent.AppendLine("CLASSDEF(" + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ");");
                 strContent.AppendLine();
                 //Method
                 for (int i = 0; i < DgvFunctions.Rows.Count; i++)
                 {
+                    bool bIsAbstract = (bool)DgvFunctions.Rows[i].Cells[1].EditedFormattedValue;
                     string strMethodName = DgvFunctions.Rows[i].Cells[2].Value.ToString().Trim();
                     strMethodName = strMethodName.Replace("\n", " ");
                     string strMethodParams = DgvFunctions.Rows[i].Cells[3].Value.ToString().Trim();
@@ -125,13 +126,14 @@ namespace _TL_1_OopCClassGenerator
                         return false;
                     }
 
+                    string strModifier = bIsAbstract ? "ABSTRACT " : "";
                     if (string.IsNullOrEmpty(strMethodParams))
                     {
-                        strContent.AppendLine("typedef ParamNull " + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
+                        strContent.AppendLine(strModifier + "typedef ParamNull " + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
                     }
                     else
                     {
-                        strContent.AppendLine("typedef struct { " + strMethodParams + " } " + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
+                        strContent.AppendLine(strModifier + "typedef struct { " + strMethodParams + " } " + this.TxtBxClassName.Text.Trim() + "_" + strMethodName + ";");
                     }
                 }
                 strContent.AppendLine();

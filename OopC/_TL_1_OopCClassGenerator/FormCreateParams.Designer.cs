@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateParams));
             this.TxtBxCreateParams = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             this.Controls.Add(this.TxtBxCreateParams);
             this.Font = new System.Drawing.Font("YaHei Consolas Hybrid", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCreateParams";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
