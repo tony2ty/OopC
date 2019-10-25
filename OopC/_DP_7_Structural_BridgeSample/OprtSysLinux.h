@@ -25,7 +25,7 @@
 
 #include "IOprtSys.h"
 
-CLASSDEF(OprtSysLinux);
+CLASSDEF(OprtSysLinux, IOprtSys);
 
 typedef struct { Matrix *pMat; } OprtSysLinux_DoPaint;
 

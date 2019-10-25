@@ -25,7 +25,7 @@
 
 #include "IOprtSys.h"
 
-CLASSDEF(OprtSysWindows);
+CLASSDEF(OprtSysWindows, IOprtSys);
 
 typedef struct { Matrix *pMat; } OprtSysWindows_DoPaint;
 

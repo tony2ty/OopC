@@ -25,7 +25,7 @@
 
 #include "IImage.h"
 
-CLASSDEF(ImagePng);
+CLASSDEF(ImagePng, IImage);
 
 typedef struct { char *pFileName; } ImagePng_ParseFile;
 

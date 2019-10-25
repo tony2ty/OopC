@@ -26,8 +26,8 @@
 #include <OopBase.h>
 #include "Matrix.h"
 
-CLASSDEF(IOprtSys);
+CLASSDEF(IOprtSys, Object);
 
-typedef struct { Matrix *pMat; } IOprtSys_DoPaint;
+ABSTRACT typedef struct { Matrix *pMat; } IOprtSys_DoPaint;
 
 #endif // !IOprtSys_H__

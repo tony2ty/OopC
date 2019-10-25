@@ -25,7 +25,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(QuickSorter);
+CLASSDEF(QuickSorter, Object);
 
 typedef struct { int *pArr; size_t szLen; } QuickSorter_DoSort;
 

@@ -25,7 +25,7 @@
 
 #include "IImage.h"
 
-CLASSDEF(ImageJpg);
+CLASSDEF(ImageJpg, IImage);
 
 typedef struct { char *pFileName; } ImageJpg_ParseFile;
 

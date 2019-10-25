@@ -25,7 +25,7 @@
 
 #include "IImage.h"
 
-CLASSDEF(ImageGif);
+CLASSDEF(ImageGif, IImage);
 
 typedef struct { char *pFileName; } ImageGif_ParseFile;
 

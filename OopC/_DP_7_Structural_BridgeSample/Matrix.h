@@ -25,7 +25,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(Matrix);
+CLASSDEF(Matrix, Object);
 
 
 #endif // !Matrix_H__

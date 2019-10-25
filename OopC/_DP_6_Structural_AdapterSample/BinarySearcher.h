@@ -25,7 +25,7 @@
 
 #include <OopBase.h>
 
-CLASSDEF(BinarySearcher);
+CLASSDEF(BinarySearcher, Object);
 
 typedef struct { int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind; } BinarySearcher_DoSearch;
 
