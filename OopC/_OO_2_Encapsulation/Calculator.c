@@ -79,7 +79,7 @@ void DELETE(Calculator)(Calculator **ppInst)
     DODELETE(ppInst, Calculator, Object);
 }
 
-Calculator *CREATE(Calculator)(double dblOperandL, double dblOperandR)
+Calculator *CREATE(Calculator)()
 {
     DOCREATE(pCreate, Calculator, Object, NULL,
         METHOD(Input)
