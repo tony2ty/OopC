@@ -29,8 +29,38 @@
     #define OOPCOLLECTION_API __declspec(dllimport)
 #endif // OOPCOLLECTION_API
 
-//dummy
-OOPCOLLECTION_API void Dummy();
+#include <OopBase.h>
+
+////List////////////////////////////////////////////////////////////////////////////////////
+//
+
+typedef struct List List;
+
+OOPCOLLECTION_API List* CREATE(List)();
+OOPCOLLECTION_API bool  INVOKE(List)(List*   pInst, char* pFuncName, void* pParams);
+OOPCOLLECTION_API void* EXTEND(List)(List*   pInst);
+OOPCOLLECTION_API void  DELETE(List)(List** ppInst);
+
+//Ìí¼Ó
+typedef struct { void *pElem; } List_Append;
+typedef struct { void **ppElems; int nCount; } List_AppendRange;
+typedef struct { void *pElem; int nIndex; } List_InsertAt;
+//É¾³ý
+typedef struct { void *pElem; } List_Remove;
+typedef struct { int nIndex; } List_RemoveAt;
+typedef struct { int nIndex; int nCount; } List_RemoveRange;
+typedef struct { bool(*fnProc)(void * /*pElem*/); } List_RemoveBy;
+typedef ParamNull List_RemoveAll;
+//²éÕÒ
+typedef struct { bool *pIsEmpty; } List_IsEmpty;
+typedef struct { void *pElem; bool *pIsContain; } List_Contain;
+typedef struct { int nIndex; } List_FindAt;
+typedef struct { void *pElem; int *pIndex; } List_IndexOf;
+//±éÀú
+typedef struct { void(*fnProc)(void * /*pElem*/); } List_Foreach;
+typedef struct { void *pElem; void **ppNext; } List_Next;
+typedef struct { void *pElem; void **ppPrev; } List_Prev;
+typedef struct { int *pCount; } List_Count;
 
 #endif // !OOPCOLLECTION_H__
 
