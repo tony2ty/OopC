@@ -137,6 +137,8 @@ static void InsertAt(void *pParams)
             pItrtr->pNext->pPrev = pToInsert;
             pItrtr->pNext = pToInsert;
 
+            pThis->nCount++;
+
             return;
         }
 
@@ -178,9 +180,104 @@ static void InsertAt(void *pParams)
         INVOKE(List)(pThis, "Append", &(List_Append){pIn->pElem});
     }
 }
-////É¾³ý
-//typedef struct { void *pElem; } List_Remove;
-//typedef struct { int nIndex; } List_RemoveAt;
+
+static void Remove(void *pParams)
+{
+    List *pThis = ((ParamIn *)pParams)->pInst;
+    List_Remove *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pIn->ppRemoved = NULL;
+
+    if (pThis->nCount != 0)
+    {
+        if (pIn->pElem != pThis->ListHead.pHead->pData && pIn->pElem != pThis->ListHead.pTail->pData)
+        {
+            for (struct ListElem *pItrtr = pThis->ListHead.pHead; pItrtr != NULL; pItrtr = pItrtr->pNext)
+            {
+                if (pItrtr->pData == pIn->pElem)
+                {
+                    pItrtr->pPrev->pNext = pItrtr->pNext;
+                    pItrtr->pNext->pPrev = pItrtr->pPrev;
+
+                    *pIn->ppRemoved = pItrtr->pData;
+                    free(pItrtr);
+                    pThis->nCount--;
+
+                    return;
+                }
+            }
+        }
+
+        if (pIn->pElem == pThis->ListHead.pHead->pData)
+        {
+            struct ListElem *pTmp = pThis->ListHead.pHead;
+            pThis->ListHead.pHead = pTmp->pNext;
+            pThis->ListHead.pHead->pPrev = NULL;
+
+            *pIn->ppRemoved = pTmp->pData;
+            free(pTmp);
+            pThis->nCount--;
+
+            return;
+        }
+
+        if (pIn->pElem == pThis->ListHead.pTail->pData)
+        {
+            struct ListElem *pTmp = pThis->ListHead.pTail;
+            pThis->ListHead.pTail = pTmp->pPrev;
+            pThis->ListHead.pTail->pNext = NULL;
+
+            *pIn->ppRemoved = pTmp->pData;
+            free(pTmp);
+            pThis->nCount--;
+
+            return;
+        }
+    }
+}
+
+static void RemoveAt(void *pParams)
+{
+    List *pThis = ((ParamIn *)pParams)->pInst;
+    List_RemoveAt *pIn = ((ParamIn *)pParams)->pIn;
+
+    if (pThis->nCount != 0)
+    {
+        if (pIn->nIndex >= 0 && pIn->nIndex < pThis->nCount)
+        {
+            struct ListElem *pTmp = pThis->ListHead.pHead;
+            for (int i = 0; i < pThis->nCount; i++)
+            {
+                if (i == pIn->nIndex)
+                {
+                    break;
+                }
+
+                pTmp = pTmp->pNext;
+            }
+
+            if (pTmp->pPrev == NULL)
+            {
+                pThis->ListHead.pHead = pTmp->pNext;
+                pThis->ListHead.pHead->pPrev = NULL;
+            }
+            if (pTmp->pNext == NULL)
+            {
+                pThis->ListHead.pTail = pTmp->pPrev;
+                pThis->ListHead.pTail->pNext = NULL;
+            }
+            if (pTmp->pNext != NULL && pTmp->pPrev != NULL)
+            {
+                pTmp->pPrev->pNext = pTmp->pNext;
+                pTmp->pNext->pPrev = pTmp->pPrev;
+            }
+
+            *pIn->ppRemoved = pTmp->pData;
+            free(pTmp);
+            pThis->nCount--;
+        }
+    }
+}
 //typedef struct { int nIndex; int nCount; } List_RemoveRange;
 //typedef struct { bool(*fnProc)(void * /*pElem*/); } List_RemoveBy;
 //typedef ParamNull List_RemoveAll;
