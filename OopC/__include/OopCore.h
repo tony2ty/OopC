@@ -21,10 +21,16 @@
 //SOFTWARE.
 
 
-#define OOPFILE_API __declspec(dllexport)
-#include "OopFile.h"
+#ifndef OOPCORE_H__
+#define OOPCORE_H__
 
-void Dummy()
-{
-    return;
-}
+#ifdef OOPCORE_API
+#else
+    #define OOPCORE_API __declspec(dllimport)
+#endif // OOPCORE_API
+
+//dummy
+OOPCORE_API void Dummy();
+
+#endif // !OOPCORE_H__
+

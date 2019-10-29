@@ -21,16 +21,16 @@
 //SOFTWARE.
 
 
-#ifndef OOPFILE_H__
-#define OOPFILE_H__
+#ifndef OOPCORE_H__
+#define OOPCORE_H__
 
-#ifdef OOPFILE_API
+#ifdef OOPCORE_API
 #else
-    #define OOPFILE_API __declspec(dllimport)
-#endif // OOPFILE_API
+    #define OOPCORE_API __declspec(dllimport)
+#endif // OOPCORE_API
 
 //dummy
-OOPFILE_API void Dummy();
+OOPCORE_API void Dummy();
 
-#endif // !OOPFILE_H__
+#endif // !OOPCORE_H__
 

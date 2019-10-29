@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{9C193195-A0E4-41D6-9EFB-586156352D6F}</ProjectGuid>
-    <RootNamespace>LB1File</RootNamespace>
+    <ProjectGuid>{7DF95DB5-7E1C-4542-BEE5-8325A8FB8F80}</ProjectGuid>
+    <RootNamespace>LB4UI</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(SolutionName)\$(Configuration)\$(TargetName)\</OutDir>
-    <TargetName>OopFile</TargetName>
+    <TargetName>OopUI</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,10 +123,10 @@ copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="OopFile.c" />
+    <ClCompile Include="OopUI.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OopFile.h" />
+    <ClInclude Include="OopUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
