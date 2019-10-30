@@ -37,34 +37,34 @@
 ////List////////////////////////////////////////////////////////////////////////////////////
 //
 
-typedef struct List List;
-
-OOPCORE_API List* CREATE(List)();
-OOPCORE_API bool  INVOKE(List)(List*   pInst, char* pFuncName, void* pParams);
-OOPCORE_API void* EXTEND(List)(List*   pInst);
-OOPCORE_API void  DELETE(List)(List** ppInst);
-
-//添加，添加时，要么添加值类型，要么添加指针地址
-typedef struct { void *pElem; } List_Append;
-typedef struct { void **ppElems; int nCount; } List_AppendRange;
-typedef struct { void *pElem; int nIndex; } List_InsertAt;
-//删除
-typedef struct { void *pElem; void **ppRemoved; } List_Remove;
-typedef struct { int nIndex; void **ppRemoved; } List_RemoveAt;
-typedef struct { int nIndex; int nCount; void ***ppRemovedArr; } List_RemoveRange;
-typedef struct { bool(*fnProc)(void * /*pElem*/); } List_RemoveBy;
-typedef ParamNull List_RemoveAll;
-//查找
-typedef struct { bool *pIsEmpty; } List_IsEmpty;
-typedef struct { void *pElem; bool *pIsContain; } List_Contain;
-typedef struct { int nIndex; } List_FindAt;
-typedef struct { void *pElem; int *pIndex; } List_FirstIndexOf;
-typedef struct { void *pElem; int *pIndex; } List_LastIndexOf;
-//遍历
-typedef struct { void(*fnProc)(void * /*pElem*/); } List_Foreach;
-typedef struct { void *pElem; void **ppNext; } List_Next;
-typedef struct { void *pElem; void **ppPrev; } List_Prev;
-typedef struct { int *pCount; } List_Count;
+//typedef struct List List;
+//
+//OOPCORE_API List* CREATE(List)();
+//OOPCORE_API bool  INVOKE(List)(List*   pInst, char* pFuncName, void* pParams);
+//OOPCORE_API void* EXTEND(List)(List*   pInst);
+//OOPCORE_API void  DELETE(List)(List** ppInst);
+//
+////添加，添加时，要么添加值类型，要么添加指针地址
+//typedef struct { void *pElem; } List_Append;
+//typedef struct { void **ppElems; int nCount; } List_AppendRange;
+//typedef struct { void *pElem; int nIndex; } List_InsertAt;
+////删除
+//typedef struct { void *pElem; void **ppRemoved; } List_Remove;
+//typedef struct { int nIndex; void **ppRemoved; } List_RemoveAt;
+//typedef struct { int nIndex; int nCount; void ***ppRemovedArr; } List_RemoveRange;
+//typedef struct { bool(*fnProc)(void * /*pElem*/); } List_RemoveBy;
+//typedef ParamNull List_RemoveAll;
+////查找
+//typedef struct { bool *pIsEmpty; } List_IsEmpty;
+//typedef struct { void *pElem; bool *pIsContain; } List_Contain;
+//typedef struct { int nIndex; } List_FindAt;
+//typedef struct { void *pElem; int *pIndex; } List_FirstIndexOf;
+//typedef struct { void *pElem; int *pIndex; } List_LastIndexOf;
+////遍历
+//typedef struct { void(*fnProc)(void * /*pElem*/); } List_Foreach;
+//typedef struct { void *pElem; void **ppNext; } List_Next;
+//typedef struct { void *pElem; void **ppPrev; } List_Prev;
+//typedef struct { int *pCount; } List_Count;
 
 #endif // !OOPCORE_H__
 

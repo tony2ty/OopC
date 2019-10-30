@@ -76,6 +76,9 @@ pInst->pChain = InsertInstance(                                      \
         GenerateInstance(pInst, TYPE(theclass), pExtRef, pMethods))  \
 
 
+//方法调用帮助宏
+#define INVK(theclass, pInst, method, ...) INVOKE(theclass)(pInst, #method, &(theclass ## _ ## method){__VA_ARGS__})
+
 //类型转换帮助宏，该宏将实例从当前类类型转换至指定父类型
 //最好不要复合调用，SWITCH((...some expr...), ..., ...)
 #define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
