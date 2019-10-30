@@ -51,7 +51,7 @@ typedef struct { void *pElem; int nIndex; } List_InsertAt;
 //É¾³ý
 typedef struct { void *pElem; void **ppRemoved; } List_Remove;
 typedef struct { int nIndex; void **ppRemoved; } List_RemoveAt;
-typedef struct { int nIndex; int nCount; } List_RemoveRange;
+typedef struct { int nIndex; int nCount; void ***ppRemovedArr; } List_RemoveRange;
 typedef struct { bool(*fnProc)(void * /*pElem*/); } List_RemoveBy;
 typedef ParamNull List_RemoveAll;
 //²éÕÒ
