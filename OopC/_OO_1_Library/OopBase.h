@@ -37,111 +37,95 @@
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
 
-//抽象方法注释符号
-#define ABSTRACT
-//添加方法
-#define  METHOD(name) InsertMethod(pMethods, 1, GenerateMethod(name, #name));
-//添加抽象方法，A前缀表示Abstract
-#define AMETHOD(name) InsertMethod(pMethods, 1, GenerateMethod(NULL, #name));
+//------面向对象功能API-------------------------------------------------------------------------------------------------------------//
 
-//构造函数帮助宏
-#define CREATE(type) Create_ ## type   
-//实例方法调用帮助宏
-#define INVOKE(type) Invoke_ ## type   
-//继承帮助宏
-#define EXTEND(type) Extend_ ## type   
-//析构帮助宏
-#define DELETE(type) Delete_ ## type   
+#define CREATE(type) Create_ ## type
 
+#define INVOKE(type) Invoke_ ## type
 
-//调用该宏实现这样的功能，给定函数参数pParams，通过实例pInst调用名为pFuncName的方法
-//最好不要复合调用，DOINVOKE((...some expr...), ..., ...)
-#define DOINVOKE(pInst, pFuncName, pParams) return Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFunc(pInst->pChain, pInst, pFuncName), pParams })
+#define EXTEND(type) Extend_ ## type
 
-#define DOEXTEND(pInst) return pInst->pChain
+#define DELETE(type) Delete_ ## type
 
-#define DODELETE(ppInst, theclass, superclass) superclass *pSuper = SWITCH((*ppInst), theclass, superclass); DELETE(superclass)(&pSuper); *ppInst = NULL
+#define DOINVOKE(pInst, pFuncName, pParams)/*调用pInst的名为pFuncName的方法，参数为pParams。不要复合调用，DOINVOKE((...some expr...), ..., ...)*/ \
+                return Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFunc(pInst->pChain, pInst, pFuncName), pParams })
 
-//创建实例，但并不初始化实例的数据域
-#define DOCREATE(pInst, theclass, superclass, pExtRef, ...)          \
-theclass *pInst = malloc(sizeof(theclass));                          \
-if (!pInst) { return NULL; }                                         \
-MethodRing *pMethods = GenerateMethodRing();                         \
-if (!pMethods) { return NULL; };                                     \
-__VA_ARGS__                                                          \
-pInst->pChain = InsertInstance(                                      \
-        EXTEND(superclass)(CREATE(superclass)()),                    \
-        GenerateInstance(pInst, #theclass, pExtRef, pMethods))  \
+#define DOEXTEND(pInst) \
+                return pInst->pChain
 
+#define DODELETE(ppInst, theclass, superclass) \
+                superclass *pSuper = SWITCH((*ppInst), theclass, superclass); DELETE(superclass)(&pSuper); *ppInst = NULL
 
-//类型转换帮助宏，该宏将实例从当前类类型转换至指定父类型
-//最好不要复合调用，SWITCH((...some expr...), ..., ...)
-#define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, #superclass)
+#define DOCREATE(pInst, theclass, superclass, pExtRef, ...)/*创建实例，但并不初始化实例的数据域*/ \
+                theclass *pInst = malloc(sizeof(theclass));                    \
+                if (!pInst) { return NULL; }                                   \
+                MethodRing *pMethods = GenerateMethodRing();                   \
+                if (!pMethods) { return NULL; };                               \
+                __VA_ARGS__                                                    \
+                pInst->pChain = InsertInstance(                                \
+                        EXTEND(superclass)(CREATE(superclass)()),              \
+                        GenerateInstance(pInst, #theclass, pExtRef, pMethods)) \
 
-//调用该宏实现这样的功能，给定函数参数pParams(...)，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
-//最好不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)
-#define DOINVOKESUPER(pInst, pFuncName, ...) InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ AsBaseByFuncSuper(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
+#define CLASSDEF(theclass, superclass, ...)/*类定义宏，定义时，给定构造参数，则类没有默认无参构造函数声明，反之，则有*/ \
+	            typedef struct theclass theclass;                                              \
+	            theclass* CREATE(theclass)(__VA_ARGS__);                                       \
+	            bool      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
+	            void*     EXTEND(theclass)(theclass*   pInst);                                 \
+	            void      DELETE(theclass)(theclass** ppInst)                                  \
 
+//-----实现面向对象的一些必要的宏定义--------------------------------------------------------------------------------------------------------------//
 
-//标准实例链定义
-#define CHAINDEF InstanceChain *pChain 
+#define      ABSTRACT//抽象方法注释符号
 
-//类定义帮助宏，
-//定义时，给定构造参数，则类没有默认无参构造函数声明
-//反之，没有给定构造参数，则类有默认构造函数声明
-#define CLASSDEF(theclass, superclass, ...)                                        \
-	typedef struct theclass theclass;                                              \
-	theclass* CREATE(theclass)(__VA_ARGS__);                                       \
-	bool      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
-	void*     EXTEND(theclass)(theclass*   pInst);                                 \
-	void      DELETE(theclass)(theclass** ppInst)                                  \
+#define      CHAINDEF/*标准实例链定义*/ \
+                     InstanceChain *pChain
+
+#define        METHOD(name)/*添加方法*/ \
+                     InsertMethod(pMethods, 1, GenerateMethod(name, #name));
+
+#define       AMETHOD(name)/*添加抽象方法，A前缀表示Abstract*/ \
+                     InsertMethod(pMethods, 1, GenerateMethod(NULL, #name));
+
+#define        SWITCH(pInst, theclass, superclass)/*将实例转换至指定父类型。不要复合调用，SWITCH((...some expr...), ..., ...)*/ \
+                     ConvertByType(EXTEND(theclass)(pInst), pInst, #superclass)
+
+#define DOINVOKESUPER(pInst, pFuncName, ...)/*调用pInst的父类pFuncName方法。不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)*/ \
+                     InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFuncInherited(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
 
 
-//成员方法标准类型
-typedef void (*Transit)(void*);
-//成员方法的入参结构体，
-//用于转发调用，
+//成员方法的空参数结构体
+typedef struct { void* pNull; } ParamNull;
+//成员方法的入参
 typedef struct { void* pInst; void* pIn; } ParamIn;
-//成员方法的空参数结构体，
-//用于外部调用
-typedef struct { void* pVd; } ParamNull;
 
-//////////////////////////////////////////////////////////////////////////////////
-//
+//-----错误信息--------------------------------------------------------------------------------------------------------------//
 
 //调用函数执行失败时，获取失败的信息
 OOPLIB_API char *GetErrorInfo(char *pMemIn);
 
-//////////////////////////////////////////////////////////////////////////////////
-//
+//-----内存释放--------------------------------------------------------------------------------------------------------------//
 
-typedef void (*ExtraMemClear)(void*);
-typedef struct ExtraMemRef ExtraMemRef;
+OOPLIB_API void* GenerateReleaseInfo(void(*fnRelease)(void *), void* pToClear);
 
-OOPLIB_API ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear);
-
-//////////////////////////////////////////////////////////////////////////////////
-//
+//-----实例链，方法--------------------------------------------------------------------------------------------------------------//
 
 typedef struct Method Method;
 typedef struct MethodRing MethodRing;
 
-OOPLIB_API Method*     GenerateMethod(Transit pAddr, char* pName);
+OOPLIB_API Method*     GenerateMethod(void(*pAddr)(void *), char* pName);
 OOPLIB_API MethodRing* GenerateMethodRing();
 OOPLIB_API MethodRing*   InsertMethod(MethodRing *pMethods, int nMethodNum, ...);
 
-//////////////////////////////////////////////////////////////////////////////////
-//
+//-----实例链，实例--------------------------------------------------------------------------------------------------------------//
 
 typedef struct Instance Instance;
 typedef struct InstanceChain InstanceChain;
 
-OOPLIB_API Instance*      GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, MethodRing* pMethods);
+OOPLIB_API Instance*      GenerateInstance(void* pFields, char* pName, void *pRlsInfo, MethodRing* pMethods);
 OOPLIB_API InstanceChain* GenerateInstanceChain();
 OOPLIB_API InstanceChain*   InsertInstance(InstanceChain* pChain, Instance* pInstance);
 
-//////////////////////////////////////////////////////////////////////////////////
-//
+//-----支持面向对象的功能--------------------------------------------------------------------------------------------------------------//
 
 //该函数的目的在于通过实例指针pInst调用名为pFuncName的函数，参数为pParams。
 //而指定名称的函数可能是pInst实例从父类中继承得到的，
@@ -155,13 +139,13 @@ OOPLIB_API bool  Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, voi
 OOPLIB_API bool  InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams);
 
 //该函数从实例链pChain中查找给定的实例指针pInst，然后向上查找，直到找到给定类型的实例为止
-OOPLIB_API void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType);
+OOPLIB_API void* ConvertByType(InstanceChain* pChain, void* pInst, char* pBaseType);
 
 //根据函数名称，确定实例链中哪个实例将会被调用，优先向下查找，然后向上查找
-OOPLIB_API void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName);
+OOPLIB_API void* ConvertByFunc(InstanceChain* pChain, void* pInst, char* pFuncName);
 
 //根据函数名称，确定实例链中哪个实例将会被调用，仅向上查找
-OOPLIB_API void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFuncName);
+OOPLIB_API void* ConvertByFuncInherited(InstanceChain* pChain, void* pInst, char* pFuncName);
 
 ////Object//////////////////////////////////////////////////////////////////////////////
 //

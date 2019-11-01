@@ -30,6 +30,8 @@
 ////OopBase//////////////////////////////////////////////////////////////////////////////
 //
 
+//---错误信息-----------------------------------------------------------------------------------//
+
 char *pErrorBuffer = NULL;
 
 char * GetErrorInfo(char * pMemIn)
@@ -51,20 +53,36 @@ void SetErrorInfo(char *pErrorInfo)
 ///////////////////////////////////////////////////////////////////////////////////
 //
 
-struct ExtraMemRef
+//---内存释放-----------------------------------------------------------------------------------//
+
+typedef void(*Releaser)(void*);
+typedef struct ReleaseInfo ReleaseInfo;
+
+struct ReleaseInfo
 {
+    ReleaseInfo *pPrev;
+    ReleaseInfo *pNext;
+
 	void* pToClear;
-	ExtraMemClear fnExec;
+    Releaser fnRelease;
 };
 
-ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear)
+struct ReleaseInfoHead
 {
-    if (!fnExec || !pToClear) { return NULL; }
+    ReleaseInfo *pHead;
+    ReleaseInfo *pTail;
+};
 
-	ExtraMemRef* pRet = malloc(sizeof(ExtraMemRef));
+void* GenerateReleaseInfo(Releaser fnRelease, void* pToClear)
+{
+    if (!fnRelease || !pToClear) { return NULL; }
+
+    ReleaseInfo* pRet = malloc(sizeof(ReleaseInfo));
 	if (!pRet) { return NULL; }
 
-	pRet->fnExec = fnExec;
+    pRet->pPrev = NULL;
+    pRet->pNext = NULL;
+	pRet->fnRelease = fnRelease;
 	pRet->pToClear = pToClear;
 
 	return pRet;
@@ -72,6 +90,11 @@ ExtraMemRef* GenerateExtraMemRef(ExtraMemClear fnExec, void* pToClear)
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
+
+//---实例链，方法-----------------------------------------------------------------------------------//
+
+//成员方法标准类型
+typedef void(*Transit)(void*);
 
 struct Method
 {
@@ -172,6 +195,8 @@ MethodRing * InsertMethod(MethodRing * pMethods, int nMethodNum, ...)
 //////////////////////////////////////////////////////////////////////////////////
 //
 
+//---实例链，实例-----------------------------------------------------------------------------------//
+
 struct Instance
 {
 	Instance* pPrev;
@@ -179,7 +204,7 @@ struct Instance
 
 	char* pName;
 	void* pFields;
-	ExtraMemRef* pExtRef;
+    ReleaseInfo* pRlsInfo;
 	MethodRing* pMethods;
 };
 
@@ -189,7 +214,7 @@ struct InstanceChain
 	Instance* pTail;
 };
 
-Instance* GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, MethodRing* pMethods)
+Instance* GenerateInstance(void* pFields, char* pName, ReleaseInfo *pRlsInfo, MethodRing* pMethods)
 {
     //即使类没有成员方法，
     //方法环也只能说是0元素，
@@ -213,7 +238,7 @@ Instance* GenerateInstance(void* pFields, char* pName, ExtraMemRef *pExtRef, Met
 	pRet->pNext = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
 	pRet->pFields = pFields;
 	pRet->pName = strcpy(pMem, pName);
-	pRet->pExtRef = pExtRef;
+	pRet->pRlsInfo = pRlsInfo;
 	pRet->pMethods = pMethods;
 
 	return pRet;
@@ -267,6 +292,8 @@ InstanceChain* InsertInstance(InstanceChain* pChain, Instance* pInstance)
 //////////////////////////////////////////////////////////////////////////////////
 //
 
+//---实现面向对象，辅助函数-----------------------------------------------------------------------------------//
+
 bool ContainMethod(MethodRing *pRing, char *pName)
 {
     if (!pRing || !pRing->pHead || !pRing->pTail || !pName || !*pName) { return false; }
@@ -317,6 +344,8 @@ Instance* FindInstance(InstanceChain* pChain, void* pInst)
 
 //////////////////////////////////////////////////////////////////////////////////
 //
+
+//---实现面向对象-----------------------------------------------------------------------------------//
 
 bool Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
 {
@@ -435,7 +464,7 @@ bool InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pPar
     }
 }
 
-void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType)
+void* ConvertByType(InstanceChain* pChain, void* pInst, char* pBaseType)
 {
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pBaseType || !*pBaseType) { return NULL; }
 
@@ -447,7 +476,7 @@ void* AsBaseByType(InstanceChain* pChain, void* pInst, char* pBaseType)
 	return NULL;
 }
 
-void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
+void* ConvertByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
 {
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 
@@ -476,7 +505,7 @@ void* AsBaseByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
 
-void* AsBaseByFuncSuper(InstanceChain* pChain, void* pInst, char* pFuncName)
+void* ConvertByFuncInherited(InstanceChain* pChain, void* pInst, char* pFuncName)
 {
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 
@@ -514,10 +543,10 @@ void Delete(InstanceChain* pChain)
 	do
 	{
 		//释放类实例的附加存储
-        if (pItrInst->pExtRef && pItrInst->pExtRef->fnExec)
+        if (pItrInst->pRlsInfo && pItrInst->pRlsInfo->fnRelease)
         {
-            pItrInst->pExtRef->fnExec(pItrInst->pExtRef->pToClear);
-            free(pItrInst->pExtRef);
+            pItrInst->pRlsInfo->fnRelease(pItrInst->pRlsInfo->pToClear);
+            free(pItrInst->pRlsInfo);
         }
 		//释放实例数据域
 		free(pItrInst->pFields);
@@ -565,6 +594,8 @@ void Delete(InstanceChain* pChain)
 
 /////Object/////////////////////////////////////////////////////////////////////////////////
 //
+
+//---面向对象Object基类-----------------------------------------------------------------------------------//
 
 struct Object
 {
