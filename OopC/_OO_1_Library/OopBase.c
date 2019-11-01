@@ -617,7 +617,7 @@ Object* CREATE(Object)()
     pMethods = InsertMethod(pMethods, 2,
         GenerateMethod(Equal, "Equal"),
         GenerateMethod(ToString, "ToString"));
-	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, TYPE(Object), NULL, pMethods));
+	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, "Object", NULL, pMethods));
 
 	return pCreate;
 }

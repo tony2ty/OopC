@@ -39,8 +39,6 @@
 
 //抽象方法注释符号
 #define ABSTRACT
-//获取类型名称字符串
-#define    TYPE(type) #type
 //添加方法
 #define  METHOD(name) InsertMethod(pMethods, 1, GenerateMethod(name, #name));
 //添加抽象方法，A前缀表示Abstract
@@ -73,15 +71,12 @@ if (!pMethods) { return NULL; };                                     \
 __VA_ARGS__                                                          \
 pInst->pChain = InsertInstance(                                      \
         EXTEND(superclass)(CREATE(superclass)()),                    \
-        GenerateInstance(pInst, TYPE(theclass), pExtRef, pMethods))  \
+        GenerateInstance(pInst, #theclass, pExtRef, pMethods))  \
 
-
-//方法调用帮助宏
-#define INVK(theclass, pInst, method, ...) INVOKE(theclass)(pInst, #method, &(theclass ## _ ## method){__VA_ARGS__})
 
 //类型转换帮助宏，该宏将实例从当前类类型转换至指定父类型
 //最好不要复合调用，SWITCH((...some expr...), ..., ...)
-#define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, TYPE(superclass))
+#define SWITCH(pInst, theclass, superclass) AsBaseByType(EXTEND(theclass)(pInst), pInst, #superclass)
 
 //调用该宏实现这样的功能，给定函数参数pParams(...)，通过实例pInst调用名为pFuncName的方法，调用的时候，只会查找实例链上部，也就是只会调用继承得到的方法
 //最好不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)
