@@ -55,29 +55,32 @@ void SetErrorInfo(char *pErrorInfo)
 
 //---内存释放-----------------------------------------------------------------------------------//
 
-typedef void(*Releaser)(void*);
-typedef struct ReleaseInfo ReleaseInfo;
+typedef void(* Releaser)(void*);
+typedef struct ReleaserRef ReleaserRef;
+typedef struct ReleaserRefList ReleaserRefList;
 
-struct ReleaseInfo
+struct ReleaserRef
 {
-    ReleaseInfo *pPrev;
-    ReleaseInfo *pNext;
+    ReleaserRef *pPrev;
+    ReleaserRef *pNext;
 
 	void* pToClear;
     Releaser fnRelease;
 };
 
-struct ReleaseInfoHead
+struct ReleaserRefList
 {
-    ReleaseInfo *pHead;
-    ReleaseInfo *pTail;
+    ReleaserRef *pHead;
+    ReleaserRef *pTail;
 };
 
-void* GenerateReleaseInfo(Releaser fnRelease, void* pToClear)
+void* GenerateReleaserRef(void* pfnRelease, void* pToClear)
 {
+    Releaser fnRelease = pfnRelease;
+
     if (!fnRelease || !pToClear) { return NULL; }
 
-    ReleaseInfo* pRet = malloc(sizeof(ReleaseInfo));
+    ReleaserRef* pRet = malloc(sizeof(ReleaserRef));
 	if (!pRet) { return NULL; }
 
     pRet->pPrev = NULL;
@@ -88,6 +91,72 @@ void* GenerateReleaseInfo(Releaser fnRelease, void* pToClear)
 	return pRet;
 }
 
+void* GenerateReleaserRefList()
+{
+    ReleaserRefList *pRet = malloc(sizeof(ReleaserRefList));
+
+    if (!pRet) { return NULL; }
+
+    pRet->pHead = NULL;
+    pRet->pTail = NULL;
+
+    return pRet;
+}
+
+void* InsertReleaserRef(void *pVdList, void *pVdRlsRef)
+{
+    ReleaserRefList *pList = pVdList;
+    ReleaserRef *pRlsRef = pVdRlsRef;
+
+    if (!pList || !pRlsRef || !pRlsRef->fnRelease) { return pList; }
+
+    if (pList->pHead && pList->pTail)
+    {
+        pList->pTail->pNext = pRlsRef;
+        pRlsRef->pPrev = pList->pTail;
+        pRlsRef->pNext = NULL;
+        pList->pTail = pRlsRef;
+
+        return pList;
+    }
+
+    if (!pList->pHead && !pList->pTail)
+    {
+        pRlsRef->pPrev = NULL;
+        pRlsRef->pNext = NULL;
+        pList->pHead = pRlsRef;
+        pList->pTail = pRlsRef;
+
+        return pList;
+    }
+
+    return NULL;
+}
+
+void CallReleaser(void *pVdList)
+{
+    ReleaserRefList *pList = pVdList;
+
+    if (!pList) { return; }
+
+    for (ReleaserRef *pIterator = pList->pHead; pIterator; pIterator = pIterator->pNext)
+    {
+        if (pIterator->fnRelease)
+        {
+            (pIterator->fnRelease)(pIterator->pToClear);
+        }
+    }
+
+    while (pList->pHead)
+    {
+        ReleaserRef *pTmp = pList->pHead;
+        pList->pHead = pList->pHead->pNext;
+        free(pTmp);
+    }
+
+    free(pList);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 //
 
@@ -95,6 +164,8 @@ void* GenerateReleaseInfo(Releaser fnRelease, void* pToClear)
 
 //成员方法标准类型
 typedef void(*Transit)(void*);
+typedef struct Method Method;
+typedef struct MethodRing MethodRing;
 
 struct Method
 {
@@ -111,7 +182,7 @@ struct MethodRing
 	Method* pTail;
 };
 
-Method* GenerateMethod(Transit fnExec, char* pName)
+void* GenerateMethod(Transit fnExec, char* pName)
 {
     //fnExec可能为null，在这种场景下可能会出现
     //一个类添加了名为pName的方法，
@@ -140,7 +211,7 @@ Method* GenerateMethod(Transit fnExec, char* pName)
 	return pRet;
 }
 
-MethodRing* GenerateMethodRing()
+void* GenerateMethodRing()
 {
 	MethodRing* pRet = malloc(sizeof(MethodRing));
 
@@ -152,8 +223,10 @@ MethodRing* GenerateMethodRing()
 	return pRet;
 }
 
-MethodRing * InsertMethod(MethodRing * pMethods, int nMethodNum, ...)
+void * InsertMethod(void * pVdMethods, int nMethodNum, ...)
 {
+    MethodRing *pMethods = pVdMethods;
+
     if (!pMethods) { return NULL; }
     if (nMethodNum <= 0) { return pMethods; }
 
@@ -197,6 +270,9 @@ MethodRing * InsertMethod(MethodRing * pMethods, int nMethodNum, ...)
 
 //---实例链，实例-----------------------------------------------------------------------------------//
 
+typedef struct Instance Instance;
+typedef struct InstanceChain InstanceChain;
+
 struct Instance
 {
 	Instance* pPrev;
@@ -204,7 +280,7 @@ struct Instance
 
 	char* pName;
 	void* pFields;
-    ReleaseInfo* pRlsInfo;
+    ReleaserRef* pRlsRef;
 	MethodRing* pMethods;
 };
 
@@ -214,8 +290,11 @@ struct InstanceChain
 	Instance* pTail;
 };
 
-Instance* GenerateInstance(void* pFields, char* pName, ReleaseInfo *pRlsInfo, MethodRing* pMethods)
+void* GenerateInstance(void* pFields, char* pName, void *pVdRlsRef, void* pVdMethods)
 {
+    MethodRing *pMethods = pVdMethods;
+    ReleaserRef *pRlsRef = pVdRlsRef;
+
     //即使类没有成员方法，
     //方法环也只能说是0元素，
     //而不能为null，
@@ -238,13 +317,13 @@ Instance* GenerateInstance(void* pFields, char* pName, ReleaseInfo *pRlsInfo, Me
 	pRet->pNext = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
 	pRet->pFields = pFields;
 	pRet->pName = strcpy(pMem, pName);
-	pRet->pRlsInfo = pRlsInfo;
+	pRet->pRlsRef = pRlsRef;
 	pRet->pMethods = pMethods;
 
 	return pRet;
 }
 
-InstanceChain* GenerateInstanceChain()
+void* GenerateInstanceChain()
 {
 	InstanceChain* pRet = malloc(sizeof(InstanceChain));
 
@@ -256,8 +335,11 @@ InstanceChain* GenerateInstanceChain()
 	return pRet;
 }
 
-InstanceChain* InsertInstance(InstanceChain* pChain, Instance* pInstance)
+void* InsertInstance(void* pVdChain, void* pVdInstance)
 {
+    InstanceChain *pChain = pVdChain;
+    Instance *pInstance = pVdInstance;
+
     if (pChain && !pInstance) { return pChain; }
     if (!pChain) { return NULL; }
 
@@ -347,8 +429,10 @@ Instance* FindInstance(InstanceChain* pChain, void* pInst)
 
 //---实现面向对象-----------------------------------------------------------------------------------//
 
-bool Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
+bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 {
+    InstanceChain *pChain = pVdChain;
+
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
     {
         SetErrorInfo("Null pChain or pInst or pFuncName.");
@@ -424,8 +508,10 @@ bool Invoke(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
     }
 }
 
-bool InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pParams)
+bool InvokeSuper(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 {
+    InstanceChain *pChain = pVdChain;
+
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
     {
         SetErrorInfo("Null pChain or pInst or pFuncName.");
@@ -464,8 +550,10 @@ bool InvokeSuper(InstanceChain* pChain, void* pInst, char* pFuncName, void* pPar
     }
 }
 
-void* ConvertByType(InstanceChain* pChain, void* pInst, char* pBaseType)
+void* ConvertByType(void* pVdChain, void* pInst, char* pBaseType)
 {
+    InstanceChain *pChain = pVdChain;
+
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pBaseType || !*pBaseType) { return NULL; }
 
 	for (Instance* pIterator = FindInstance(pChain, pInst); pIterator; pIterator = pIterator->pPrev)
@@ -476,8 +564,10 @@ void* ConvertByType(InstanceChain* pChain, void* pInst, char* pBaseType)
 	return NULL;
 }
 
-void* ConvertByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
+void* ConvertByFunc(void* pVdChain, void* pInst, char* pFuncName)
 {
+    InstanceChain *pChain = pVdChain;
+
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 
 	Instance* pTmpInst = NULL;
@@ -505,8 +595,10 @@ void* ConvertByFunc(InstanceChain* pChain, void* pInst, char* pFuncName)
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
 
-void* ConvertByFuncInherited(InstanceChain* pChain, void* pInst, char* pFuncName)
+void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFuncName)
 {
+    InstanceChain *pChain = pVdChain;
+
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
 
 	Instance* pFindInst = FindInstance(pChain, pInst);
@@ -543,10 +635,10 @@ void Delete(InstanceChain* pChain)
 	do
 	{
 		//释放类实例的附加存储
-        if (pItrInst->pRlsInfo && pItrInst->pRlsInfo->fnRelease)
+        if (pItrInst->pRlsRef && pItrInst->pRlsRef->fnRelease)
         {
-            pItrInst->pRlsInfo->fnRelease(pItrInst->pRlsInfo->pToClear);
-            free(pItrInst->pRlsInfo);
+            pItrInst->pRlsRef->fnRelease(pItrInst->pRlsRef->pToClear);
+            free(pItrInst->pRlsRef);
         }
 		//释放实例数据域
 		free(pItrInst->pFields);
