@@ -28,7 +28,9 @@
 
 int main(int argc, char** argv)
 {
-    Calculator *pCalc = CREATE(Calculator)();
+    RLSLOCALMEMBRA();
+
+    Calculator *pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), &pCalc);
 
     bool bRet = false;
     double dblResult = 0;
@@ -39,9 +41,9 @@ int main(int argc, char** argv)
     INVOKE(Calculator)(pCalc, "Output", &(Calculator_Output){ &dblResult });
     printf("\n11 + 13 = ? %f.\n", dblResult);
 
-    DELETE(Calculator)(&pCalc);
-
 	system("pause");
+
+    RLSLOCALMEMKET();
 
 	return 0;
 }
