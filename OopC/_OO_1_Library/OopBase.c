@@ -615,7 +615,7 @@ void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFuncName)
 	return NULL;
 }
 
-void* AsExactType(InstanceChain* pChain, void* pInst)
+void* ConvertToExactType(InstanceChain* pChain, void* pInst)
 {
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst) { return NULL; }
 
@@ -699,7 +699,7 @@ static void Equal(void* pParams)
 	Object* pThis = ((ParamIn*)pParams)->pInst;
 	Object_Equal* pIn = ((ParamIn*)pParams)->pIn;
 
-	*pIn->pRet = AsExactType(pThis->pChain, pThis) == pIn->pToCmpr;
+	*pIn->pRet = ConvertToExactType(pThis->pChain, pThis) == pIn->pToCmpr;
 }
 
 static void ToString(void* pParams)
@@ -707,7 +707,7 @@ static void ToString(void* pParams)
 	Object* pThis = ((ParamIn*)pParams)->pInst;
 	Object_ToString* pIn = ((ParamIn*)pParams)->pIn;
 
-	printf("%p", AsExactType(pThis->pChain, pThis));
+	printf("%p", ConvertToExactType(pThis->pChain, pThis));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -723,10 +723,9 @@ void* EXTEND(Object)(Object* pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(Object)(Object** ppInst)
+void DELETE(Object)(Object* pInst)
 {
-	Delete((*ppInst)->pChain);
-    *ppInst = NULL;
+	Delete(pInst->pChain);
 }
 
 Object* CREATE(Object)()

@@ -53,8 +53,8 @@
 #define DOEXTEND(pInst) \
                 return pInst->pChain
 
-#define DODELETE(ppInst, theclass, superclass) \
-                superclass *pSuper = SWITCH((*ppInst), theclass, superclass); DELETE(superclass)(&pSuper); *ppInst = NULL
+#define DODELETE(pInst, theclass, superclass) \
+                superclass *pSuper = SWITCH(pInst, theclass, superclass); DELETE(superclass)(pSuper)
 
 #define DOCREATE(pInst, theclass, superclass, pRlsRef, ...)/*创建实例，但并不初始化实例的数据域*/ \
                 theclass *pInst = malloc(sizeof(theclass));                 \
@@ -67,11 +67,11 @@
                     GenerateInstance(pInst, #theclass, pRlsRef, pMethods)) \
 
 #define CLASSDEF(theclass, superclass, ...)/*类定义宏，定义时，给定构造参数，则类没有默认无参构造函数声明，反之，则有*/ \
-	            typedef struct theclass theclass;                                              \
-	            theclass* CREATE(theclass)(__VA_ARGS__);                                       \
-	            bool      INVOKE(theclass)(theclass*   pInst, char* pFuncName, void* pParams); \
-	            void*     EXTEND(theclass)(theclass*   pInst);                                 \
-	            void      DELETE(theclass)(theclass** ppInst)                                  \
+	            typedef struct theclass theclass;                                            \
+	            theclass* CREATE(theclass)(__VA_ARGS__);                                     \
+	            bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams); \
+	            void*     EXTEND(theclass)(theclass* pInst);                                 \
+	            void      DELETE(theclass)(theclass* pInst)                                  \
 
 //-----实现面向对象的一些必要的宏定义--------------------------------------------------------------------------------------------------------------//
 
@@ -110,7 +110,7 @@ OOPLIB_API char *GetErrorInfo(char* pMemIn);
 #define RLSLOCALMEMKET()/*局部动态内存释放环境，结束宏。Release local memory ket*/ \
                       CallReleaser(pLocalMemRefList)
 
-#define          TORLS(fnRelease, pToClear)/*局部动态内存释放标记宏*/ \
+#define          TORLS(fnRelease, pToClear)/*局部动态内存释放标记宏。To Release*/ \
                       InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, pToClear))
 
 OOPLIB_API void* GenerateReleaserRef(void* pfnRelease, void* pToClear);
@@ -159,9 +159,9 @@ OOPLIB_API void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFunc
 typedef struct Object Object;
 
 OOPLIB_API Object* CREATE(Object)();
-OOPLIB_API bool    INVOKE(Object)(Object*   pInst, char* pFuncName, void* pParams);
-OOPLIB_API void*   EXTEND(Object)(Object*   pInst);
-OOPLIB_API void    DELETE(Object)(Object** ppInst);
+OOPLIB_API bool    INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams);
+OOPLIB_API void*   EXTEND(Object)(Object* pInst);
+OOPLIB_API void    DELETE(Object)(Object* pInst);
 
 typedef struct { bool* pRet; void* pToCmpr; } Object_Equal;
 typedef ParamNull Object_ToString;
