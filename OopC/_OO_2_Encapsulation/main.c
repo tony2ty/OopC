@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 {
     RLSLOCALMEMBRA();
 
-    Calculator *pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), &pCalc);
+    Calculator *pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), pCalc);
 
     bool bRet = false;
     double dblResult = 0;

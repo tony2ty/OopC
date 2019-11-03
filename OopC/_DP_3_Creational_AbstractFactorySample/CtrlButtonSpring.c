@@ -54,9 +54,9 @@ void *EXTEND(CtrlButtonSpring)(CtrlButtonSpring *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CtrlButtonSpring)(CtrlButtonSpring **ppInst)
+void DELETE(CtrlButtonSpring)(CtrlButtonSpring *pInst)
 {
-    DODELETE(ppInst, CtrlButtonSpring, ICtrlButton);
+    DODELETE(pInst, CtrlButtonSpring, ICtrlButton);
 }
 
 CtrlButtonSpring *CREATE(CtrlButtonSpring)()

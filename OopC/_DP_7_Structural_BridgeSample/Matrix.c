@@ -47,9 +47,9 @@ void *EXTEND(Matrix)(Matrix *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(Matrix)(Matrix **ppInst)
+void DELETE(Matrix)(Matrix *pInst)
 {
-	DODELETE(ppInst, Matrix, Object);
+	DODELETE(pInst, Matrix, Object);
 }
 
 Matrix *CREATE(Matrix)()

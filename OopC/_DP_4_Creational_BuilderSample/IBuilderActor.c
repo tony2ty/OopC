@@ -45,9 +45,9 @@ void *EXTEND(IBuilderActor)(IBuilderActor *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(IBuilderActor)(IBuilderActor **ppInst)
+void DELETE(IBuilderActor)(IBuilderActor *pInst)
 {
-	DODELETE(ppInst, IBuilderActor, Object);
+	DODELETE(pInst, IBuilderActor, Object);
 }
 
 IBuilderActor *CREATE(IBuilderActor)()

@@ -45,9 +45,9 @@ void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton **ppInst)
+void DELETE(ICtrlButton)(ICtrlButton *pInst)
 {
-    DODELETE(ppInst, ICtrlButton, Object);
+    DODELETE(pInst, ICtrlButton, Object);
 }
 
 ICtrlButton *CREATE(ICtrlButton)()

@@ -29,24 +29,24 @@
 
 int main(int argc, char** argv)
 {
+    RLSLOCALMEMBRA();
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 
 	{
-		Calculator* pCalc = CREATE(Calculator)();
+        Calculator* pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), pCalc);
 
 		double dblRet = 0;
 		INVOKE(Calculator)(pCalc, "Subtract", &(Calculator_Subtract){10, 12, &dblRet});
 		printf("10 - 12 = ? %f.\n", dblRet);
-
-		DELETE(Calculator)(&pCalc);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//
 
 	{
-		CalculatorExt* pCalcExt = CREATE(CalculatorExt)();
+        CalculatorExt* pCalcExt = CREATE(CalculatorExt)(); TORLS(DELETE(CalculatorExt), pCalcExt);
 
 		double dblRet = 0;
 		INVOKE(CalculatorExt)(pCalcExt, "Add", &(CalculatorExt_Add){11, 21, & dblRet});
@@ -57,14 +57,12 @@ int main(int argc, char** argv)
 		printf("11 * 7  = ? %f.\n", dblRet);
 		INVOKE(CalculatorExt)(pCalcExt, "Divide", &(CalculatorExt_Divide){11, 1, & dblRet});
 		printf("11 / 1  = ? %f.\n", dblRet);
-
-		DELETE(CalculatorExt)(&pCalcExt);
 	}
 
 	{
-		Calculator* pBase = NULL;
+        Calculator* pBase = NULL;
 		{
-			CalculatorExt* pExact = CREATE(CalculatorExt)();
+			CalculatorExt* pExact = CREATE(CalculatorExt)(); TORLS(DELETE(CalculatorExt), pExact);
 			pBase = SWITCH(pExact, CalculatorExt, Calculator);
 		}
 
@@ -73,11 +71,9 @@ int main(int argc, char** argv)
 		printf("11 - 5  = ? %f.\n", dblRet);
 		INVOKE(Calculator)(pBase, "Multiply", &(Calculator_Multiply){11, 7, & dblRet});
 		printf("11 * 7  = ? %f.\n", dblRet);
-
-		DELETE(Calculator)(&pBase);
 	}
 
-	system("pause");
+    RLSLOCALMEMKET();
 
 	return 0;
 }

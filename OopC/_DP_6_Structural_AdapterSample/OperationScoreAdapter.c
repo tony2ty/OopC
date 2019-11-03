@@ -37,11 +37,11 @@ struct OperationScoreAdapter
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void ClearExtMem(void *pToClear)
+static void Clear(void *pToClear)
 {
 	OperationScoreAdapter *pInst = (OperationScoreAdapter *)pToClear;
-	DELETE(QuickSorter)(&pInst->pSorter);
-	DELETE(BinarySearcher)(&pInst->pSearcher);
+	DELETE(QuickSorter)(pInst->pSorter);
+	DELETE(BinarySearcher)(pInst->pSearcher);
 }
 
 static void DoSort(void *pParams)
@@ -74,14 +74,14 @@ void *EXTEND(OperationScoreAdapter)(OperationScoreAdapter *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(OperationScoreAdapter)(OperationScoreAdapter **ppInst)
+void DELETE(OperationScoreAdapter)(OperationScoreAdapter *pInst)
 {
-	DODELETE(ppInst, OperationScoreAdapter, IOperationScore);
+	DODELETE(pInst, OperationScoreAdapter, IOperationScore);
 }
 
 OperationScoreAdapter *CREATE(OperationScoreAdapter)()
 {
-	DOCREATE(pCreate, OperationScoreAdapter, IOperationScore, GenerateReleaseInfo(ClearExtMem, pCreate),
+	DOCREATE(pCreate, OperationScoreAdapter, IOperationScore, GenerateReleaserRef(Clear, pCreate),
 		METHOD(DoSort)
 		METHOD(DoSearch));
 

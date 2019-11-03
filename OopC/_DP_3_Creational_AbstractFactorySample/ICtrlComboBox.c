@@ -45,9 +45,9 @@ void *EXTEND(ICtrlComboBox)(ICtrlComboBox *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlComboBox)(ICtrlComboBox **ppInst)
+void DELETE(ICtrlComboBox)(ICtrlComboBox *pInst)
 {
-    DODELETE(ppInst, ICtrlComboBox, Object);
+    DODELETE(pInst, ICtrlComboBox, Object);
 }
 
 ICtrlComboBox *CREATE(ICtrlComboBox)()

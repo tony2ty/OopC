@@ -45,9 +45,9 @@ void* EXTEND(ILoggerFactory)(ILoggerFactory* pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(ILoggerFactory)(ILoggerFactory** ppInst)
+void DELETE(ILoggerFactory)(ILoggerFactory* pInst)
 {
-    DODELETE(ppInst, ILoggerFactory, Object);
+    DODELETE(pInst, ILoggerFactory, Object);
 }
 
 ILoggerFactory* CREATE(ILoggerFactory)()

@@ -11,10 +11,12 @@
 
 int main(int argc, char **argv)
 {
+    RLSLOCALMEMBRA();
+
     {
         IFactorySkin *pFactory = NULL;
         {
-            FactorySkinSpring *pFactorySpring = CREATE(FactorySkinSpring)();
+            FactorySkinSpring *pFactorySpring = CREATE(FactorySkinSpring)(); TORLS(DELETE(FactorySkinSpring), pFactorySpring);
             pFactory = SWITCH(pFactorySpring, FactorySkinSpring, IFactorySkin);
         }
 
@@ -22,19 +24,13 @@ int main(int argc, char **argv)
         ICtrlTextField *pTextField = NULL;
         ICtrlComboBox *pComboBox = NULL;
 
-        INVOKE(IFactorySkin)(pFactory, "CreateButton", &(IFactorySkin_CreateButton){&pButton});
-        INVOKE(IFactorySkin)(pFactory, "CreateTextField", &(IFactorySkin_CreateTextField){&pTextField});
-        INVOKE(IFactorySkin)(pFactory, "CreateComboBox", &(IFactorySkin_CreateComboBox){&pComboBox});
+        INVOKE(IFactorySkin)(pFactory, "CreateButton", &(IFactorySkin_CreateButton){&pButton}); TORLS(DELETE(ICtrlButton), pButton);
+        INVOKE(IFactorySkin)(pFactory, "CreateTextField", &(IFactorySkin_CreateTextField){&pTextField}); TORLS(DELETE(ICtrlTextField), pTextField);
+        INVOKE(IFactorySkin)(pFactory, "CreateComboBox", &(IFactorySkin_CreateComboBox){&pComboBox}); TORLS(DELETE(ICtrlComboBox), pComboBox);
 
         INVOKE(ICtrlButton)(pButton, "Display", NULL);
         INVOKE(ICtrlTextField)(pTextField, "Display", NULL);
         INVOKE(ICtrlComboBox)(pComboBox, "Display", NULL);
-
-        DELETE(ICtrlButton)(&pButton);
-        DELETE(ICtrlTextField)(&pTextField);
-        DELETE(ICtrlComboBox)(&pComboBox);
-
-        DELETE(IFactorySkin)(&pFactory);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +38,7 @@ int main(int argc, char **argv)
     {
         IFactorySkin *pFactory = NULL;
         {
-            FactorySkinSummer *pFactorySummer = CREATE(FactorySkinSummer)();
+            FactorySkinSummer *pFactorySummer = CREATE(FactorySkinSummer)(); TORLS(DELETE(FactorySkinSummer), pFactorySummer);
             pFactory = SWITCH(pFactorySummer, FactorySkinSummer, IFactorySkin);
         }
 
@@ -50,22 +46,18 @@ int main(int argc, char **argv)
         ICtrlTextField *pTextField = NULL;
         ICtrlComboBox *pComboBox = NULL;
 
-        INVOKE(IFactorySkin)(pFactory, "CreateButton", &(IFactorySkin_CreateButton){ &pButton });
-        INVOKE(IFactorySkin)(pFactory, "CreateTextField", &(IFactorySkin_CreateTextField){ &pTextField });
-        INVOKE(IFactorySkin)(pFactory, "CreateComboBox", &(IFactorySkin_CreateComboBox){ &pComboBox });
+        INVOKE(IFactorySkin)(pFactory, "CreateButton", &(IFactorySkin_CreateButton){ &pButton }); TORLS(DELETE(ICtrlButton), pButton);
+        INVOKE(IFactorySkin)(pFactory, "CreateTextField", &(IFactorySkin_CreateTextField){ &pTextField }); TORLS(DELETE(ICtrlTextField), pTextField);
+        INVOKE(IFactorySkin)(pFactory, "CreateComboBox", &(IFactorySkin_CreateComboBox){ &pComboBox }); TORLS(DELETE(ICtrlComboBox), pComboBox);
 
         INVOKE(ICtrlButton)(pButton, "Display", NULL);
         INVOKE(ICtrlTextField)(pTextField, "Display", NULL);
         INVOKE(ICtrlComboBox)(pComboBox, "Display", NULL);
-
-        DELETE(ICtrlButton)(&pButton);
-        DELETE(ICtrlTextField)(&pTextField);
-        DELETE(ICtrlComboBox)(&pComboBox);
-
-        DELETE(IFactorySkin)(&pFactory);
     }
 
     system("pause");
+
+    RLSLOCALMEMKET();
     
     return 0;
 }

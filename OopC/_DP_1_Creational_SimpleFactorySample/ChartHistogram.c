@@ -54,9 +54,9 @@ void *EXTEND(ChartHistogram)(ChartHistogram *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(ChartHistogram)(ChartHistogram **ppInst)
+void DELETE(ChartHistogram)(ChartHistogram *pInst)
 {
-    DODELETE(ppInst, ChartHistogram, IChart);
+    DODELETE(pInst, ChartHistogram, IChart);
 }
 
 ChartHistogram *CREATE(ChartHistogram)()

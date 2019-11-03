@@ -39,11 +39,14 @@ static void ParseFile(void *pParams)
 	ImageGif *pThis = ((ParamIn *)pParams)->pInst;
 	ImageGif_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
 
+    RLSLOCALMEMBRA();
+
 	//Todo: 
     printf("½âÎöGif¸ñÊ½Í¼Æ¬ %s\n", pIn->pFileName);
-    Matrix *pMat = CREATE(Matrix)();
+    Matrix *pMat = CREATE(Matrix)(); TORLS(DELETE(Matrix), pMat);
     DOINVOKESUPER(pThis, "DoPaint", &(IImage_DoPaint){pMat});
-    DELETE(Matrix)(&pMat);
+
+    RLSLOCALMEMKET();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -59,9 +62,9 @@ void *EXTEND(ImageGif)(ImageGif *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(ImageGif)(ImageGif **ppInst)
+void DELETE(ImageGif)(ImageGif *pInst)
 {
-	DODELETE(ppInst, ImageGif, IImage);
+	DODELETE(pInst, ImageGif, IImage);
 }
 
 ImageGif *CREATE(ImageGif)()

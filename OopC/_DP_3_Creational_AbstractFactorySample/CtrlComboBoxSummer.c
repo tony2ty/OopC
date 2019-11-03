@@ -54,9 +54,9 @@ void *EXTEND(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CtrlComboBoxSummer)(CtrlComboBoxSummer **ppInst)
+void DELETE(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst)
 {
-    DODELETE(ppInst, CtrlComboBoxSummer, ICtrlComboBox);
+    DODELETE(pInst, CtrlComboBoxSummer, ICtrlComboBox);
 }
 
 CtrlComboBoxSummer *CREATE(CtrlComboBoxSummer)()

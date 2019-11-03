@@ -56,9 +56,9 @@ void *EXTEND(OprtSysLinux)(OprtSysLinux *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(OprtSysLinux)(OprtSysLinux **ppInst)
+void DELETE(OprtSysLinux)(OprtSysLinux *pInst)
 {
-	DODELETE(ppInst, OprtSysLinux, IOprtSys);
+	DODELETE(pInst, OprtSysLinux, IOprtSys);
 }
 
 OprtSysLinux *CREATE(OprtSysLinux)()

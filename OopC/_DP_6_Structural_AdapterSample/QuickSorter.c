@@ -61,9 +61,9 @@ void *EXTEND(QuickSorter)(QuickSorter *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(QuickSorter)(QuickSorter **ppInst)
+void DELETE(QuickSorter)(QuickSorter *pInst)
 {
-	DODELETE(ppInst, QuickSorter, Object);
+	DODELETE(pInst, QuickSorter, Object);
 }
 
 QuickSorter *CREATE(QuickSorter)()

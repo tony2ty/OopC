@@ -45,9 +45,9 @@ void *EXTEND(IChart)(IChart *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(IChart)(IChart **ppInst)
+void DELETE(IChart)(IChart *pInst)
 {
-    DODELETE(ppInst, IChart, Object);
+    DODELETE(pInst, IChart, Object);
 }
 
 IChart *CREATE(IChart)()

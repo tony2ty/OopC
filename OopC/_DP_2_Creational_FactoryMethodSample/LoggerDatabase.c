@@ -54,9 +54,9 @@ void* EXTEND(LoggerDatabase)(LoggerDatabase* pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(LoggerDatabase)(LoggerDatabase** ppInst)
+void DELETE(LoggerDatabase)(LoggerDatabase* pInst)
 {
-    DODELETE(ppInst, LoggerDatabase, ILogger);
+    DODELETE(pInst, LoggerDatabase, ILogger);
 }
 
 LoggerDatabase* CREATE(LoggerDatabase)()

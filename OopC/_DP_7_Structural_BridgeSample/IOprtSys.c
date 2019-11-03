@@ -47,9 +47,9 @@ void *EXTEND(IOprtSys)(IOprtSys *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(IOprtSys)(IOprtSys **ppInst)
+void DELETE(IOprtSys)(IOprtSys *pInst)
 {
-	DODELETE(ppInst, IOprtSys, Object);
+	DODELETE(pInst, IOprtSys, Object);
 }
 
 IOprtSys *CREATE(IOprtSys)()

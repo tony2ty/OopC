@@ -4,8 +4,10 @@
 
 int main(int argc, char **argv)
 {
-    ModelGenerator *pGenerator = CREATE(ModelGenerator)();
-    ModelGenerator *pGenerator2 = CREATE(ModelGenerator)();
+    RLSLOCALMEMBRA();
+
+    ModelGenerator *pGenerator = CREATE(ModelGenerator)(); TORLS(DELETE(ModelGenerator), pGenerator);
+    ModelGenerator *pGenerator2 = CREATE(ModelGenerator)(); //TORLS(DELETE(ModelGenerator), pGenerator2);//两次create均使用的相同单例，因此不能再次标记TORLS，可以取消注释运行试试
 
     if (pGenerator == pGenerator2)
     {
@@ -19,6 +21,8 @@ int main(int argc, char **argv)
     int nModel = -1;
     INVOKE(ModelGenerator)(pGenerator, "GetModel", &(ModelGenerator_GetModel){ &nModel });
     printf("The new model generated is %d.\n", nModel);
+
+    RLSLOCALMEMKET();
 
     return 0;
 }

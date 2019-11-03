@@ -75,9 +75,9 @@ void *EXTEND(FactorySkinSummer)(FactorySkinSummer *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(FactorySkinSummer)(FactorySkinSummer **ppInst)
+void DELETE(FactorySkinSummer)(FactorySkinSummer *pInst)
 {
-    DODELETE(ppInst, FactorySkinSummer, IFactorySkin);
+    DODELETE(pInst, FactorySkinSummer, IFactorySkin);
 }
 
 FactorySkinSummer *CREATE(FactorySkinSummer)()

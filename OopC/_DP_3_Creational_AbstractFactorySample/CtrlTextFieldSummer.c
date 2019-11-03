@@ -54,9 +54,9 @@ void *EXTEND(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CtrlTextFieldSummer)(CtrlTextFieldSummer **ppInst)
+void DELETE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst)
 {
-    DODELETE(ppInst, CtrlTextFieldSummer, ICtrlTextField);
+    DODELETE(pInst, CtrlTextFieldSummer, ICtrlTextField);
 }
 
 CtrlTextFieldSummer *CREATE(CtrlTextFieldSummer)()

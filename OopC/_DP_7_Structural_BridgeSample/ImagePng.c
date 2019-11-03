@@ -39,11 +39,14 @@ static void ParseFile(void *pParams)
 	ImagePng *pThis = ((ParamIn *)pParams)->pInst;
 	ImagePng_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
 
+    RLSLOCALMEMBRA();
+
 	//Todo: 
     printf("½âÎöPng¸ñÊ½Í¼Æ¬ %s\n", pIn->pFileName);
-    Matrix *pMat = CREATE(Matrix)();
+    Matrix *pMat = CREATE(Matrix)(); TORLS(DELETE(Matrix), pMat);
     DOINVOKESUPER(pThis, "DoPaint", &(IImage_DoPaint){pMat});
-    DELETE(Matrix)(&pMat);
+
+    RLSLOCALMEMKET();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -59,9 +62,9 @@ void *EXTEND(ImagePng)(ImagePng *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(ImagePng)(ImagePng **ppInst)
+void DELETE(ImagePng)(ImagePng *pInst)
 {
-	DODELETE(ppInst, ImagePng, IImage);
+	DODELETE(pInst, ImagePng, IImage);
 }
 
 ImagePng *CREATE(ImagePng)()

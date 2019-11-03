@@ -45,9 +45,9 @@ void *EXTEND(ICtrlTextField)(ICtrlTextField *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(ICtrlTextField)(ICtrlTextField **ppInst)
+void DELETE(ICtrlTextField)(ICtrlTextField *pInst)
 {
-    DODELETE(ppInst, ICtrlTextField, Object);
+    DODELETE(pInst, ICtrlTextField, Object);
 }
 
 ICtrlTextField *CREATE(ICtrlTextField)()

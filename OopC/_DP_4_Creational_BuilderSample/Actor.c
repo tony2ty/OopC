@@ -127,7 +127,7 @@ static void HairStyle(void *pParams)
 ///////////////////////////////////////////////////////////////////////
 //
 
-static void ClearExtraMem(void *pToClear)
+static void Clear(void *pToClear)
 {
 	Actor *pInst = (Actor *)pToClear;
 	free(pInst->pType);
@@ -150,14 +150,14 @@ void *EXTEND(Actor)(Actor *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(Actor)(Actor **ppInst)
+void DELETE(Actor)(Actor *pInst)
 {
-	DODELETE(ppInst, Actor, Object);
+	DODELETE(pInst, Actor, Object);
 }
 
 Actor *CREATE(Actor)()
 {
-	DOCREATE(pCreate, Actor, Object, GenerateReleaseInfo(ClearExtraMem, pCreate),
+	DOCREATE(pCreate, Actor, Object, GenerateReleaserRef(Clear, pCreate),
 		METHOD(Type)
 		METHOD(Gender)
 		METHOD(Face)

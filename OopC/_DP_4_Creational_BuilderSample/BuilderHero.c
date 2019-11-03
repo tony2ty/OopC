@@ -100,9 +100,9 @@ void *EXTEND(BuilderHero)(BuilderHero *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(BuilderHero)(BuilderHero **ppInst)
+void DELETE(BuilderHero)(BuilderHero *pInst)
 {
-	DODELETE(ppInst, BuilderHero, IBuilderActor);
+	DODELETE(pInst, BuilderHero, IBuilderActor);
 }
 
 BuilderHero *CREATE(BuilderHero)()

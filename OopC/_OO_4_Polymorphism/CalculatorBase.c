@@ -45,9 +45,9 @@ void* EXTEND(CalculatorBase)(CalculatorBase* pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CalculatorBase)(CalculatorBase** ppInst)
+void DELETE(CalculatorBase)(CalculatorBase* pInst)
 {
-    DODELETE(ppInst, CalculatorBase, Object);
+    DODELETE(pInst, CalculatorBase, Object);
 }
 
 CalculatorBase* CREATE(CalculatorBase)()

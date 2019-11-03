@@ -62,9 +62,9 @@ void *EXTEND(ModelGenerator)(ModelGenerator *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(ModelGenerator)(ModelGenerator **ppInst)
+void DELETE(ModelGenerator)(ModelGenerator *pInst)
 {
-	DODELETE(ppInst, ModelGenerator, Object);
+	DODELETE(pInst, ModelGenerator, Object);
 }
 
 ModelGenerator *CREATE(ModelGenerator)()

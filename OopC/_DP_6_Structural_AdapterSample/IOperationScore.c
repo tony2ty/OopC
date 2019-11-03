@@ -47,9 +47,9 @@ void *EXTEND(IOperationScore)(IOperationScore *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(IOperationScore)(IOperationScore **ppInst)
+void DELETE(IOperationScore)(IOperationScore *pInst)
 {
-	DODELETE(ppInst, IOperationScore, Object);
+	DODELETE(pInst, IOperationScore, Object);
 }
 
 IOperationScore *CREATE(IOperationScore)()

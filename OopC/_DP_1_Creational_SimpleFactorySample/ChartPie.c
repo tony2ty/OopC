@@ -54,9 +54,9 @@ void *EXTEND(ChartPie)(ChartPie *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(ChartPie)(ChartPie **ppInst)
+void DELETE(ChartPie)(ChartPie *pInst)
 {
-    DODELETE(ppInst, ChartPie, IChart);
+    DODELETE(pInst, ChartPie, IChart);
 }
 
 ChartPie *CREATE(ChartPie)()

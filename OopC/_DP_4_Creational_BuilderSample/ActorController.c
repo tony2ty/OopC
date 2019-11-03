@@ -59,9 +59,9 @@ void *EXTEND(ActorController)(ActorController *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(ActorController)(ActorController **ppInst)
+void DELETE(ActorController)(ActorController *pInst)
 {
-	DODELETE(ppInst, ActorController, Object);
+	DODELETE(pInst, ActorController, Object);
 }
 
 ActorController *CREATE(ActorController)()

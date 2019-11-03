@@ -54,12 +54,12 @@ static void SetOprtSys(void *pParams)
 //////////////////////////////////////////////////////////////////////////
 //
 
-static void ClearExtraMem(void *pToClear)
+static void Clear(void *pToClear)
 {
     IImage *pInst = pToClear;
     if (pInst->pOS)
     {
-        DELETE(IOprtSys)(&pInst->pOS);
+        DELETE(IOprtSys)(pInst->pOS);
     }
     pInst->pOS = NULL;
 }
@@ -77,14 +77,14 @@ void *EXTEND(IImage)(IImage *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(IImage)(IImage **ppInst)
+void DELETE(IImage)(IImage *pInst)
 {
-	DODELETE(ppInst, IImage, Object);
+	DODELETE(pInst, IImage, Object);
 }
 
 IImage *CREATE(IImage)()
 {
-	DOCREATE(pCreate, IImage, Object, GenerateReleaseInfo(ClearExtraMem, pCreate),
+	DOCREATE(pCreate, IImage, Object, GenerateReleaserRef(Clear, pCreate),
 		METHOD(DoPaint)
 		METHOD(SetOprtSys)
 		AMETHOD(ParseFile));

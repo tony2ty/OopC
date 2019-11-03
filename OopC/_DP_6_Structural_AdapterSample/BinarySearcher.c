@@ -69,9 +69,9 @@ void *EXTEND(BinarySearcher)(BinarySearcher *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(BinarySearcher)(BinarySearcher **ppInst)
+void DELETE(BinarySearcher)(BinarySearcher *pInst)
 {
-	DODELETE(ppInst, BinarySearcher, Object);
+	DODELETE(pInst, BinarySearcher, Object);
 }
 
 BinarySearcher *CREATE(BinarySearcher)()

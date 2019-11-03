@@ -56,9 +56,9 @@ void *EXTEND(OprtSysWindows)(OprtSysWindows *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(OprtSysWindows)(OprtSysWindows **ppInst)
+void DELETE(OprtSysWindows)(OprtSysWindows *pInst)
 {
-	DODELETE(ppInst, OprtSysWindows, IOprtSys);
+	DODELETE(pInst, OprtSysWindows, IOprtSys);
 }
 
 OprtSysWindows *CREATE(OprtSysWindows)()

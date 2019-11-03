@@ -54,9 +54,9 @@ void *EXTEND(CtrlButtonSummer)(CtrlButtonSummer *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CtrlButtonSummer)(CtrlButtonSummer **ppInst)
+void DELETE(CtrlButtonSummer)(CtrlButtonSummer *pInst)
 {
-    DODELETE(ppInst, CtrlButtonSummer, ICtrlButton);
+    DODELETE(pInst, CtrlButtonSummer, ICtrlButton);
 }
 
 CtrlButtonSummer *CREATE(CtrlButtonSummer)()

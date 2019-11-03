@@ -100,9 +100,9 @@ void *EXTEND(BuilderAngel)(BuilderAngel *pInst)
 	DOEXTEND(pInst);
 }
 
-void DELETE(BuilderAngel)(BuilderAngel **ppInst)
+void DELETE(BuilderAngel)(BuilderAngel *pInst)
 {
-	DODELETE(ppInst, BuilderAngel, IBuilderActor);
+	DODELETE(pInst, BuilderAngel, IBuilderActor);
 }
 
 BuilderAngel *CREATE(BuilderAngel)()

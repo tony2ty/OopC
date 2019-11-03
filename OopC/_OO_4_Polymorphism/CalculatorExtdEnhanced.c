@@ -86,9 +86,9 @@ void* EXTEND(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced** ppInst)
+void DELETE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst)
 {
-    DODELETE(ppInst, CalculatorExtdEnhanced, CalculatorBase);
+    DODELETE(pInst, CalculatorExtdEnhanced, CalculatorBase);
 }
 
 CalculatorExtdEnhanced* CREATE(CalculatorExtdEnhanced)()

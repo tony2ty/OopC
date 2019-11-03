@@ -54,9 +54,9 @@ void *EXTEND(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(CtrlTextFieldSpring)(CtrlTextFieldSpring **ppInst)
+void DELETE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst)
 {
-    DODELETE(ppInst, CtrlTextFieldSpring, ICtrlTextField);
+    DODELETE(pInst, CtrlTextFieldSpring, ICtrlTextField);
 }
 
 CtrlTextFieldSpring *CREATE(CtrlTextFieldSpring)()

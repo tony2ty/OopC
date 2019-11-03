@@ -27,9 +27,11 @@
 
 int main(int argc, char **argv)
 {
+    RLSLOCALMEMBRA();
+
 	IOperationScore *pOprtScr = NULL;
 	{
-		OperationScoreAdapter *pAdapter = CREATE(OperationScoreAdapter)();
+        OperationScoreAdapter *pAdapter = CREATE(OperationScoreAdapter)(); TORLS(DELETE(OperationScoreAdapter), pAdapter);
 		pOprtScr = SWITCH(pAdapter, OperationScoreAdapter, IOperationScore);
 	}
 
@@ -58,7 +60,7 @@ int main(int argc, char **argv)
 	INVOKE(IOperationScore)(pOprtScr, "DoSearch", &(IOperationScore_DoSearch){arr, szLen, 6, &nIndexFind});
 	printf("Index of 6 is: %d.\n", nIndexFind);
 
-	DELETE(IOperationScore)(&pOprtScr);
+    RLSLOCALMEMKET();
 
 	return 0;
 }

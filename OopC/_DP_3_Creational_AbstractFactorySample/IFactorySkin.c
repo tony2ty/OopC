@@ -45,9 +45,9 @@ void *EXTEND(IFactorySkin)(IFactorySkin *pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(IFactorySkin)(IFactorySkin **ppInst)
+void DELETE(IFactorySkin)(IFactorySkin *pInst)
 {
-    DODELETE(ppInst, IFactorySkin, Object);
+    DODELETE(pInst, IFactorySkin, Object);
 }
 
 IFactorySkin *CREATE(IFactorySkin)()

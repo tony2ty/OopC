@@ -57,9 +57,9 @@ void* EXTEND(LoggerFactoryFile)(LoggerFactoryFile* pInst)
     DOEXTEND(pInst);
 }
 
-void DELETE(LoggerFactoryFile)(LoggerFactoryFile** ppInst)
+void DELETE(LoggerFactoryFile)(LoggerFactoryFile* pInst)
 {
-    DODELETE(ppInst, LoggerFactoryFile, ILoggerFactory);
+    DODELETE(pInst, LoggerFactoryFile, ILoggerFactory);
 }
 
 LoggerFactoryFile* CREATE(LoggerFactoryFile)()
