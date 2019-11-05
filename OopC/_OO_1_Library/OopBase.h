@@ -64,7 +64,7 @@
                 __VA_ARGS__                                                 \
                 pInst->pChain = InsertInstance(                             \
                     EXTEND(superclass)(CREATE(superclass)()),               \
-                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods)) \
+                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods))  \
 
 #define CLASSDEF(theclass, superclass, ...)/*类定义宏，定义时，给定构造参数，则类没有默认无参构造函数声明，反之，则有*/ \
 	            typedef struct theclass theclass;                                            \
@@ -75,7 +75,7 @@
 
 //-----实现面向对象的一些必要的宏定义--------------------------------------------------------------------------------------------------------------//
 
-#define      ABSTRACT//抽象方法注释符号
+#define      ABSTRACT/*抽象方法注释符号*/
 
 #define      CHAINDEF/*标准实例链定义*/ \
                      void *pChain
