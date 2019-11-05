@@ -27,34 +27,9 @@
 #include <string.h>
 #include <stdio.h>
 
-////OopBase//////////////////////////////////////////////////////////////////////////////
-//
-
-//---错误信息-----------------------------------------------------------------------------------//
-
-char *pErrorBuffer = NULL;
-
-char * GetErrorInfo(char * pMemIn)
-{
-    if (!pErrorBuffer) { return pMemIn; }
-
-    int nLen = strlen(pErrorBuffer) + 1;
-    return memcpy(realloc(pMemIn, nLen), pErrorBuffer, nLen);
-}
-
-void SetErrorInfo(char *pErrorInfo)
-{
-    if (!pErrorInfo || !*pErrorInfo) { return; }
-    
-    int nLen = strlen(pErrorInfo) + 1;
-    pErrorBuffer = memcpy(realloc(pErrorBuffer, nLen), pErrorInfo, nLen);
-}
-
-///////////////////////////////////////////////////////////////////////////////////
-//
-
-//---内存释放-----------------------------------------------------------------------------------//
-
+/**********************************************************/
+/*********** Simple api for memory releasing **************/
+/**********************************************************/
 typedef void(* Releaser)(void*);
 typedef struct ReleaserRef ReleaserRef;
 typedef struct ReleaserRefList ReleaserRefList;
@@ -74,7 +49,7 @@ struct ReleaserRefList
     ReleaserRef *pTail;
 };
 
-void* GenerateReleaserRef(void* pfnRelease, void* pToClear)
+void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear)
 {
     Releaser fnRelease = pfnRelease;
 
@@ -157,12 +132,11 @@ void CallReleaser(void *pVdList)
     free(pList);
 }
 
-///////////////////////////////////////////////////////////////////////////////////
-//
+/**********************************************************/
+/********* Implements of functions of OOP *****************/
+/**********************************************************/
 
-//---实例链，方法-----------------------------------------------------------------------------------//
-
-//成员方法标准类型
+//1.datastructure and api
 typedef void(*Transit)(void*);
 typedef struct Method Method;
 typedef struct MethodRing MethodRing;
@@ -182,8 +156,9 @@ struct MethodRing
 	Method* pTail;
 };
 
-void* GenerateMethod(Transit fnExec, char* pName)
+void* GenerateMethod(void(*pfnAddr)(void *), char* pName)
 {
+    Transit fnExec = pfnAddr;
     //fnExec可能为null，在这种场景下可能会出现
     //一个类添加了名为pName的方法，
     //但是没有给出具体实现，
@@ -265,10 +240,6 @@ void * InsertMethod(void * pVdMethods, int nMethodNum, ...)
     return pMethods;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-//---实例链，实例-----------------------------------------------------------------------------------//
 
 typedef struct Instance Instance;
 typedef struct InstanceChain InstanceChain;
@@ -371,10 +342,24 @@ void* InsertInstance(void* pVdChain, void* pVdInstance)
 	return NULL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
+//2.oop rules and some operations like simple error handling
+char *pErrorBuffer = NULL;
 
-//---实现面向对象，辅助函数-----------------------------------------------------------------------------------//
+char * GetErrorInfo(char * pMemIn)
+{
+    if (!pErrorBuffer) { return pMemIn; }
+
+    int nLen = strlen(pErrorBuffer) + 1;
+    return memcpy(realloc(pMemIn, nLen), pErrorBuffer, nLen);
+}
+
+void SetErrorInfo(char *pErrorInfo)
+{
+    if (!pErrorInfo || !*pErrorInfo) { return; }
+
+    int nLen = strlen(pErrorInfo) + 1;
+    pErrorBuffer = memcpy(realloc(pErrorBuffer, nLen), pErrorInfo, nLen);
+}
 
 bool ContainMethod(MethodRing *pRing, char *pName)
 {
@@ -424,10 +409,6 @@ Instance* FindInstance(InstanceChain* pChain, void* pInst)
 	return NULL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-//---实现面向对象-----------------------------------------------------------------------------------//
 
 bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 {
@@ -684,11 +665,10 @@ void Delete(InstanceChain* pChain)
 	free(pChain);
 }
 
-/////Object/////////////////////////////////////////////////////////////////////////////////
-//
 
-//---面向对象Object基类-----------------------------------------------------------------------------------//
-
+/***************************************************/
+/*********** Super super class: Object *************/
+/***************************************************/
 struct Object
 {
     CHAINDEF;
@@ -710,8 +690,6 @@ static void ToString(void* pParams)
 	printf("%p", ConvertToExactType(pThis->pChain, pThis));
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
-//
 
 bool INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
 {
