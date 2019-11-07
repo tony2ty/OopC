@@ -33,7 +33,6 @@
 typedef void(* Releaser)(void*);
 typedef struct ReleaserRef ReleaserRef;
 typedef struct ReleaserRefList ReleaserRefList;
-
 struct ReleaserRef
 {
     ReleaserRef *pPrev;
@@ -42,13 +41,11 @@ struct ReleaserRef
 	void* pToClear;
     Releaser fnRelease;
 };
-
 struct ReleaserRefList
 {
     ReleaserRef *pHead;
     ReleaserRef *pTail;
 };
-
 void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear)
 {
     Releaser fnRelease = pfnRelease;
@@ -65,7 +62,6 @@ void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear)
 
 	return pRet;
 }
-
 void* GenerateReleaserRefList()
 {
     ReleaserRefList *pRet = malloc(sizeof(ReleaserRefList));
@@ -77,8 +73,7 @@ void* GenerateReleaserRefList()
 
     return pRet;
 }
-
-void* InsertReleaserRef(void *pVdList, void *pVdRlsRef)
+void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef)
 {
     ReleaserRefList *pList = pVdList;
     ReleaserRef *pRlsRef = pVdRlsRef;
@@ -107,8 +102,7 @@ void* InsertReleaserRef(void *pVdList, void *pVdRlsRef)
 
     return NULL;
 }
-
-void CallReleaser(void *pVdList)
+void      CallReleaser(void *pVdList)
 {
     ReleaserRefList *pList = pVdList;
 
@@ -118,7 +112,7 @@ void CallReleaser(void *pVdList)
     {
         if (pIterator->fnRelease)
         {
-            (pIterator->fnRelease)(pIterator->pToClear);
+            pIterator->fnRelease(pIterator->pToClear);
         }
     }
 
@@ -132,6 +126,7 @@ void CallReleaser(void *pVdList)
     free(pList);
 }
 
+
 /**********************************************************/
 /********* Implements of functions of OOP *****************/
 /**********************************************************/
@@ -140,7 +135,6 @@ void CallReleaser(void *pVdList)
 typedef void(*Transit)(void*);
 typedef struct Method Method;
 typedef struct MethodRing MethodRing;
-
 struct Method
 {
 	Method* pPrev;
@@ -149,13 +143,11 @@ struct Method
 	char* pName;
 	Transit fnExec;
 };
-
 struct MethodRing
 {
 	Method* pHead;
 	Method* pTail;
 };
-
 void* GenerateMethod(void(*pfnAddr)(void *), char* pName)
 {
     Transit fnExec = pfnAddr;
@@ -185,7 +177,6 @@ void* GenerateMethod(void(*pfnAddr)(void *), char* pName)
 
 	return pRet;
 }
-
 void* GenerateMethodRing()
 {
 	MethodRing* pRet = malloc(sizeof(MethodRing));
@@ -197,8 +188,7 @@ void* GenerateMethodRing()
 
 	return pRet;
 }
-
-void * InsertMethod(void * pVdMethods, int nMethodNum, ...)
+void *  InsertMethod(void * pVdMethods, int nMethodNum, ...)
 {
     MethodRing *pMethods = pVdMethods;
 
@@ -240,10 +230,8 @@ void * InsertMethod(void * pVdMethods, int nMethodNum, ...)
     return pMethods;
 }
 
-
 typedef struct Instance Instance;
 typedef struct InstanceChain InstanceChain;
-
 struct Instance
 {
 	Instance* pPrev;
@@ -254,13 +242,11 @@ struct Instance
     ReleaserRef* pRlsRef;
 	MethodRing* pMethods;
 };
-
 struct InstanceChain
 {
 	Instance* pHead;
 	Instance* pTail;
 };
-
 void* GenerateInstance(void* pFields, char* pName, void *pVdRlsRef, void* pVdMethods)
 {
     MethodRing *pMethods = pVdMethods;
@@ -293,7 +279,6 @@ void* GenerateInstance(void* pFields, char* pName, void *pVdRlsRef, void* pVdMet
 
 	return pRet;
 }
-
 void* GenerateInstanceChain()
 {
 	InstanceChain* pRet = malloc(sizeof(InstanceChain));
@@ -305,8 +290,7 @@ void* GenerateInstanceChain()
 
 	return pRet;
 }
-
-void* InsertInstance(void* pVdChain, void* pVdInstance)
+void*   InsertInstance(void* pVdChain, void* pVdInstance)
 {
     InstanceChain *pChain = pVdChain;
     Instance *pInstance = pVdInstance;
@@ -343,22 +327,14 @@ void* InsertInstance(void* pVdChain, void* pVdInstance)
 }
 
 //2.oop rules and some operations like simple error handling
-char *pErrorBuffer = NULL;
-
-char * GetErrorInfo(char * pMemIn)
+int  nInvokeErrorCode = INVKSUCCESS;
+int  GetInvokeRetCode()
 {
-    if (!pErrorBuffer) { return pMemIn; }
-
-    int nLen = strlen(pErrorBuffer) + 1;
-    return memcpy(realloc(pMemIn, nLen), pErrorBuffer, nLen);
+	return nInvokeErrorCode;
 }
-
-void SetErrorInfo(char *pErrorInfo)
+void SetInvokeRetCode()
 {
-    if (!pErrorInfo || !*pErrorInfo) { return; }
-
-    int nLen = strlen(pErrorInfo) + 1;
-    pErrorBuffer = memcpy(realloc(pErrorBuffer, nLen), pErrorInfo, nLen);
+	nInvokeErrorCode = INVKSUCCESS;
 }
 
 bool ContainMethod(MethodRing *pRing, char *pName)
@@ -375,7 +351,6 @@ bool ContainMethod(MethodRing *pRing, char *pName)
 
     return false;
 }
-
 Method* FindMethod(MethodRing* pRing, char* pName)
 {
     if (!pRing || !pRing->pHead || !pRing->pTail || !pName || !*pName) { return NULL; }
@@ -393,7 +368,6 @@ Method* FindMethod(MethodRing* pRing, char* pName)
 
 	return NULL;
 }
-
 Instance* FindInstance(InstanceChain* pChain, void* pInst)
 {
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst) { return NULL; }
@@ -409,14 +383,13 @@ Instance* FindInstance(InstanceChain* pChain, void* pInst)
 	return NULL;
 }
 
-
 bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 {
     InstanceChain *pChain = pVdChain;
 
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
     {
-        SetErrorInfo("Null pChain or pInst or pFuncName.");
+		nInvokeErrorCode = INVKNULLPARAM;
         return false;
     }
 
@@ -425,7 +398,7 @@ bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 	Instance* pFindInst = FindInstance(pChain, pInst);
     if (!pFindInst) //没有找到，说明给定的实例pInst不是相应的类的实例
     {
-        SetErrorInfo("Given object is not an instance of given type.");
+		nInvokeErrorCode = INVKINSTNOTFOUND;
         return false;
     }
 
@@ -477,25 +450,24 @@ bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
             }
             else
             {
-                SetErrorInfo("Invalid call because the declaration type of instance has no given method.");
+				nInvokeErrorCode = INVKNOSUCHMETHOD1;
                 return false;
             }
         }
     }
     else
     {
-        SetErrorInfo("Given instance has not given func.");
+		nInvokeErrorCode = INVKNOSUCHMETHOD2;
         return false;
     }
 }
-
 bool InvokeSuper(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 {
     InstanceChain *pChain = pVdChain;
 
 	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
     {
-        SetErrorInfo("Null pChain or pInst or pFuncName.");
+		nInvokeErrorCode = INVKNULLPARAM;
         return false;
     }
 
@@ -504,7 +476,7 @@ bool InvokeSuper(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 	Instance* pFindInst = FindInstance(pChain, pInst);
 	if (!pFindInst)
     {
-        SetErrorInfo("Given object is not an instance of given type.");
+		nInvokeErrorCode = INVKINSTNOTFOUND;
         return false;
     }
 
@@ -526,11 +498,10 @@ bool InvokeSuper(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
     }
     else
     {
-        SetErrorInfo("Given instance has not given func.");
+		nInvokeErrorCode = INVKNOSUCHMETHOD2;
         return false;
     }
 }
-
 void* ConvertByType(void* pVdChain, void* pInst, char* pBaseType)
 {
     InstanceChain *pChain = pVdChain;
@@ -544,7 +515,6 @@ void* ConvertByType(void* pVdChain, void* pInst, char* pBaseType)
 
 	return NULL;
 }
-
 void* ConvertByFunc(void* pVdChain, void* pInst, char* pFuncName)
 {
     InstanceChain *pChain = pVdChain;
@@ -575,7 +545,6 @@ void* ConvertByFunc(void* pVdChain, void* pInst, char* pFuncName)
 
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
-
 void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFuncName)
 {
     InstanceChain *pChain = pVdChain;
@@ -595,7 +564,6 @@ void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFuncName)
 
 	return NULL;
 }
-
 void* ConvertToExactType(InstanceChain* pChain, void* pInst)
 {
     if (!pChain || !pChain->pHead || !pChain->pTail || !pInst) { return NULL; }
@@ -608,7 +576,6 @@ void* ConvertToExactType(InstanceChain* pChain, void* pInst)
 
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
-
 void Delete(InstanceChain* pChain)
 {
 	//迭代释放每个实例
@@ -673,7 +640,6 @@ struct Object
 {
     CHAINDEF;
 };
-
 static void Equal(void* pParams)
 {
 	Object* pThis = ((ParamIn*)pParams)->pInst;
@@ -681,7 +647,6 @@ static void Equal(void* pParams)
 
 	*pIn->pRet = ConvertToExactType(pThis->pChain, pThis) == pIn->pToCmpr;
 }
-
 static void ToString(void* pParams)
 {
 	Object* pThis = ((ParamIn*)pParams)->pInst;
@@ -690,22 +655,18 @@ static void ToString(void* pParams)
 	printf("%p", ConvertToExactType(pThis->pChain, pThis));
 }
 
-
 bool INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
 }
-
 void* EXTEND(Object)(Object* pInst)
 {
     DOEXTEND(pInst);
 }
-
 void DELETE(Object)(Object* pInst)
 {
 	Delete(pInst->pChain);
 }
-
 Object* CREATE(Object)()
 {
 	Object* pCreate = malloc(sizeof(Object));

@@ -74,7 +74,7 @@
 /******************************************************/
 /******* Neccessary and required API for Coding *******/
 /******************************************************/
-#define      ABSTRACT
+#define      ABSTRACT                                                           \
 
 #define      CHAINDEF                                                           \
                      void *pChain                                               \
@@ -96,7 +96,12 @@ typedef struct { void* pNull; } ParamNull;
 typedef struct { void* pInst; void* pIn; } ParamIn;
 
 //only for calling INVOKE function
-OOPLIB_API char *GetErrorInfo(char* pMemIn);
+#define INVKSUCCESS       0//success
+#define INVKNULLPARAM     1//Null chain or inst or funcName.
+#define INVKINSTNOTFOUND  2//not an instance of given type, or say, inst not found in chain
+#define INVKNOSUCHMETHOD1 3//The declared type has no such method.
+#define INVKNOSUCHMETHOD2 4//no such method found.
+OOPLIB_API int GetInvokeRetCode();
 
 //for releasing local memory
 #define RLSLOCALMEMBRA()                                                                            \
