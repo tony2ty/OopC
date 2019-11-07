@@ -29,8 +29,6 @@
 CLASSDEF(CalculatorExt, Calculator);
 
 typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExt_Add;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExt_Subtract;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExt_Multiply;
 typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExt_Divide;
 
 #endif // !CALCULATOREXT_H__

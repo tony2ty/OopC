@@ -42,10 +42,10 @@ static void Add(void* pParams)
 
 //static void Subtract(void* pParams);//直接继承
 
-static void Multiply(void* pParams)
+OVERRIDE static void Multiply(void* pParams)
 {
 	CalculatorExt* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExt_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+	Calculator_Multiply* pIn = ((ParamIn*)pParams)->pIn;
 
 	//调用转发
 	DOINVOKESUPER(pThis, "Multiply", pIn);
