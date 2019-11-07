@@ -34,6 +34,13 @@
 ////String////////////////////////////////////////////////////////////////////////////////////
 //
 
+typedef struct String String;
+
+OOPCORE_API String* CREATE(String)();
+OOPCORE_API bool  INVOKE(String)(String* pInst, char* pFuncName, void* pParams);
+OOPCORE_API void* EXTEND(String)(String* pInst);
+OOPCORE_API void  DELETE(String)(String* pInst);
+
 ////List////////////////////////////////////////////////////////////////////////////////////
 //
 
