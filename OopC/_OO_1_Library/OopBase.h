@@ -102,6 +102,7 @@ typedef struct { void* pInst; void* pIn; } ParamIn;
 #define INVKNOSUCHMETHOD1 3//The declared type has no such method.
 #define INVKNOSUCHMETHOD2 4//no such method found.
 OOPLIB_API int GetInvokeRetCode();
+OOPLIB_API void ResetInvokeRetCode();
 
 //for releasing local memory
 #define RLSLOCALMEMBRA()                                                                            \

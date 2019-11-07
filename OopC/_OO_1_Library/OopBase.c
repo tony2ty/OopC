@@ -332,7 +332,7 @@ int  GetInvokeRetCode()
 {
 	return nInvokeErrorCode;
 }
-void SetInvokeRetCode()
+void ResetInvokeRetCode()
 {
 	nInvokeErrorCode = INVKSUCCESS;
 }
