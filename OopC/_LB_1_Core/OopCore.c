@@ -24,8 +24,130 @@
 #define OOPCORE_API __declspec(dllexport)
 #include "OopCore.h"
 
-////String////////////////////////////////////////////////////////////////////////////////////
-//
+/*************************************************/
+/***************** String ************************/
+/*************************************************/
+
+#include <stdio.h>
+#include "sds/sds.h"
+
+struct String
+{
+    CHAINDEF;
+
+    sds *pSdsStr;
+};
+
+static void GetInnerPtr(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_GetInnerPtr *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pIn->pData = pThis->pSdsStr;
+}
+
+static void Duplicate(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_Duplicate *pIn = ((ParamIn *)pParams)->pIn;
+
+    String *pDup = CREATE(String)("");
+    sdsfree(*pDup->pSdsStr);
+    *pDup->pSdsStr = sdsdup(*pThis->pSdsStr);
+
+    *pIn->ppDuplicated = pDup;
+}
+
+static void Grow(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_Grow *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdsgrowzero(*pThis->pSdsStr, pIn->szByteToGrow);
+}
+
+static void CatenateByLen(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_CatenateByLen *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdscatlen(*pThis->pSdsStr, pIn->pData, pIn->szLen);
+}
+
+static void Catenate(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_Catenate *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdscat(*pThis->pSdsStr, pIn->pData);
+}
+
+static void CatenateAnotherInst(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_CatenateAnotherInst *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdscatsds(*pThis->pSdsStr, *pIn->pToCatenate->pSdsStr);
+}
+
+static void CopyByLen(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_CopyByLen *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdscpylen(*pThis->pSdsStr, pIn->pData, pIn->szLen);
+}
+
+static void Copy(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_Copy *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdscpy(*pThis->pSdsStr, pIn->pData);
+}
+
+static void Trim(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_Trim *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pThis->pSdsStr = sdstrim(*pThis->pSdsStr, pIn->pCharSet);
+}
+
+static void ToString(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    Object_ToString *pIn = ((ParamIn *)pParams)->pIn;
+    printf(*pThis->pSdsStr);
+}
+
+static void Clear(void *pParam)
+{
+    String *pStr = pParam;
+    sdsfree(*pStr->pSdsStr);
+}
+
+bool INVOKE(String)(String *pInst, char *pFuncName, void *pParams)
+{
+    DOINVOKE(pInst, pFuncName, pParams);
+}
+void *EXTEND(String)(String *pInst)
+{
+    DOEXTEND(pInst);
+}
+void DELETE(String)(String *pInst)
+{
+    DODELETE(pInst, String, Object);
+}
+String *CREATE(String)(const char *pInit)
+{
+    DOCREATE(pCreate, String, Object, GenerateReleaserRef(Clear, pCreate),
+        );
+
+    *pCreate->pSdsStr = sdsnew(pInit);
+
+    return pCreate;
+}
 
 ////List////////////////////////////////////////////////////////////////////////////////////
 //

@@ -31,15 +31,91 @@
 
 #include <OopBase.h>
 
-////String////////////////////////////////////////////////////////////////////////////////////
-//
+/*************************************************/
+/***************** String ************************/
+/*************************************************/
 
 typedef struct String String;
-
-OOPCORE_API String* CREATE(String)();
+// Null param is allowed.
+OOPCORE_API String* CREATE(String)(const char *pInit);
 OOPCORE_API bool  INVOKE(String)(String* pInst, char* pFuncName, void* pParams);
 OOPCORE_API void* EXTEND(String)(String* pInst);
 OOPCORE_API void  DELETE(String)(String* pInst);
+
+/*
+ * Example:
+ * 
+ * String *pStr = CREATE(String)("It's amazing.");
+ * char **pInner = NULL;
+ * INVOKE(String)(pStr, "GetInnerPtr", &(String_GetInnerPtr){&pInner});
+ *
+ */
+typedef struct { char ***pData; } String_GetInnerPtr;
+//The input ref should be null, or this may cause mem leak
+typedef struct { String **ppDuplicated; } String_Duplicate;
+// Grow String inst to have the specified length. The new growed bytes will be set to zero. if the specified length is smaller than the current length, no operation is performed. 
+typedef struct { size_t szByteToGrow; } String_Grow;
+// Append the specified binary-safe string pointed by 'pData' of 'szLen' bytes to the end of String inst.
+typedef struct { const void *pData; size_t szLen; } String_CatenateByLen;
+// Append the specified null termianted C string to the String inst.
+typedef struct { const char *pData; } String_Catenate;
+// Append the specified String inst to the existing inst.
+typedef struct { String *pToCatenate; } String_CatenateAnotherInst;
+// Destructively modify the String inst to hold the specified binary safe string pointed by 'pData' of length 'szLen' bytes.
+typedef struct { const char *pData; size_t szLen; }String_CopyByLen;
+// Like CopyByLen() but 'pData' must be a null-termined string so that the length of the string is obtained with strlen(). 
+typedef struct { const char *pData; } String_Copy;
+/* Remove the part of the string from left and from right composed just of
+ * contiguous characters found in 'cset', that is a null terminted C string.
+ *
+ * Example:
+ *
+ * String *pStr = CREATE(String)("AA...AA.a.aa.aHelloWorld     :::");
+ * INVOKE(String)(pStr, "Trim", &(String_Trim){ "Aa. :" });
+ * INVOKE(String)(pStr, "ToString", NULL);
+ *
+ * Output will be just "HelloWorld".
+ */
+typedef struct { const char *pCharSet; } String_Trim;
+/* Turn the String into a smaller (or equal) string containing only the
+ * substring specified by the 'nStartIndex' and 'nEndIndex' indexes.
+ *
+ * start and end can be negative, where -1 means the last character of the
+ * string, -2 the penultimate character, and so forth.
+ *
+ * The interval is inclusive, so the start and end characters will be part
+ * of the resulting string.
+ *
+ * The string is modified in-place.
+ *
+ * Example:
+ *
+ * String *pStr = CREATE(String)("Hello World");
+ * INVOKE(String)(pStr, "GetRange", &(String_GetRange){1, -1});
+ * INVOKE(String)(pStr, "ToString", NULL);
+ *
+ * Output will be "ello World";
+ */
+typedef struct { int nStartIndex; int nEndIndex; } String_GetRange;
+/* Set length of the String inst to that as obtained with strlen(), so
+ * considering as content only up to the first null term character.
+ *
+ * This function is useful when the String inst is hacked manually in some
+ * way, like in the following example:
+ *
+ * String *pStr = CREATE(String)("foobar");
+ * char *pInner = NULL;
+ * INVOKE(String)(pStr, "InnerPtr", &(String_InnerPtr){&pInner});
+ * pInner[2] = '\0';
+ * INVOKE(String)(pStr, "UpdateLen", NULL);
+ * INVOKE(String)(pStr, "ToString", NULL);
+ *
+ * The output will be "2", but if we comment out the call to sdsupdatelen()
+ * the output will be "6" as the string was modified but the logical length
+ * remains 6 bytes. */
+typedef ParamNull String_UpdateLen;
+//not often equals to the value obtained via function strlen().
+typedef struct { size_t *pszStrLen; } String_StrLen;
 
 ////List////////////////////////////////////////////////////////////////////////////////////
 //
