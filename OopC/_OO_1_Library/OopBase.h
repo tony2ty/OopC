@@ -76,6 +76,8 @@
 /******************************************************/
 #define      ABSTRACT                                                           \
 
+#define      OVERRIDE                                                           \
+
 #define      CHAINDEF                                                           \
                      void *pChain                                               \
 
