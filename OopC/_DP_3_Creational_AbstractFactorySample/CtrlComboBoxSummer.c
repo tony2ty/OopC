@@ -33,10 +33,10 @@ struct CtrlComboBoxSummer
 //////////////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     CtrlComboBoxSummer *pThis = ((ParamIn *)pParams)->pInst;
-    CtrlComboBoxSummer_Display *pIn = ((ParamIn *)pParams)->pIn;
+    ICtrlComboBox_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("显示蓝色边框组合框.\n");
 }

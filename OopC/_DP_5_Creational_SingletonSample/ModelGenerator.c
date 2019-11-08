@@ -52,6 +52,16 @@ static void GetModel(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
+static void Clear(void *pParams)
+{
+    ModelGenerator *pInst = pParams;
+
+    //对象销毁后，便没有单例了，
+    //因此标识变量设为false
+    bHasBeenGenerated = false;
+    pSingleton = NULL;
+}
+
 bool INVOKE(ModelGenerator)(ModelGenerator *pInst, char *pFuncName, void *pParams)
 {
 	DOINVOKE(pInst, pFuncName, pParams);
@@ -72,13 +82,14 @@ ModelGenerator *CREATE(ModelGenerator)()
     //这里通过变量判断，
     //单例出现并发问题的情况就归结为
     //同时访问一个基本类型变量出现数据竞争。
+    //并发量很大的时候，仍然不推荐这样处理
     if (bHasBeenGenerated)
     {
         return pSingleton;
     }
     bHasBeenGenerated = true;
 
-	DOCREATE(pCreate, ModelGenerator, Object, NULL,
+	DOCREATE(pCreate, ModelGenerator, Object, GenerateReleaserRef(Clear, pCreate),
 		METHOD(GetModel));
 
     pSingleton = pCreate;

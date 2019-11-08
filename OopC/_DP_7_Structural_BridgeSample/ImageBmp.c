@@ -34,10 +34,10 @@ struct ImageBmp
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(void *pParams)
 {
 	ImageBmp *pThis = ((ParamIn *)pParams)->pInst;
-	ImageBmp_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
 
     RLSLOCALMEMBRA();
 

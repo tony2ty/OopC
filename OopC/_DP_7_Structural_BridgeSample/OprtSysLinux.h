@@ -27,6 +27,4 @@
 
 CLASSDEF(OprtSysLinux, IOprtSys);
 
-typedef struct { Matrix *pMat; } OprtSysLinux_DoPaint;
-
 #endif // !OprtSysLinux_H__

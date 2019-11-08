@@ -33,10 +33,10 @@ struct LoggerFactoryDatabase
 /////////////////////////////////////////////////////////////////////
 //
 
-static void CreateLogger(void* pParams)
+OVERRIDE static void CreateLogger(void* pParams)
 {
 	LoggerFactoryDatabase* pThis = ((ParamIn*)pParams)->pInst;
-	LoggerFactoryDatabase_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
+	ILoggerFactory_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
 
 	LoggerDatabase* pLoggerDatabase = CREATE(LoggerDatabase)();
 	*pIn->ppRet = SWITCH(pLoggerDatabase, LoggerDatabase, ILogger);

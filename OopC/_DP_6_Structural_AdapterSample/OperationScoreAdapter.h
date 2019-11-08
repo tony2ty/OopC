@@ -27,7 +27,4 @@
 
 CLASSDEF(OperationScoreAdapter, IOperationScore);
 
-typedef struct { int *pArr; size_t szLen; } OperationScoreAdapter_DoSort;
-typedef struct { int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind; } OperationScoreAdapter_DoSearch;
-
 #endif // !OperationScoreAdapter_H__

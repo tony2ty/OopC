@@ -34,10 +34,10 @@ struct ImageGif
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(void *pParams)
 {
 	ImageGif *pThis = ((ParamIn *)pParams)->pInst;
-	ImageGif_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
 
     RLSLOCALMEMBRA();
 

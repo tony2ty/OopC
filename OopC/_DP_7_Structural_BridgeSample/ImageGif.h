@@ -27,6 +27,4 @@
 
 CLASSDEF(ImageGif, IImage);
 
-typedef struct { char *pFileName; } ImageGif_ParseFile;
-
 #endif // !ImageGif_H__

@@ -33,10 +33,10 @@ struct ChartHistogram
 ////////////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     ChartHistogram *pThis = ((ParamIn *)pParams)->pInst;
-    ChartHistogram_Display *pIn = ((ParamIn *)pParams)->pIn;
+    IChart_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("ÏÔÊ¾Öù×´Í¼.\n");
 }

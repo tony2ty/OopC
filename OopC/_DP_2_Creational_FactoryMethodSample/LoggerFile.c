@@ -33,10 +33,10 @@ struct LoggerFile
 //////////////////////////////////////////////////////////////////////////
 //
 
-static void WriteLog(void* pParams)
+OVERRIDE static void WriteLog(void* pParams)
 {
 	LoggerFile* pThis = ((ParamIn*)pParams)->pInst;
-	LoggerFile_WriteLog* pIn = ((ParamIn*)pParams)->pIn;
+	ILogger_WriteLog* pIn = ((ParamIn*)pParams)->pIn;
 
 	printf("文件日志记录.\n");
 }

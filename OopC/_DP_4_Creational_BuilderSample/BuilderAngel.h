@@ -28,11 +28,4 @@
 
 CLASSDEF(BuilderAngel, IBuilderActor);
 
-typedef ParamNull BuilderAngel_BuildType;
-typedef ParamNull BuilderAngel_BuildGender;
-typedef ParamNull BuilderAngel_BuildFace;
-typedef ParamNull BuilderAngel_BuildCostume;
-typedef ParamNull BuilderAngel_BuildHairStyle;
-typedef struct { Actor **ppRet; } BuilderAngel_CreateActor;
-
 #endif // !BUILDERANGEL_H__

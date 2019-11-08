@@ -34,55 +34,55 @@ struct BuilderAngel
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void BuildType(void *pParams)
+OVERRIDE static void BuildType(void *pParams)
 {
 	BuilderAngel *pThis = ((ParamIn *)pParams)->pInst;
-	BuilderAngel_BuildType *pIn = ((ParamIn *)pParams)->pIn;
+	IBuilderActor_BuildType *pIn = ((ParamIn *)pParams)->pIn;
 
 	char *pTmp = "天使";
 	INVOKE(Actor)(pThis->pActor, "Type", &(Actor_Type){true, &pTmp});
 }
 
-static void BuildGender(void *pParams)
+OVERRIDE static void BuildGender(void *pParams)
 {
 	BuilderAngel *pThis = ((ParamIn *)pParams)->pInst;
-	BuilderAngel_BuildGender *pIn = ((ParamIn *)pParams)->pIn;
+    IBuilderActor_BuildGender *pIn = ((ParamIn *)pParams)->pIn;
 
 	char *pTmp = "女";
 	INVOKE(Actor)(pThis->pActor, "Gender", &(Actor_Gender){true, &pTmp});
 }
 
-static void BuildFace(void *pParams)
+OVERRIDE static void BuildFace(void *pParams)
 {
 	BuilderAngel *pThis = ((ParamIn *)pParams)->pInst;
-	BuilderAngel_BuildFace *pIn = ((ParamIn *)pParams)->pIn;
+    IBuilderActor_BuildFace *pIn = ((ParamIn *)pParams)->pIn;
 
 	char *pTmp = "漂亮";
 	INVOKE(Actor)(pThis->pActor, "Face", &(Actor_Face){true, &pTmp});
 }
 
-static void BuildCostume(void *pParams)
+OVERRIDE static void BuildCostume(void *pParams)
 {
 	BuilderAngel *pThis = ((ParamIn *)pParams)->pInst;
-	BuilderAngel_BuildCostume *pIn = ((ParamIn *)pParams)->pIn;
+    IBuilderActor_BuildCostume *pIn = ((ParamIn *)pParams)->pIn;
 
 	char *pTmp = "白裙";
 	INVOKE(Actor)(pThis->pActor, "Costume", &(Actor_Costume){true, &pTmp});
 }
 
-static void BuildHairStyle(void *pParams)
+OVERRIDE static void BuildHairStyle(void *pParams)
 {
 	BuilderAngel *pThis = ((ParamIn *)pParams)->pInst;
-	BuilderAngel_BuildHairStyle *pIn = ((ParamIn *)pParams)->pIn;
+    IBuilderActor_BuildHairStyle *pIn = ((ParamIn *)pParams)->pIn;
 
 	char *pTmp = "披肩长发";
 	INVOKE(Actor)(pThis->pActor, "HairStyle", &(Actor_HairStyle){true, &pTmp});
 }
 
-static void CreateActor(void *pParams)
+OVERRIDE static void CreateActor(void *pParams)
 {
 	BuilderAngel *pThis = ((ParamIn *)pParams)->pInst;
-	BuilderAngel_CreateActor *pIn = ((ParamIn *)pParams)->pIn;
+    IBuilderActor_CreateActor *pIn = ((ParamIn *)pParams)->pIn;
 
 	*pIn->ppRet = pThis->pActor;
 }

@@ -28,6 +28,4 @@
 
 CLASSDEF(CtrlComboBoxSummer, ICtrlComboBox);
 
-typedef ParamNull CtrlComboBoxSummer_Display;
-
 #endif // !CTRLCOMBOBOXSUMMER_H__

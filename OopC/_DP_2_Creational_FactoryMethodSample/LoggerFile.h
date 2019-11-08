@@ -28,6 +28,4 @@
 
 CLASSDEF(LoggerFile, ILogger);
 
-typedef ParamNull LoggerFile_WriteLog;
-
 #endif // !LOGGERFILE_H__

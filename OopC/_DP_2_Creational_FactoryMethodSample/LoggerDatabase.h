@@ -28,6 +28,4 @@
 
 CLASSDEF(LoggerDatabase, ILogger);
 
-typedef ParamNull LoggerDatabase_WriteLog;
-
 #endif // !LOGGERDATABASE_H__

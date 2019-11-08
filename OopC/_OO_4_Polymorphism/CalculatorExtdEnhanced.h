@@ -28,9 +28,4 @@
 
 CLASSDEF(CalculatorExtdEnhanced, CalculatorBase);
 
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExtdEnhanced_Add;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExtdEnhanced_Subtract;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExtdEnhanced_Multiply;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExtdEnhanced_Divide;
-
 #endif // !CALCULATOREXTENHANCED_H__

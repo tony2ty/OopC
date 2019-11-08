@@ -33,10 +33,10 @@ struct LoggerDatabase
 ///////////////////////////////////////////////////////////////////
 //
 
-static void WriteLog(void* pParams)
+OVERRIDE static void WriteLog(void* pParams)
 {
 	LoggerDatabase* pThis = ((ParamIn*)pParams)->pInst;
-	LoggerDatabase_WriteLog* pIn = ((ParamIn*)pParams)->pIn;
+	ILogger_WriteLog* pIn = ((ParamIn*)pParams)->pIn;
 
 	printf("数据库日志记录。\n");
 }

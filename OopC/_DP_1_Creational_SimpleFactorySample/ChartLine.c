@@ -33,10 +33,10 @@ struct ChartLine
 ///////////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     ChartLine *pThis = ((ParamIn *)pParams)->pInst;
-    ChartLine_Display *pIn = ((ParamIn *)pParams)->pIn;
+    IChart_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("œ‘ æ’€œﬂÕº°£\n");
 }

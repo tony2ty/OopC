@@ -28,8 +28,4 @@
 
 CLASSDEF(FactorySkinSummer, IFactorySkin);
 
-typedef struct { ICtrlButton **ppButton; } FactorySkinSummer_CreateButton;
-typedef struct { ICtrlTextField **ppTextField; } FactorySkinSummer_CreateTextField;
-typedef struct { ICtrlComboBox **ppComboBox; } FactorySkinSummer_CreateComboBox;
-
 #endif // !FACTORYSKINSUMMER_H__

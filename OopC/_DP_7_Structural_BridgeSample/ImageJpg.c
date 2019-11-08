@@ -34,10 +34,10 @@ struct ImageJpg
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(void *pParams)
 {
 	ImageJpg *pThis = ((ParamIn *)pParams)->pInst;
-	ImageJpg_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
 
     RLSLOCALMEMBRA();
 

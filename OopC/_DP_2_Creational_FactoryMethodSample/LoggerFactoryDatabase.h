@@ -28,6 +28,4 @@
 
 CLASSDEF(LoggerFactoryDatabase, ILoggerFactory);
 
-typedef struct { ILogger** ppRet; } LoggerFactoryDatabase_CreateLogger;
-
 #endif // !LOGGERFACTORYDATABASE_H__

@@ -28,6 +28,4 @@
 
 CLASSDEF(CtrlButtonSpring, ICtrlButton);
 
-typedef ParamNull CtrlButtonSpring_Display;
-
 #endif // !CTRLBUTTONSPRING_H__

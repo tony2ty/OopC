@@ -28,6 +28,4 @@
 
 CLASSDEF(ChartLine, IChart);
 
-typedef ParamNull ChartLine_Display;
-
 #endif // !CHARTLINE_H__

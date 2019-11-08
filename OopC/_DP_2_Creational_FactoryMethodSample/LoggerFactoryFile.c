@@ -35,10 +35,10 @@ struct LoggerFactoryFile
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void CreateLogger(void* pParams)
+OVERRIDE static void CreateLogger(void* pParams)
 {
 	LoggerFactoryFile* pThis = ((ParamIn*)pParams)->pInst;
-	LoggerFactoryFile_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
+	ILoggerFactory_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
 
 	LoggerFile* pLoggerFile = CREATE(LoggerFile)();
 	*pIn->ppRet = SWITCH(pLoggerFile, LoggerFile, ILogger);

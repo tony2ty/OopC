@@ -28,6 +28,4 @@
 
 CLASSDEF(CtrlButtonSummer, ICtrlButton);
 
-typedef ParamNull CtrlButtonSummer_Display;
-
 #endif // !CTRLBUTTONSUMMER_H__

@@ -33,10 +33,10 @@ struct CtrlButtonSummer
 /////////////////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     CtrlButtonSummer *pThis = ((ParamIn *)pParams)->pInst;
-    CtrlButtonSummer_Display *pIn = ((ParamIn *)pParams)->pIn;
+    ICtrlButton_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("отй╬гЁю╤и╚╟╢е╔║ё\n");
 }

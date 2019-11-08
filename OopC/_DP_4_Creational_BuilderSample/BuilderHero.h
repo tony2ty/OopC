@@ -28,11 +28,4 @@
 
 CLASSDEF(BuilderHero, IBuilderActor);
 
-typedef ParamNull BuilderHero_BuildType;
-typedef ParamNull BuilderHero_BuildGender;
-typedef ParamNull BuilderHero_BuildFace;
-typedef ParamNull BuilderHero_BuildCostume;
-typedef ParamNull BuilderHero_BuildHairStyle;
-typedef struct { Actor **ppRet; } BuilderHero_CreateActor;
-
 #endif // !BUILDERHERO_H__

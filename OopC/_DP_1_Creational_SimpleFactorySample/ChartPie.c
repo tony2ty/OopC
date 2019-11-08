@@ -33,10 +33,10 @@ struct ChartPie
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     ChartPie *pThis = ((ParamIn *)pParams)->pInst;
-    ChartPie_Display *pIn = ((ParamIn *)pParams)->pIn;
+    IChart_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("отй╬╠Щв╢м╪.\n");
 }

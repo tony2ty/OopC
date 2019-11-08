@@ -35,28 +35,28 @@ struct FactorySkinSpring
 ////////////////////////////////////////////////////////////////////////
 //
 
-static void CreateButton(void *pParams)
+OVERRIDE static void CreateButton(void *pParams)
 {
     FactorySkinSpring *pThis = ((ParamIn *)pParams)->pInst;
-    FactorySkinSpring_CreateButton *pIn = ((ParamIn *)pParams)->pIn;
+    IFactorySkin_CreateButton *pIn = ((ParamIn *)pParams)->pIn;
 
     CtrlButtonSpring *pButton = CREATE(CtrlButtonSpring)();
     *pIn->ppButton = SWITCH(pButton, CtrlButtonSpring, ICtrlButton);
 }
 
-static void CreateTextField(void *pParams)
+OVERRIDE static void CreateTextField(void *pParams)
 {
     FactorySkinSpring *pThis = ((ParamIn *)pParams)->pInst;
-    FactorySkinSpring_CreateTextField *pIn = ((ParamIn *)pParams)->pIn;
+    IFactorySkin_CreateTextField *pIn = ((ParamIn *)pParams)->pIn;
 
     CtrlTextFieldSpring *pTextField = CREATE(CtrlTextFieldSpring)();
     *pIn->ppTextField = SWITCH(pTextField, CtrlTextFieldSpring, ICtrlTextField);
 }
 
-static void CreateComboBox(void *pParams)
+OVERRIDE static void CreateComboBox(void *pParams)
 {
     FactorySkinSpring *pThis = ((ParamIn *)pParams)->pInst;
-    FactorySkinSpring_CreateComboBox *pIn = ((ParamIn *)pParams)->pIn;
+    IFactorySkin_CreateComboBox *pIn = ((ParamIn *)pParams)->pIn;
 
     CtrlComboBoxSpring *pComboBox = CREATE(CtrlComboBoxSpring)();
     *pIn->ppComboBox = SWITCH(pComboBox, CtrlComboBoxSpring, ICtrlComboBox);

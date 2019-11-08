@@ -34,10 +34,10 @@ struct OprtSysWindows
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void DoPaint(void *pParams)
+OVERRIDE static void DoPaint(void *pParams)
 {
 	OprtSysWindows *pThis = ((ParamIn *)pParams)->pInst;
-	OprtSysWindows_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
+	IOprtSys_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
     printf("在Windows操作系统中显示图像.\n");

@@ -28,6 +28,4 @@
 
 CLASSDEF(ChartPie, IChart);
 
-typedef ParamNull ChartPie_Display;
-
 #endif // !CHARTPIE_H__

@@ -28,6 +28,4 @@
 
 CLASSDEF(CtrlTextFieldSummer, ICtrlTextField);
 
-typedef ParamNull CtrlTextFieldSummer_Display;
-
 #endif // !CTRLTEXTFIELDSUMMER_H__

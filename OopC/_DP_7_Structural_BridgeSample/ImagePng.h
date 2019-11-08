@@ -27,6 +27,4 @@
 
 CLASSDEF(ImagePng, IImage);
 
-typedef struct { char *pFileName; } ImagePng_ParseFile;
-
 #endif // !ImagePng_H__

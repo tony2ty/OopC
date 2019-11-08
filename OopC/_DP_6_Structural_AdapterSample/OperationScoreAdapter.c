@@ -44,18 +44,18 @@ static void Clear(void *pToClear)
 	DELETE(BinarySearcher)(pInst->pSearcher);
 }
 
-static void DoSort(void *pParams)
+OVERRIDE static void DoSort(void *pParams)
 {
 	OperationScoreAdapter *pThis = ((ParamIn *)pParams)->pInst;
-	OperationScoreAdapter_DoSort *pIn = ((ParamIn *)pParams)->pIn;
+	IOperationScore_DoSort *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
 	INVOKE(QuickSorter)(pThis->pSorter, "DoSort", &(QuickSorter_DoSort){pIn->pArr, pIn->szLen});
 }
-static void DoSearch(void *pParams)
+OVERRIDE static void DoSearch(void *pParams)
 {
 	OperationScoreAdapter *pThis = ((ParamIn *)pParams)->pInst;
-	OperationScoreAdapter_DoSearch *pIn = ((ParamIn *)pParams)->pIn;
+	IOperationScore_DoSearch *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
 	INVOKE(BinarySearcher)(pThis->pSearcher, "DoSearch", &(BinarySearcher_DoSearch){pIn->pArrToSearch, pIn->szLen, pIn->nKey, pIn->pRetIndexFind});

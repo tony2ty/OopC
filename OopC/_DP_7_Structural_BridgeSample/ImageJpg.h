@@ -27,6 +27,4 @@
 
 CLASSDEF(ImageJpg, IImage);
 
-typedef struct { char *pFileName; } ImageJpg_ParseFile;
-
 #endif // !ImageJpg_H__

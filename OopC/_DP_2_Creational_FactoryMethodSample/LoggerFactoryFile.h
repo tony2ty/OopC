@@ -28,6 +28,4 @@
 
 CLASSDEF(LoggerFactoryFile, ILoggerFactory);
 
-typedef struct { ILogger** ppRet; } LoggerFactoryFile_CreateLogger;
-
 #endif // !LOGGERFACTORYFILE_H__

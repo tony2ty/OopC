@@ -27,6 +27,4 @@
 
 CLASSDEF(OprtSysWindows, IOprtSys);
 
-typedef struct { Matrix *pMat; } OprtSysWindows_DoPaint;
-
 #endif // !OprtSysWindows_H__

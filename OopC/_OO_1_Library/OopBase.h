@@ -74,8 +74,9 @@
 /******************************************************/
 /******* Neccessary and required API for Coding *******/
 /******************************************************/
+//demonstrate a method has no implement
 #define      ABSTRACT                                                           \
-
+//demonstrate an operation of implementing an abstract method of super or overriding an inherited method
 #define      OVERRIDE                                                           \
 
 #define      CHAINDEF                                                           \

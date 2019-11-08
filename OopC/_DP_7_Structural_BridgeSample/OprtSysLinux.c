@@ -34,10 +34,10 @@ struct OprtSysLinux
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void DoPaint(void *pParams)
+OVERRIDE static void DoPaint(void *pParams)
 {
 	OprtSysLinux *pThis = ((ParamIn *)pParams)->pInst;
-	OprtSysLinux_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
+	IOprtSys_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
 
 	//Todo: 
     printf("在Linux操作系统中显示图像.\n");

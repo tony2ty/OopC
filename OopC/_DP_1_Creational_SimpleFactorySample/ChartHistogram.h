@@ -28,6 +28,4 @@
 
 CLASSDEF(ChartHistogram, IChart);
 
-typedef ParamNull ChartHistogram_Display;
-
 #endif // !CHARTHISTOGRAM_H__

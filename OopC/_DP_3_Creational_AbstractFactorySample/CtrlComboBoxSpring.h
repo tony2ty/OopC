@@ -28,6 +28,4 @@
 
 CLASSDEF(CtrlComboBoxSpring, ICtrlComboBox);
 
-typedef ParamNull CtrlComboBoxSpring_Display;
-
 #endif // !CTRLCOMBOBOXSPRING_H__

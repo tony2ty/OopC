@@ -33,10 +33,10 @@ struct CtrlButtonSpring
 //////////////////////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     CtrlButtonSpring *pThis = ((ParamIn *)pParams)->pInst;
-    CtrlButtonSpring_Display *pIn = ((ParamIn *)pParams)->pIn;
+    ICtrlButton_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("отй╬гЁбли╚╟╢е╔║ё\n");
 }

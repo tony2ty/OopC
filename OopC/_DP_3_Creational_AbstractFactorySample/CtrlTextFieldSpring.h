@@ -28,6 +28,4 @@
 
 CLASSDEF(CtrlTextFieldSpring, ICtrlTextField);
 
-typedef ParamNull CtrlTextFieldSpring_Display;
-
 #endif // !CTRLTEXTFIELDSPRING_H__

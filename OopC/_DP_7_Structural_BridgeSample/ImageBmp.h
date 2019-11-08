@@ -27,6 +27,4 @@
 
 CLASSDEF(ImageBmp, IImage);
 
-typedef struct { char *pFileName; } ImageBmp_ParseFile;
-
 #endif // !ImageBmp_H__

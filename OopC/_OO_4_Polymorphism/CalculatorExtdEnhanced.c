@@ -33,40 +33,40 @@ struct CalculatorExtdEnhanced
 ///////////////////////////////////////////////////////////////////////////
 //
 
-static void Add(void* pParams)
+OVERRIDE static void Add(void* pParams)
 {
 	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExtdEnhanced_Add* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorBase_Add* pIn = ((ParamIn*)pParams)->pIn;
 
     printf("Add operation using enhanced calculator.\n");
 
 	*pIn->pdblRet = pIn->dblOpL + pIn->dblOpR;
 }
 
-static void Subtract(void* pParams)
+OVERRIDE static void Subtract(void* pParams)
 {
 	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExtdEnhanced_Subtract* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorBase_Subtract* pIn = ((ParamIn*)pParams)->pIn;
 
     printf("Subtract operation using enhanced calculator.\n");
 
 	*pIn->pdblRet = pIn->dblOpL - pIn->dblOpR;
 }
 
-static void Multiply(void* pParams)
+OVERRIDE static void Multiply(void* pParams)
 {
 	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExtdEnhanced_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorBase_Multiply* pIn = ((ParamIn*)pParams)->pIn;
 
     printf("multiply operation using enhanced calculator.\n");
 
 	*pIn->pdblRet = pIn->dblOpL * pIn->dblOpR;
 }
 
-static void Divide(void* pParams)
+OVERRIDE static void Divide(void* pParams)
 {
 	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExtdEnhanced_Divide* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorBase_Divide* pIn = ((ParamIn*)pParams)->pIn;
 
     printf("divide operation using enhanced calculator.\n");
 

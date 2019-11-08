@@ -33,10 +33,10 @@ struct CtrlTextFieldSummer
 /////////////////////////////////////////////////////////////////
 //
 
-static void Display(void *pParams)
+OVERRIDE static void Display(void *pParams)
 {
     CtrlTextFieldSummer *pThis = ((ParamIn *)pParams)->pInst;
-    CtrlTextFieldSummer_Display *pIn = ((ParamIn *)pParams)->pIn;
+    ICtrlTextField_Display *pIn = ((ParamIn *)pParams)->pIn;
 
     printf("显示蓝色边框文本框。\n");
 }
