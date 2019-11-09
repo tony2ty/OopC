@@ -6,73 +6,34 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_OO_1_Library", "OopC\_OO_1_Library\_OO_1_Library.vcxproj", "{2A48588A-6138-4316-BF1A-1750BCE2F107}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_OO_2_Encapsulation", "OopC\_OO_2_Encapsulation\_OO_2_Encapsulation.vcxproj", "{775F823D-389A-4B32-84E7-AA463EF1E4F2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_OO_3_Inheritance", "OopC\_OO_3_Inheritance\_OO_3_Inheritance.vcxproj", "{027320BF-0A87-4BA7-9110-B9BB62D487C6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_OO_4_Polymorphism", "OopC\_OO_4_Polymorphism\_OO_4_Polymorphism.vcxproj", "{69EE5CEC-21F6-43E1-9A79-67716419499A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_1_Creational_SimpleFactorySample", "OopC\_DP_1_Creational_SimpleFactorySample\_DP_1_Creational_SimpleFactorySample.vcxproj", "{CDF3127B-90C5-45D2-952F-87A2C279C86C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_2_Creational_FactoryMethodSample", "OopC\_DP_2_Creational_FactoryMethodSample\_DP_2_Creational_FactoryMethodSample.vcxproj", "{1FB847F8-B486-4B84-B406-4C12157D4E2A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_3_Creational_AbstractFactorySample", "OopC\_DP_3_Creational_AbstractFactorySample\_DP_3_Creational_AbstractFactorySample.vcxproj", "{8D3C49C9-3798-47C2-A906-B70F171921DF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_4_Creational_BuilderSample", "OopC\_DP_4_Creational_BuilderSample\_DP_4_Creational_BuilderSample.vcxproj", "{D2242F52-9E46-4205-AC6B-12DA3FDA89FA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_TL_1_OopCClassGenerator", "OopC\_TL_1_OopCClassGenerator\_TL_1_OopCClassGenerator.csproj", "{F37C6631-4C44-41A9-9F34-B47A8CCF63D5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_5_Creational_SingletonSample", "OopC\_DP_5_Creational_SingletonSample\_DP_5_Creational_SingletonSample.vcxproj", "{59A06C59-90FA-4771-BCE3-BED876865D2B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "_TL_2_GeneratorSetup", "OopC\_TL_2_GeneratorSetup\_TL_2_GeneratorSetup.vdproj", "{2EDE4818-991E-450D-A1B1-A0BA40D8B07A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_6_Structural_AdapterSample", "OopC\_DP_6_Structural_AdapterSample\_DP_6_Structural_AdapterSample.vcxproj", "{00FED5C0-6876-4C0F-8E6D-5FEB5AFB0CCF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_DP_7_Structural_BridgeSample", "OopC\_DP_7_Structural_BridgeSample\_DP_7_Structural_BridgeSample.vcxproj", "{9BF74388-ABDC-4825-BC10-C822E040BE06}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_LB_2_IO", "OopC\_LB_2_IO\_LB_2_IO.vcxproj", "{C92FD18A-6567-4C64-8BA6-A8B6D8F70363}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_LB_3_Net", "OopC\_LB_3_Net\_LB_3_Net.vcxproj", "{4F3ECB8A-A565-4B3B-89AC-D887F49C783B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_LB_5_Util", "OopC\_LB_5_Util\_LB_5_Util.vcxproj", "{8E597895-DAB1-4ED0-A934-E6173DAA636F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2A48588A-6138-4316-BF1A-1750BCE2F107} = {2A48588A-6138-4316-BF1A-1750BCE2F107}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_LB_1_Core", "OopC\_LB_1_Core\_LB_1_Core.vcxproj", "{ACDE4705-98AE-4BFA-8BE4-BA787F563155}"
 EndProject

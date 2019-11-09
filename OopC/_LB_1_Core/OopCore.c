@@ -29,7 +29,7 @@
 /*************************************************/
 
 #include <stdio.h>
-#include "sds/sds.h"
+#include "sds.h"
 
 struct String
 {
