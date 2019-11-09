@@ -42,14 +42,36 @@ OOPCORE_API bool  INVOKE(String)(String* pInst, char* pFuncName, void* pParams);
 OOPCORE_API void* EXTEND(String)(String* pInst);
 OOPCORE_API void  DELETE(String)(String* pInst);
 
+//1.字符遍历
 /*
  * Example:
- * 
+ *
  * String *pStr = CREATE(String)("It's amazing.");
- * char **pInner = NULL;
+ * char *pInner = NULL;
  * INVOKE(String)(pStr, "GetInnerPtr", &(String_GetInnerPtr){&pInner}); */
-typedef struct { char ***pppData; }
+typedef struct { char **ppInnerPtr; }
                String_GetInnerPtr;
+//2.比较
+//3.索引
+//4.长度
+typedef struct { size_t *pszLength; }
+               String_GetLength;
+//5.连接
+//6.复制
+//7.格式化
+//8.空判断
+//9.join
+//10.startwith
+//11.endwith
+//12.查找
+//13.插入
+//14.删除
+//15.替换
+//16.分割
+//17.字串
+//18.大小写
+//19.缩空
+
 typedef struct { size_t szCapacity; }
                String_SetCapacity;
 typedef struct { size_t *pszCapacity; }
@@ -86,10 +108,6 @@ typedef struct { size_t szIncrease; }
                String_IncreaseLen;
 typedef struct { size_t szToSet; }
                String_SetStrLen;
-/*
- * not often equals to the value obtained via function strlen(). */
-typedef struct { size_t *pszStrLen; }
-               String_GetStrLen;
 /*
  * The input ref should be null,
  * or this may cause mem leak */

@@ -35,7 +35,7 @@ struct String
 {
     CHAINDEF;
 
-    sds *pSdsStr;
+    sds sdsStr;
 };
 
 static void GetInnerPtr(void *pParams)
@@ -43,7 +43,15 @@ static void GetInnerPtr(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_GetInnerPtr *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pIn->pppData = pThis->pSdsStr;
+    *pIn->ppInnerPtr = pThis->sdsStr;
+}
+
+static void GetLength(void *pParams)
+{
+    String *pThis = ((ParamIn *)pParams)->pInst;
+    String_GetLength *pIn = ((ParamIn *)pParams)->pIn;
+
+    *pIn->pszLength = sdslen(pThis->sdsStr);
 }
 
 static void SetCapacity(void *pParams)
@@ -51,7 +59,7 @@ static void SetCapacity(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_SetCapacity *pIn = ((ParamIn *)pParams)->pIn;
 
-    sdssetalloc(*pThis->pSdsStr, pIn->szCapacity);
+    sdssetalloc(pThis->sdsStr, pIn->szCapacity);
 }
 
 static void GetCapacity(void *pParams)
@@ -59,7 +67,7 @@ static void GetCapacity(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_GetCapacity *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pIn->pszCapacity = sdsalloc(*pThis->pSdsStr);
+    *pIn->pszCapacity = sdsalloc(pThis->sdsStr);
 }
 
 static void GetAvailCapacity(void *pParams)
@@ -67,7 +75,7 @@ static void GetAvailCapacity(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_GetAvailCapacity *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pIn->pszAvailCapacity = sdsavail(*pThis->pSdsStr);
+    *pIn->pszAvailCapacity = sdsavail(pThis->sdsStr);
 }
 
 static void IncreaseCapacityWithInit(void *pParams)
@@ -75,7 +83,7 @@ static void IncreaseCapacityWithInit(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_IncreaseCapacityWithInit *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdsgrowzero(*pThis->pSdsStr, pIn->szByteToIncrease);
+    pThis->sdsStr = sdsgrowzero(pThis->sdsStr, pIn->szByteToIncrease);
 }
 
 static void TrimSizeToLen(void *pParams)
@@ -83,7 +91,7 @@ static void TrimSizeToLen(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_TrimSizeToLen *pIn = ((ParamIn *)pParams)->pIn;
 
-    sdsupdatelen(*pThis->pSdsStr);
+    sdsupdatelen(pThis->sdsStr);
 }
 
 static void IncreaseLen(void *pParams)
@@ -91,7 +99,7 @@ static void IncreaseLen(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_IncreaseLen *pIn = ((ParamIn *)pParams)->pIn;
 
-    sdsinclen(*pThis->pSdsStr, pIn->szIncrease);
+    sdsinclen(pThis->sdsStr, pIn->szIncrease);
 }
 
 static void SetStrLen(void *pParams)
@@ -99,15 +107,7 @@ static void SetStrLen(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_SetStrLen *pIn = ((ParamIn *)pParams)->pIn;
 
-    sdssetlen(*pThis->pSdsStr, pIn->szToSet);
-}
-
-static void GetStrLen(void *pParams)
-{
-    String *pThis = ((ParamIn *)pParams)->pInst;
-    String_GetStrLen *pIn = ((ParamIn *)pParams)->pIn;
-
-    *pIn->pszStrLen = sdslen(*pThis->pSdsStr);
+    sdssetlen(pThis->sdsStr, pIn->szToSet);
 }
 
 static void Duplicate(void *pParams)
@@ -116,8 +116,8 @@ static void Duplicate(void *pParams)
     String_Duplicate *pIn = ((ParamIn *)pParams)->pIn;
 
     String *pDup = CREATE(String)("");
-    sdsfree(*pDup->pSdsStr);
-    *pDup->pSdsStr = sdsdup(*pThis->pSdsStr);
+    sdsfree(pDup->sdsStr);
+    pThis->sdsStr = sdsdup(pThis->sdsStr);
 
     *pIn->ppDuplicated = pDup;
 }
@@ -127,7 +127,7 @@ static void CatenateByLen(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_CatenateByLen *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdscatlen(*pThis->pSdsStr, pIn->pData, pIn->szLen);
+    pThis->sdsStr = sdscatlen(pThis->sdsStr, pIn->pData, pIn->szLen);
 }
 
 static void Catenate(void *pParams)
@@ -135,7 +135,7 @@ static void Catenate(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_Catenate *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdscat(*pThis->pSdsStr, pIn->pData);
+    pThis->sdsStr = sdscat(pThis->sdsStr, pIn->pData);
 }
 
 static void CatenateAnotherInst(void *pParams)
@@ -143,7 +143,7 @@ static void CatenateAnotherInst(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_CatenateAnotherInst *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdscatsds(*pThis->pSdsStr, *pIn->pToCatenate->pSdsStr);
+    pThis->sdsStr = sdscatsds(pThis->sdsStr, pIn->pToCatenate->sdsStr);
 }
 
 static void CopyByLen(void *pParams)
@@ -151,7 +151,7 @@ static void CopyByLen(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_CopyByLen *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdscpylen(*pThis->pSdsStr, pIn->pData, pIn->szLen);
+    pThis->sdsStr = sdscpylen(pThis->sdsStr, pIn->pData, pIn->szLen);
 }
 
 static void Copy(void *pParams)
@@ -159,7 +159,7 @@ static void Copy(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_Copy *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdscpy(*pThis->pSdsStr, pIn->pData);
+    pThis->sdsStr = sdscpy(pThis->sdsStr, pIn->pData);
 }
 
 static void Trim(void *pParams)
@@ -167,7 +167,7 @@ static void Trim(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_Trim *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pThis->pSdsStr = sdstrim(*pThis->pSdsStr, pIn->pCharSet);
+    pThis->sdsStr = sdstrim(pThis->sdsStr, pIn->pCharSet);
 }
 
 static void GetRange(void *pParams)
@@ -175,7 +175,7 @@ static void GetRange(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_GetRange *pIn = ((ParamIn *)pParams)->pIn;
 
-    sdsrange(*pThis->pSdsStr, pIn->nStartIndex, pIn->nEndIndex);
+    sdsrange(pThis->sdsStr, pIn->nStartIndex, pIn->nEndIndex);
 }
 
 static void Empty(void *pParams)
@@ -183,7 +183,7 @@ static void Empty(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_Empty *pIn = ((ParamIn *)pParams)->pIn;
 
-    sdsclear(*pThis->pSdsStr);
+    sdsclear(pThis->sdsStr);
 }
 
 static void Compare(void *pParams)
@@ -191,20 +191,20 @@ static void Compare(void *pParams)
     String *pThis = ((ParamIn *)pParams)->pInst;
     String_Compare *pIn = ((ParamIn *)pParams)->pIn;
 
-    *pIn->pRet = sdscmp(*pThis->pSdsStr, *pIn->pToCmpr->pSdsStr);
+    *pIn->pRet = sdscmp(pThis->sdsStr, pIn->pToCmpr->sdsStr);
 }
 
 OVERRIDE static void ToString(void *pParams)
 {
     String *pThis = ((ParamIn *)pParams)->pInst;
     Object_ToString *pIn = ((ParamIn *)pParams)->pIn;
-    printf(*pThis->pSdsStr);
+    printf(pThis->sdsStr);
 }
 
 static void Clear(void *pParam)
 {
     String *pStr = pParam;
-    sdsfree(*pStr->pSdsStr);
+    sdsfree(pStr->sdsStr);
 }
 
 bool INVOKE(String)(String *pInst, char *pFuncName, void *pParams)
@@ -222,9 +222,10 @@ void DELETE(String)(String *pInst)
 String *CREATE(String)(const char *pInit)
 {
     DOCREATE(pCreate, String, Object, GenerateReleaserRef(Clear, pCreate),
-        );
+        METHOD(GetInnerPtr)
+        METHOD(GetLength));
 
-    *pCreate->pSdsStr = sdsnew(pInit);
+    pCreate->sdsStr = sdsnew(pInit);
 
     return pCreate;
 }
