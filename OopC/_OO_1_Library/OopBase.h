@@ -54,22 +54,29 @@
 #define DODELETE(pInst, theclass, superclass)                                                                                         \
                 superclass *pSuper = SWITCH(pInst, theclass, superclass); DELETE(superclass)(pSuper)                                  \
 
-#define DOCREATE(pInst, theclass, superclass, pRlsRef, ...)                                  \
-                theclass *pInst = malloc(sizeof(theclass));                                  \
-                if (!pInst) { return NULL; }                                                 \
-                void *pMethods = GenerateMethodRing();                                       \
-                if (!pMethods) { return NULL; };                                             \
-                __VA_ARGS__                                                                  \
-                pInst->pChain = InsertInstance(                                              \
-                    EXTEND(superclass)(CREATE(superclass)()),                                \
-                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods))                   \
+#define DOCREATE(pInst, theclass, superclass, pRlsRef, ...)                                             \
+                theclass *pInst = malloc(sizeof(theclass));                                             \
+                if (!pInst) { return NULL; }                                                            \
+                void *pMethods = GenerateMethodRing();                                                  \
+                if (!pMethods) { return NULL; };                                                        \
+                __VA_ARGS__                                                                             \
+                pInst->pChain = InsertInstance(                                                         \
+                    EXTEND(superclass)(CREATE(superclass)()),                                           \
+                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods))                              \
 
-#define CLASSDEF(theclass, superclass, ...)                                                  \
-	            typedef struct theclass theclass;                                            \
-	            theclass* CREATE(theclass)(__VA_ARGS__);                                     \
-	            bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams); \
-	            void*     EXTEND(theclass)(theclass* pInst);                                 \
-	            void      DELETE(theclass)(theclass* pInst)                                  \
+#define CLASSDEF(theclass, superclass, ...)                                                             \
+	            typedef struct theclass theclass;                                                       \
+	            theclass* CREATE(theclass)(__VA_ARGS__);                                                \
+	            bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams);            \
+	            void*     EXTEND(theclass)(theclass* pInst);                                            \
+	            void      DELETE(theclass)(theclass* pInst)                                             \
+
+#define CLASSDEFEXP(exportflag, theclass, superclass, ...)                                              \
+	            exportflag typedef struct theclass theclass;                                            \
+	            exportflag theclass* CREATE(theclass)(__VA_ARGS__);                                     \
+	            exportflag bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams); \
+	            exportflag void*     EXTEND(theclass)(theclass* pInst);                                 \
+	            exportflag void      DELETE(theclass)(theclass* pInst)                                  \
 
 /******************************************************/
 /******* Neccessary and required API for Coding *******/
