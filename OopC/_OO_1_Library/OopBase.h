@@ -152,12 +152,7 @@ OOPLIB_API void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFunc
 /********************************************************/
 /************** Super super class : Object **************/
 /********************************************************/
-typedef struct Object Object;
-
-OOPLIB_API Object* CREATE(Object)();
-OOPLIB_API bool    INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams);
-OOPLIB_API void*   EXTEND(Object)(Object* pInst);
-OOPLIB_API void    DELETE(Object)(Object* pInst);
+CLASSDEFEXP(OOPLIB_API, Object, Object);
 
 typedef struct { bool* pRet; void* pToCmpr; } Object_Equal;
 typedef ParamNull Object_ToString;
