@@ -24,7 +24,172 @@
 #define OOPUTIL_API __declspec(dllexport)
 #include "OopUtil.h"
 
-void Dummy()
+/**************************************************/
+/****************** IniWrapper ********************/
+/**************************************************/
+
+#include "iniparser.h"
+
+struct IniWrapper
 {
-    return;
+    CHAINDEF;
+
+    char* pIniFileName;
+
+    dictionary* pDict;
+};
+
+////////////////////////////////////////////////////////////////////
+//
+
+static void Init(void* pParams)
+{
+    IniWrapper* pThis = ((ParamIn*)pParams)->pInst;
+    IniWrapper_Init* pIn = ((ParamIn*)pParams)->pIn;
+
+    size_t szTmp = strlen(pIn->pIniFileName);
+    pThis->pIniFileName = malloc(szTmp + 1);
+    if (pThis->pIniFileName == NULL)
+    {
+        *pIn->pRet = false;
+        return;
+    }
+
+    memcpy(pThis->pIniFileName, pIn->pIniFileName, szTmp + 1);
+    pThis->pDict = iniparser_load(pIn->pIniFileName);
+
+    *pIn->pRet = pThis->pDict != NULL;
+}
+
+static void WriteIni(void* pParams)
+{
+    IniWrapper* pThis = ((ParamIn*)pParams)->pInst;
+    IniWrapper_WriteIni* pIn = ((ParamIn*)pParams)->pIn;
+
+    //write value
+    if (pIn->pSection != NULL && pIn->pKey != NULL)
+    {
+        size_t szLenKey = 0;
+        char* pBufEntry = NULL;
+
+        {
+            szLenKey = strlen(pIn->pSection) + 1/* : */ + strlen(pIn->pKey) + 1/* \0 */;
+            pBufEntry = malloc(szLenKey);
+        }
+        if (pBufEntry == NULL)
+        {
+            *pIn->pRet = false;
+            return;
+        }
+        memset(pBufEntry, 0, szLenKey);
+        sprintf(pBufEntry, "%s:%s", pIn->pSection, pIn->pKey);
+
+        *pIn->pRet = 0 == iniparser_set(pThis->pDict, pBufEntry, pIn->pValue);
+        free(pBufEntry);
+
+        return;
+    }
+
+    //new section
+    if (pIn->pSection != NULL && pIn->pKey == NULL)
+    {
+        *pIn->pRet = 0 == iniparser_set(pThis->pDict, pIn->pSection, NULL);
+        return;
+    }
+
+    *pIn->pRet = false;
+}
+
+static void ReadIni(void* pParams)
+{
+    IniWrapper* pThis = ((ParamIn*)pParams)->pInst;
+    IniWrapper_ReadIni* pIn = ((ParamIn*)pParams)->pIn;
+
+    size_t szLenKey = 0;
+    char* pBufKey = NULL;
+
+    {
+        szLenKey = strlen(pIn->pSection) + 1/* : */ + strlen(pIn->pKey) + 1/* \0 */;
+        pBufKey = malloc(szLenKey);
+    }
+    if (pBufKey == NULL)
+    {
+        //failed to alloc mem
+        *pIn->pRet = false;
+        return;
+    }
+    memset(pBufKey, 0, szLenKey);
+    sprintf(pBufKey, "%s:%s", pIn->pSection, pIn->pKey);
+
+    *pIn->ppRetVal = iniparser_getstring(pThis->pDict, pBufKey, "");
+    free(pBufKey);
+
+    *pIn->pRet = true;
+}
+
+static void Save(void* pParams)
+{
+    IniWrapper* pThis = ((ParamIn*)pParams)->pInst;
+    IniWrapper_Save* pIn = ((ParamIn*)pParams)->pIn;
+
+    const char* pFileName = pThis->pIniFileName;
+    if (pIn->pSaveAs != NULL)
+    {
+        pFileName = pIn->pSaveAs;
+    }
+    if (pFileName == NULL)
+    {
+        *pIn->pRet = false;
+        return;
+    }
+
+    FILE* fp = fopen(pFileName, "w");
+    if (fp == NULL)
+    {
+        *pIn->pRet = false;
+        return;
+    }
+
+    iniparser_dump_ini(pThis->pDict, fp);
+    fclose(fp);
+
+    *pIn->pRet = true;
+}
+
+static void Clear(void* pParams)
+{
+    IniWrapper* pInst = pParams;
+
+    free(pInst->pIniFileName);
+
+    iniparser_freedict(pInst->pDict);
+}
+
+bool INVOKE(IniWrapper)(IniWrapper* pInst, char* pFuncName, void* pParams)
+{
+    DOINVOKE(pInst, pFuncName, pParams);
+}
+
+void* EXTEND(IniWrapper)(IniWrapper* pInst)
+{
+    DOEXTEND(pInst);
+}
+
+void DELETE(IniWrapper)(IniWrapper* pInst)
+{
+    DODELETE(pInst, IniWrapper, Object);
+}
+
+IniWrapper* CREATE(IniWrapper)()
+{
+    DOCREATE(pCreate, IniWrapper, Object, GenerateReleaserRef(Clear, pCreate),
+        METHOD(Init)
+        METHOD(WriteIni)
+        METHOD(ReadIni)
+        METHOD(Save));
+
+    pCreate->pIniFileName = NULL;
+    pCreate->pDict = NULL;
+
+    return pCreate;
 }

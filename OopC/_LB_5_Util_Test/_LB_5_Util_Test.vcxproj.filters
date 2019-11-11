@@ -13,30 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\sds">
-      <UniqueIdentifier>{6ec5af86-26ac-4e8b-9806-05dab44bbbb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\sds">
-      <UniqueIdentifier>{716b25c5-8590-4c88-a2b4-920f0c2f57b0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OopCore.c">
+    <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="sds.c">
-      <Filter>源文件\sds</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="OopCore.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sds.h">
-      <Filter>头文件\sds</Filter>
-    </ClInclude>
-    <ClInclude Include="sdsalloc.h">
-      <Filter>头文件\sds</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

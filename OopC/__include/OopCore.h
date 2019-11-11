@@ -35,19 +35,14 @@
 /***************** String ************************/
 /*************************************************/
 
-typedef struct String String;
-// Null param is allowed.
-OOPCORE_API String* CREATE(String)(const char *pInit);
-OOPCORE_API bool  INVOKE(String)(String* pInst, char* pFuncName, void* pParams);
-OOPCORE_API void* EXTEND(String)(String* pInst);
-OOPCORE_API void  DELETE(String)(String* pInst);
+CLASSDEFEXP(OOPCORE_API, String, Object);
 
 //1.×Ö·û±éÀú
 /*
  * Example:
  *
  * String *pStr = CREATE(String)("It's amazing.");
- * char **pInner = NULL;
+ * char *pInner = NULL;
  * INVOKE(String)(pStr, "GetInnerPtr", &(String_GetInnerPtr){&pInner}); */
 typedef struct { char **ppInnerPtr; }
                String_GetInnerPtr;

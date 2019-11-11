@@ -13,15 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\iniparser">
+      <UniqueIdentifier>{8e0e9fcb-340f-43c4-8ff0-25f891f01157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\iniparser">
+      <UniqueIdentifier>{6aef7954-9a72-47dd-ba79-ea886af0f032}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OopUtil.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="dictionary.c">
+      <Filter>源文件\iniparser</Filter>
+    </ClCompile>
+    <ClCompile Include="iniparser.c">
+      <Filter>源文件\iniparser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OopUtil.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="iniparser.h">
+      <Filter>头文件\iniparser</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary.h">
+      <Filter>头文件\iniparser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
