@@ -102,7 +102,7 @@ void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef)
 
     return NULL;
 }
-void      CallReleaser(void *pVdList)
+void   DestroyReleaserRefList(void *pVdList)
 {
     ReleaserRefList *pList = pVdList;
 
@@ -188,46 +188,72 @@ void* GenerateMethodRing()
 
 	return pRet;
 }
-void *  InsertMethod(void * pVdMethods, int nMethodNum, ...)
+void*   InsertMethod(void* pVdMethods, void* pVdMethod)
 {
-    MethodRing *pMethods = pVdMethods;
+	MethodRing* pMethods = pVdMethods;
+	Method* pMethod = pVdMethod;
 
-    if (!pMethods) { return NULL; }
-    if (nMethodNum <= 0) { return pMethods; }
+	if (pMethods == NULL || pVdMethod == NULL)
+	{
+		return NULL;
+	}
 
-    va_list methods;
-    va_start(methods, nMethodNum);
+	//pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail == true 属于异常情况
 
-    //pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail == true 属于异常情况
+	if (pMethods->pHead && pMethods->pTail)
+	{
+		pMethod->pPrev = pMethods->pTail;
+		pMethod->pNext = pMethods->pHead;
 
-    if (!pMethods->pHead && !pMethods->pTail)
-    {
-        Method *pMethod = va_arg(methods, Method *);
-        pMethod->pNext = pMethod;
-        pMethod->pPrev = pMethod;
+		pMethods->pHead->pPrev = pMethod;
+		pMethods->pTail->pNext = pMethod;
 
-        pMethods->pHead = pMethod;
-        pMethods->pTail = pMethod;
+		pMethods->pTail = pMethod;
 
-        nMethodNum--;
-    }
+		return pMethods;
+	}
 
-    for (int i = 0; i < nMethodNum; i++)
-    {
-        Method *pMethod = va_arg(methods, Method *);
+	if (!pMethods->pHead && !pMethods->pTail)
+	{
+		pMethod->pNext = pMethod;
+		pMethod->pPrev = pMethod;
 
-        pMethod->pPrev = pMethods->pTail;
-        pMethod->pNext = pMethods->pHead;
+		pMethods->pHead = pMethod;
+		pMethods->pTail = pMethod;
 
-        pMethods->pHead->pPrev = pMethod;
-        pMethods->pTail->pNext = pMethod;
+		return pMethods;
+	}
 
-        pMethods->pTail = pMethod;
-    }
+	return NULL;
+}
+void   DestroyMethodRing(void* pVdMethods)
+{
+	MethodRing* pMethods = pVdMethods;
 
-    va_end(methods);
+	if (pMethods != NULL)
+	{
+		if (pMethods->pHead != NULL && pMethods->pTail != NULL)
+		{
+			pMethods->pHead->pPrev = NULL;
+			pMethods->pTail->pNext = NULL;
 
-    return pMethods;
+			for (Method *pIt = pMethods->pHead; pIt;)
+			{
+				Method* pTmp = pIt->pNext;
+				free(pIt->pName);
+				free(pIt);
+				pIt = pTmp;
+			}
+
+			free(pMethods);
+			return;
+		}
+
+		if (pMethods->pHead == NULL && pMethods->pTail == NULL)
+		{
+			free(pMethods);
+		}
+	}
 }
 
 typedef struct Instance Instance;
@@ -295,8 +321,7 @@ void*   InsertInstance(void* pVdChain, void* pVdInstance)
     InstanceChain *pChain = pVdChain;
     Instance *pInstance = pVdInstance;
 
-    if (pChain && !pInstance) { return pChain; }
-    if (!pChain) { return NULL; }
+    if (!pChain || !pInstance) { return NULL; }
 
     //pChain->pHead && !pChain->pTail || !pChain->pHead && pChain->pTail == true 属于异常情况
 
@@ -670,15 +695,27 @@ void DELETE(Object)(Object* pInst)
 Object* CREATE(Object)()
 {
 	Object* pCreate = malloc(sizeof(Object));
-    if (!pCreate) { return NULL; }
+    if (pCreate == NULL) { return NULL; }
 
 	MethodRing* pMethods = GenerateMethodRing();
-    if (!pMethods) { return NULL; }
+	if (pMethods == NULL)
+	{
+		free(pCreate);
+		return NULL;
+	}
 
-    pMethods = InsertMethod(pMethods, 2,
-        GenerateMethod(Equal, "Equal"),
-        GenerateMethod(ToString, "ToString"));
-	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, "Object", NULL, pMethods));
+	if (InsertMethod(pMethods, GenerateMethod(Equal, "Equal") == NULL)
+	  ||InsertMethod(pMethods, GenerateMethod(ToString, "ToString")) == NULL)
+	{
+		DestroyMethodRing(pMethods);
+		return NULL;
+	}
+
+	void* pVdChain = GenerateInstanceChain();
+	if (pVdChain == NULL) { return NULL; }
+
+	pCreate->pChain = InsertInstance(pVdChain, GenerateInstance(pCreate, "Object", NULL, pMethods));
+	if (pCreate->pChain == NULL) { return NULL; }
 
 	return pCreate;
 }

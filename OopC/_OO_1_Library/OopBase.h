@@ -49,7 +49,7 @@
                 return Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFunc(pInst->pChain, pInst, pFuncName), pParams }) \
 
 #define DOEXTEND(pInst)                                                                                                               \
-                return pInst->pChain                                                                                                  \
+				return pInst == NULL ? NULL : pInst->pChain																			  \
 
 #define DODELETE(pInst, theclass, superclass)                                                                                         \
                 superclass *pSuper = SWITCH(pInst, theclass, superclass); DELETE(superclass)(pSuper)                                  \
@@ -58,11 +58,12 @@
                 theclass *pInst = malloc(sizeof(theclass));                                             \
                 if (!pInst) { return NULL; }                                                            \
                 void *pMethods = GenerateMethodRing();                                                  \
-                if (!pMethods) { return NULL; };                                                        \
+                if (!pMethods) { free(pInst); return NULL; }                                            \
                 __VA_ARGS__                                                                             \
                 pInst->pChain = InsertInstance(                                                         \
                     EXTEND(superclass)(CREATE(superclass)()),                                           \
-                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods))                              \
+                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods));                             \
+				if (pInst->pChain == NULL) return NULL                                                  \
 
 #define CLASSDEF(theclass, superclass)                                                                  \
 	            typedef struct theclass theclass;                                                       \
@@ -82,21 +83,21 @@
 /******* Neccessary and required API for Coding *******/
 /******************************************************/
 //demonstrate a method has no implement
-#define      ABSTRACT                                                           \
+#define      ABSTRACT                                                                                                                                 \
 //demonstrate an operation of implementing an abstract method of super or overriding an inherited method
-#define      OVERRIDE                                                           \
+#define      OVERRIDE                                                                                                                                 \
 
-#define      CHAINDEF                                                           \
-                     void *pChain                                               \
+#define      CHAINDEF                                                                                                                                 \
+                     void *pChain                                                                                                                     \
 
-#define        METHOD(name)                                                     \
-                     InsertMethod(pMethods, 1, GenerateMethod(name, #name));    \
+#define        METHOD(name)                                                                                                                           \
+                     if (InsertMethod(pMethods, GenerateMethod(name, #name)) == NULL) {DestroyMethodRing(pMethods); return NULL;}                     \
 
-#define       AMETHOD(name)                                                     \
-                     InsertMethod(pMethods, 1, GenerateMethod(NULL, #name));    \
+#define       AMETHOD(name)                                                                                                                           \
+                     if (InsertMethod(pMethods, GenerateMethod(NULL, #name)) == NULL) {DestroyMethodRing(pMethods); return NULL;}                     \
 
-#define        SWITCH(pInst, theclass, superclass)                              \
-                     ConvertByType(EXTEND(theclass)(pInst), pInst, #superclass) \
+#define        SWITCH(pInst, theclass, superclass)                                                                                                    \
+                     ConvertByType(EXTEND(theclass)(pInst), pInst, #superclass)                                                                       \
 
 #define DOINVOKESUPER(pInst, pFuncName, ...)                                                                                                          \
                      InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFuncInherited(pInst->pChain, pInst, pFuncName), __VA_ARGS__ }) \
@@ -119,7 +120,7 @@ OOPLIB_API void ResetInvokeRetCode();
                       void *pLocalMemRefList = GenerateReleaserRefList()                            \
 
 #define RLSLOCALMEMKET()                                                                            \
-                      CallReleaser(pLocalMemRefList)                                                \
+                      DestroyReleaserRefList(pLocalMemRefList)                                      \
 
 #define          TORLS(fnRelease, pToClear)                                                         \
                       InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, pToClear)) \
@@ -130,12 +131,13 @@ OOPLIB_API void ResetInvokeRetCode();
 OOPLIB_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear);
 OOPLIB_API void* GenerateReleaserRefList();
 OOPLIB_API void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef);
-OOPLIB_API void      CallReleaser(void *pVdList);
+OOPLIB_API void   DestroyReleaserRefList(void *pVdList);
 
 
 OOPLIB_API void* GenerateMethod(void(*pfnAddr)(void *), char* pName);
 OOPLIB_API void* GenerateMethodRing();
-OOPLIB_API void*   InsertMethod(void *pVdMethods, int nMethodNum, ...);
+OOPLIB_API void*   InsertMethod(void *pVdMethods, void *pVdMethod);
+OOPLIB_API void   DestroyMethodRing(void *pVdMethods);
 
 
 OOPLIB_API void* GenerateInstance(void* pFields, char* pName, void *pRlsRef, void* pVdMethods);
