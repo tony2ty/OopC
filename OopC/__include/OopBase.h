@@ -64,16 +64,16 @@
                     EXTEND(superclass)(CREATE(superclass)()),                                           \
                     GenerateInstance(pInst, #theclass, pRlsRef, pMethods))                              \
 
-#define CLASSDEF(theclass, superclass, ...)                                                             \
+#define CLASSDEF(theclass, superclass)                                                                  \
 	            typedef struct theclass theclass;                                                       \
-	            theclass* CREATE(theclass)(__VA_ARGS__);                                                \
+	            theclass* CREATE(theclass)();                                                           \
 	            bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams);            \
 	            void*     EXTEND(theclass)(theclass* pInst);                                            \
 	            void      DELETE(theclass)(theclass* pInst)                                             \
 
-#define CLASSDEFEXP(exportflag, theclass, superclass, ...)                                              \
-	            exportflag typedef struct theclass theclass;                                            \
-	            exportflag theclass* CREATE(theclass)(__VA_ARGS__);                                     \
+#define CLASSDEFEXP(exportflag, theclass, superclass)                                                   \
+	            typedef struct theclass theclass;                                                       \
+	            exportflag theclass* CREATE(theclass)();                                                \
 	            exportflag bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams); \
 	            exportflag void*     EXTEND(theclass)(theclass* pInst);                                 \
 	            exportflag void      DELETE(theclass)(theclass* pInst)                                  \
