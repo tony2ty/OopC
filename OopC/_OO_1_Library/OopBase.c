@@ -151,13 +151,10 @@ struct MethodRing
 void* GenerateMethod(void(*pfnAddr)(void *), char* pName)
 {
     Transit fnExec = pfnAddr;
-    //fnExec可能为null，在这种场景下可能会出现
-    //一个类添加了名为pName的方法，
-    //但是没有给出具体实现，
-    //而是让子类实现，
-    //相当于名为pName的方法为抽象方法
 
-	if (!pName || !*pName) { return NULL; }
+    //fnExec can be NULL when generating abstract method.
+    //pName CAN'T be NULL, so there's no need to judge with if clause;
+	//if (!pName || !*pName) { return NULL; }
 
 	void* pMem = malloc(strlen(pName) + 1);
 	Method* pRet = malloc(sizeof(Method));
@@ -170,8 +167,9 @@ void* GenerateMethod(void(*pfnAddr)(void *), char* pName)
 		return NULL;
 	}
 
-	pRet->pPrev = NULL; //新产生的 方法结构体 必须将该字段设为null，判断需要用到
-	pRet->pNext = NULL; //新产生的 方法结构体 必须将该字段设为null，判断需要用到
+    //field pPrev and pNext of pointer pRet malloced just now must be set to NULL for later judgement.
+	pRet->pPrev = NULL;
+	pRet->pNext = NULL;
 	pRet->fnExec = fnExec;
 	pRet->pName = strcpy(pMem, pName);
 
@@ -183,8 +181,9 @@ void* GenerateMethodRing()
 
     if (!pRet) { return NULL; }
 
-	pRet->pHead = NULL; //新产生的 方法环结构体 必须将该字段设为null，判断需要用到
-	pRet->pTail = NULL; //新产生的 方法环结构体 必须将该字段设为null，判断需要用到
+    //field pHead and pTail of pointer pRet malloced just now must be set to NULL for later judgement.
+	pRet->pHead = NULL;
+	pRet->pTail = NULL;
 
 	return pRet;
 }
@@ -193,12 +192,15 @@ void*   InsertMethod(void* pVdMethods, void* pVdMethod)
 	MethodRing* pMethods = pVdMethods;
 	Method* pMethod = pVdMethod;
 
-	if (pMethods == NULL || pVdMethod == NULL)
+    //pMethods can't be null, 
+    //because pre-judgement has been made when calling this func.
+	if (pVdMethod == NULL)
 	{
 		return NULL;
 	}
 
-	//pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail == true 属于异常情况
+    //no need to consider this kind of situation:
+	//pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail == true
 
 	if (pMethods->pHead && pMethods->pTail)
 	{
@@ -230,30 +232,29 @@ void   DestroyMethodRing(void* pVdMethods)
 {
 	MethodRing* pMethods = pVdMethods;
 
-	if (pMethods != NULL)
-	{
-		if (pMethods->pHead != NULL && pMethods->pTail != NULL)
-		{
-			pMethods->pHead->pPrev = NULL;
-			pMethods->pTail->pNext = NULL;
+    //pMethods cannot be null if this func called.
 
-			for (Method *pIt = pMethods->pHead; pIt;)
-			{
-				Method* pTmp = pIt->pNext;
-				free(pIt->pName);
-				free(pIt);
-				pIt = pTmp;
-			}
+    if (pMethods->pHead != NULL && pMethods->pTail != NULL)
+    {
+        pMethods->pHead->pPrev = NULL;
+        pMethods->pTail->pNext = NULL;
 
-			free(pMethods);
-			return;
-		}
+        for (Method *pIt = pMethods->pHead; pIt;)
+        {
+            Method* pTmp = pIt->pNext;
+            free(pIt->pName);
+            free(pIt);
+            pIt = pTmp;
+        }
 
-		if (pMethods->pHead == NULL && pMethods->pTail == NULL)
-		{
-			free(pMethods);
-		}
-	}
+        free(pMethods);
+        return;
+    }
+
+    if (pMethods->pHead == NULL && pMethods->pTail == NULL)
+    {
+        free(pMethods);
+    }
 }
 
 typedef struct Instance Instance;
@@ -278,12 +279,8 @@ void* GenerateInstance(void* pFields, char* pName, void *pVdRlsRef, void* pVdMet
     MethodRing *pMethods = pVdMethods;
     ReleaserRef *pRlsRef = pVdRlsRef;
 
-    //即使类没有成员方法，
-    //方法环也只能说是0元素，
-    //而不能为null，
-    //也就是pMethods不能为null
-
-    if (!pFields || !pName || !*pName || !pMethods) { return NULL; }
+    //these params can't be null
+    //if (!pFields || !pName || !*pName || !pMethods) { return NULL; }
 
 	void* pMem = malloc(strlen(pName) + 1);
 	Instance* pRet = malloc(sizeof(Instance));
@@ -296,8 +293,9 @@ void* GenerateInstance(void* pFields, char* pName, void *pVdRlsRef, void* pVdMet
 		return NULL;
 	}
 
-	pRet->pPrev = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
-	pRet->pNext = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
+    //field pPrev and pNext of pointer pRet malloced just now must be set to NULL for later judgement.
+	pRet->pPrev = NULL;
+	pRet->pNext = NULL;
 	pRet->pFields = pFields;
 	pRet->pName = strcpy(pMem, pName);
 	pRet->pRlsRef = pRlsRef;
@@ -311,8 +309,9 @@ void* GenerateInstanceChain()
 
     if (!pRet) { return NULL; }
 
-	pRet->pHead = NULL; //新产生的 实例链结构体 必须将该字段设为null，判断需要用到
-	pRet->pTail = NULL; //新产生的 实例链结构体 必须将该字段设为null，判断需要用到
+    //field pHead and pTail of pointer pRet malloced just now must be set to NULL for later judgement.
+	pRet->pHead = NULL;
+	pRet->pTail = NULL;
 
 	return pRet;
 }
@@ -321,9 +320,11 @@ void*   InsertInstance(void* pVdChain, void* pVdInstance)
     InstanceChain *pChain = pVdChain;
     Instance *pInstance = pVdInstance;
 
-    if (!pChain || !pInstance) { return NULL; }
+    //pChain can't be null.
+    if (!pInstance) { return NULL; }
 
-    //pChain->pHead && !pChain->pTail || !pChain->pHead && pChain->pTail == true 属于异常情况
+    //this kind of situation can't occur:
+    //pChain->pHead && !pChain->pTail || !pChain->pHead && pChain->pTail == true
 
 	if (pChain->pHead && pChain->pTail)
 	{
