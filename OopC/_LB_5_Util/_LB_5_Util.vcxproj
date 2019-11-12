@@ -111,6 +111,7 @@ copy $(ProjectDir)OopUtil.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Comm
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)$(SolutionName)\__include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)$(SolutionName)\__lib\$(PlatformTarget)</AdditionalLibraryDirectories>
@@ -119,7 +120,7 @@ copy $(ProjectDir)OopUtil.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Comm
     <PostBuildEvent>
       <Command>copy $(TargetDir)*.lib /Y /V $(SolutionDir)$(SolutionName)\__lib\$(PlatformTarget)\
 copy $(TargetDir)*.dll /Y /V $(SolutionDir)$(SolutionName)\__dll\$(PlatformTarget)\
-copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
+copy $(ProjectDir)OopUtil.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,6 +132,7 @@ copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)$(SolutionName)\__include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -141,7 +143,7 @@ copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
     <PostBuildEvent>
       <Command>copy $(TargetDir)*.lib /Y /V $(SolutionDir)$(SolutionName)\__lib\$(PlatformTarget)\
 copy $(TargetDir)*.dll /Y /V $(SolutionDir)$(SolutionName)\__dll\$(PlatformTarget)\
-copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
+copy $(ProjectDir)OopUtil.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,6 +155,7 @@ copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)$(SolutionName)\__include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -163,7 +166,7 @@ copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
     <PostBuildEvent>
       <Command>copy $(TargetDir)*.lib /Y /V $(SolutionDir)$(SolutionName)\__lib\$(PlatformTarget)\
 copy $(TargetDir)*.dll /Y /V $(SolutionDir)$(SolutionName)\__dll\$(PlatformTarget)\
-copy $(ProjectDir)*.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
+copy $(ProjectDir)OopUtil.h /Y /V $(SolutionDir)$(SolutionName)\__include\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
