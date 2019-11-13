@@ -80,9 +80,9 @@ void DELETE(CalculatorExt)(CalculatorExt* pInst)
 CalculatorExt* CREATE(CalculatorExt)()
 {
     DOCREATE(pCreate, CalculatorExt, Calculator, NULL,
-        METHOD(Add)
-        METHOD(Multiply)
-        METHOD(Divide));
+        METHOD(pCreate, Add)
+        METHOD(pCreate, Multiply)
+        METHOD(pCreate, Divide));
 
 	return pCreate;
 }

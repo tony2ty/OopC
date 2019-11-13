@@ -64,14 +64,16 @@ void* EXTEND(Calculator)(Calculator* pInst)
 
 void DELETE(Calculator)(Calculator* pInst)
 {
-    DODELETE(pInst, Calculator, Object);
+    //DODELETE(pInst, Calculator, Object);
+    Object *pSuper = SWITCH(pInst, Calculator, Object);
+    DELETE(Object)(pSuper);
 }
 
 Calculator* CREATE(Calculator)()
 {
     DOCREATE(pCreate, Calculator, Object, NULL,
-        METHOD(Subtract)
-        METHOD(Multiply));
+        METHOD(pCreate, Subtract)
+        METHOD(pCreate, Multiply));
 
 	return pCreate;
 }

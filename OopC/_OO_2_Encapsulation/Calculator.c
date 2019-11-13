@@ -82,9 +82,9 @@ void DELETE(Calculator)(Calculator *pInst)
 Calculator *CREATE(Calculator)()
 {
     DOCREATE(pCreate, Calculator, Object, NULL,
-        METHOD(Input)
-        METHOD(Add)
-        METHOD(Output));
+        METHOD(pCreate, Input)
+        METHOD(pCreate, Add)
+        METHOD(pCreate, Output));
 
     return pCreate;
 }

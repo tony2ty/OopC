@@ -53,10 +53,10 @@ void DELETE(CalculatorBase)(CalculatorBase* pInst)
 CalculatorBase* CREATE(CalculatorBase)()
 {
     DOCREATE(pCreate, CalculatorBase, Object, NULL,
-        AMETHOD(Add)
-        AMETHOD(Subtract)
-        AMETHOD(Multiply)
-        AMETHOD(Divide));
+        AMETHOD(pCreate, Add)
+        AMETHOD(pCreate, Subtract)
+        AMETHOD(pCreate, Multiply)
+        AMETHOD(pCreate, Divide));
 
 	return pCreate;
 }

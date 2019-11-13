@@ -94,10 +94,10 @@ void DELETE(CalculatorExtdCommon)(CalculatorExtdCommon* pInst)
 CalculatorExtdCommon* CREATE(CalculatorExtdCommon)()
 {
     DOCREATE(pCreate, CalculatorExtdCommon, CalculatorBase, NULL,
-        METHOD(Add)
-        METHOD(Subtract)
-        METHOD(Multiply)
-        METHOD(Divide));
+        METHOD(pCreate, Add)
+        METHOD(pCreate, Subtract)
+        METHOD(pCreate, Multiply)
+        METHOD(pCreate, Divide));
 
 	return pCreate;
 }

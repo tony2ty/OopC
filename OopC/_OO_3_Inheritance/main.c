@@ -36,6 +36,7 @@ int main(int argc, char** argv)
 
 	{
         Calculator* pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), pCalc);
+        DELETE(Calculator)(pCalc);
 
 		double dblRet = 0;
 		INVOKE(Calculator)(pCalc, "Subtract", &(Calculator_Subtract){10, 12, &dblRet});
