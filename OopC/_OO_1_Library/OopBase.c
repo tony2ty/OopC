@@ -73,35 +73,6 @@ void* GenerateReleaserRefList()
 
     return pRet;
 }
-void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef)
-{
-    ReleaserRefList *pList = pVdList;
-    ReleaserRef *pRlsRef = pVdRlsRef;
-
-    if (!pList || !pRlsRef || !pRlsRef->fnRelease) { return pList; }
-
-    if (pList->pHead && pList->pTail)
-    {
-        pList->pTail->pNext = pRlsRef;
-        pRlsRef->pPrev = pList->pTail;
-        pRlsRef->pNext = NULL;
-        pList->pTail = pRlsRef;
-
-        return pList;
-    }
-
-    if (!pList->pHead && !pList->pTail)
-    {
-        pRlsRef->pPrev = NULL;
-        pRlsRef->pNext = NULL;
-        pList->pHead = pRlsRef;
-        pList->pTail = pRlsRef;
-
-        return pList;
-    }
-
-    return NULL;
-}
 void   DestroyReleaserRefList(void *pVdList)
 {
     ReleaserRefList *pList = pVdList;
@@ -124,6 +95,36 @@ void   DestroyReleaserRefList(void *pVdList)
     }
 
     free(pList);
+}
+void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef)
+{
+    ReleaserRefList *pList = pVdList;
+    ReleaserRef *pRlsRef = pVdRlsRef;
+
+    //no need to set if-clause here.
+    //if (!pList || !pRlsRef || !pRlsRef->fnRelease) { return pList; }
+
+    if (pList->pHead && pList->pTail)
+    {
+        pList->pTail->pNext = pRlsRef;
+        pRlsRef->pPrev = pList->pTail;
+        pRlsRef->pNext = NULL;
+        pList->pTail = pRlsRef;
+
+        return pList;
+    }
+
+    if (!pList->pHead && !pList->pTail)
+    {
+        pRlsRef->pPrev = NULL;
+        pRlsRef->pNext = NULL;
+        pList->pHead = pRlsRef;
+        pList->pTail = pRlsRef;
+
+        return pList;
+    }
+
+    return NULL;
 }
 
 
@@ -187,6 +188,34 @@ void* GenerateMethodRing()
 
 	return pRet;
 }
+void   DestroyMethodRing(void* pVdMethods)
+{
+    MethodRing* pMethods = pVdMethods;
+
+    //pMethods cannot be null if this func called.
+
+    if (pMethods->pHead != NULL && pMethods->pTail != NULL)
+    {
+        pMethods->pHead->pPrev = NULL;
+        pMethods->pTail->pNext = NULL;
+
+        for (Method *pIt = pMethods->pHead; pIt;)
+        {
+            Method* pTmp = pIt->pNext;
+            free(pIt->pName);
+            free(pIt);
+            pIt = pTmp;
+        }
+
+        free(pMethods);
+        return;
+    }
+
+    if (pMethods->pHead == NULL && pMethods->pTail == NULL)
+    {
+        free(pMethods);
+    }
+}
 void*   InsertMethod(void* pVdMethods, void* pVdMethod)
 {
 	MethodRing* pMethods = pVdMethods;
@@ -194,8 +223,9 @@ void*   InsertMethod(void* pVdMethods, void* pVdMethod)
 
     //pMethods can't be null, 
     //because pre-judgement has been made when calling this func.
-	if (pVdMethod == NULL)
+	if (pMethod == NULL)
 	{
+        DestroyMethodRing(pMethods);
 		return NULL;
 	}
 
@@ -227,34 +257,6 @@ void*   InsertMethod(void* pVdMethods, void* pVdMethod)
 	}
 
 	return NULL;
-}
-void   DestroyMethodRing(void* pVdMethods)
-{
-	MethodRing* pMethods = pVdMethods;
-
-    //pMethods cannot be null if this func called.
-
-    if (pMethods->pHead != NULL && pMethods->pTail != NULL)
-    {
-        pMethods->pHead->pPrev = NULL;
-        pMethods->pTail->pNext = NULL;
-
-        for (Method *pIt = pMethods->pHead; pIt;)
-        {
-            Method* pTmp = pIt->pNext;
-            free(pIt->pName);
-            free(pIt);
-            pIt = pTmp;
-        }
-
-        free(pMethods);
-        return;
-    }
-
-    if (pMethods->pHead == NULL && pMethods->pTail == NULL)
-    {
-        free(pMethods);
-    }
 }
 
 typedef struct Instance Instance;
@@ -315,6 +317,63 @@ void* GenerateInstanceChain()
 
 	return pRet;
 }
+void   DestroyInstanceChain(void* pVdChain)
+{
+    InstanceChain *pChain = pVdChain;
+
+    //迭代释放每个实例
+    Instance* pItrInst = pChain->pHead;
+    do
+    {
+        //释放类实例的附加存储
+        if (pItrInst->pRlsRef && pItrInst->pRlsRef->fnRelease)
+        {
+            pItrInst->pRlsRef->fnRelease(pItrInst->pRlsRef->pToClear);
+            free(pItrInst->pRlsRef);
+        }
+        //释放实例数据域
+        free(pItrInst->pFields);
+        //释放类名
+        free(pItrInst->pName);
+        //释放方法环：释放方法名
+        if (pItrInst->pMethods->pHead && pItrInst->pMethods->pTail)
+        {
+            Method* pItrMthd = pItrInst->pMethods->pHead;
+            do
+            {
+                free(pItrMthd->pName);
+                pItrMthd = pItrMthd->pNext;
+
+            } while (pItrMthd != pItrInst->pMethods->pHead);
+            //释放方法环：释放方法结构体
+            pItrMthd = pItrInst->pMethods->pHead;
+            do
+            {
+                void* pVd = pItrMthd->pNext;
+                free(pItrMthd);
+                pItrMthd = pVd;
+
+            } while (pItrMthd != pItrInst->pMethods->pHead);
+        }
+        //释放方法环：释放环头
+        free(pItrInst->pMethods);
+
+        pItrInst = pItrInst->pNext;
+
+    } while (pItrInst != NULL);
+
+    //释放链
+    pItrInst = pChain->pHead;
+    do
+    {
+        void* pVd = pItrInst->pNext;
+        free(pItrInst);
+        pItrInst = pVd;
+
+    } while (pItrInst != NULL);
+
+    free(pChain);
+}
 void*   InsertInstance(void* pVdChain, void* pVdInstance)
 {
     InstanceChain *pChain = pVdChain;
@@ -331,7 +390,7 @@ void*   InsertInstance(void* pVdChain, void* pVdInstance)
 				free(pInstance->pRlsRef);
 			}
 
-			pInstance->pMethods->pTail->pNext == NULL;
+			pInstance->pMethods->pTail->pNext = NULL;
 			while (pInstance->pMethods->pHead)
 			{
 				Method* pTmp = pInstance->pMethods->pHead;
@@ -356,7 +415,7 @@ void*   InsertInstance(void* pVdChain, void* pVdInstance)
 		}
 		else
 		{
-			Delete(pChain);
+			DestroyInstanceChain(pChain);
 		}
 		return NULL;
 	}
@@ -640,61 +699,6 @@ void* ConvertToExactType(InstanceChain* pChain, void* pInst)
 
     return pTmpInst ? pTmpInst->pFields : NULL;
 }
-void Delete(InstanceChain* pChain)
-{
-	//迭代释放每个实例
-	Instance* pItrInst = pChain->pHead;
-	do
-	{
-		//释放类实例的附加存储
-        if (pItrInst->pRlsRef && pItrInst->pRlsRef->fnRelease)
-        {
-            pItrInst->pRlsRef->fnRelease(pItrInst->pRlsRef->pToClear);
-            free(pItrInst->pRlsRef);
-        }
-		//释放实例数据域
-		free(pItrInst->pFields);
-		//释放类名
-		free(pItrInst->pName);
-		//释放方法环：释放方法名
-        if (pItrInst->pMethods->pHead && pItrInst->pMethods->pTail)
-        {
-            Method* pItrMthd = pItrInst->pMethods->pHead;
-            do
-            {
-                free(pItrMthd->pName);
-                pItrMthd = pItrMthd->pNext;
-
-            } while (pItrMthd != pItrInst->pMethods->pHead);
-            //释放方法环：释放方法结构体
-            pItrMthd = pItrInst->pMethods->pHead;
-            do
-            {
-                void* pVd = pItrMthd->pNext;
-                free(pItrMthd);
-                pItrMthd = pVd;
-
-            } while (pItrMthd != pItrInst->pMethods->pHead);
-        }
-		//释放方法环：释放环头
-		free(pItrInst->pMethods);
-
-		pItrInst = pItrInst->pNext;
-
-	} while (pItrInst != NULL);
-
-	//释放链
-	pItrInst = pChain->pHead;
-	do
-	{
-		void* pVd = pItrInst->pNext;
-		free(pItrInst);
-		pItrInst = pVd;
-
-	} while (pItrInst != NULL);
-
-	free(pChain);
-}
 
 
 /***************************************************/
@@ -729,7 +733,7 @@ void* EXTEND(Object)(Object* pInst)
 }
 void DELETE(Object)(Object* pInst)
 {
-	Delete(pInst->pChain);
+	DestroyInstanceChain(pInst->pChain);
 }
 Object* CREATE(Object)()
 {
@@ -743,17 +747,14 @@ Object* CREATE(Object)()
 		return NULL;
 	}
 
-	if (InsertMethod(pMethods, GenerateMethod(Equal, "Equal") == NULL)
+	if (InsertMethod(pMethods, GenerateMethod(Equal, "Equal")) == NULL
 	  ||InsertMethod(pMethods, GenerateMethod(ToString, "ToString")) == NULL)
 	{
-		DestroyMethodRing(pMethods);
+        free(pCreate);
 		return NULL;
 	}
 
-	void* pVdChain = GenerateInstanceChain();
-	if (pVdChain == NULL) { return NULL; }
-
-	pCreate->pChain = InsertInstance(pVdChain, GenerateInstance(pCreate, "Object", NULL, pMethods));
+	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, "Object", NULL, pMethods));
 	if (pCreate->pChain == NULL) { return NULL; }
 
 	return pCreate;

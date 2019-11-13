@@ -90,11 +90,11 @@
 #define      CHAINDEF                                                                                                                                 \
                      void *pChain                                                                                                                     \
 
-#define        METHOD(name)                                                                                                                           \
-                     if (InsertMethod(pMethods, GenerateMethod(name, #name)) == NULL) {DestroyMethodRing(pMethods); return NULL;}                     \
+#define        METHOD(pInst, name)                                                                                                                    \
+                     if (InsertMethod(pMethods, GenerateMethod(name, #name)) == NULL) {free(pInst); return NULL;}                                     \
 
-#define       AMETHOD(name)                                                                                                                           \
-                     if (InsertMethod(pMethods, GenerateMethod(NULL, #name)) == NULL) {DestroyMethodRing(pMethods); return NULL;}                     \
+#define       AMETHOD(pInst, name)                                                                                                                    \
+                     if (InsertMethod(pMethods, GenerateMethod(NULL, #name)) == NULL) {free(pInst); return NULL;}                                     \
 
 #define        SWITCH(pInst, theclass, superclass)                                                                                                    \
                      ConvertByType(EXTEND(theclass)(pInst), pInst, #superclass)                                                                       \
@@ -115,13 +115,18 @@ typedef struct { void* pInst; void* pIn; } ParamIn;
 OOPLIB_API int GetInvokeRetCode();
 OOPLIB_API void ResetInvokeRetCode();
 
-//for releasing local memory
+//for releasing local memory.
+//this macro always asserts that mem will be allocated successfully,
+//while in some extreme condition failure of mem allocation will cause error.
 #define RLSLOCALMEMBRA()                                                                            \
                       void *pLocalMemRefList = GenerateReleaserRefList()                            \
 
 #define RLSLOCALMEMKET()                                                                            \
                       DestroyReleaserRefList(pLocalMemRefList)                                      \
 
+//used to mark mem dynamically allocated which is intended to free at the end of current code block.
+//this macro always asserts that mem will be allocated successfully when calling GenerateReleaserRef(),
+//while in some extreme condition failure of mem allocation will cause error.
 #define          TORLS(fnRelease, pToClear)                                                         \
                       InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, pToClear)) \
 
@@ -130,14 +135,13 @@ OOPLIB_API void ResetInvokeRetCode();
 /********************************************************/
 OOPLIB_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear);
 OOPLIB_API void* GenerateReleaserRefList();
-OOPLIB_API void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef);
 OOPLIB_API void   DestroyReleaserRefList(void *pVdList);
+OOPLIB_API void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef);
 
 
 OOPLIB_API void* GenerateMethod(void(*pfnAddr)(void *), char* pName);
 OOPLIB_API void* GenerateMethodRing();
 OOPLIB_API void*   InsertMethod(void *pVdMethods, void *pVdMethod);
-OOPLIB_API void   DestroyMethodRing(void *pVdMethods);
 
 
 OOPLIB_API void* GenerateInstance(void* pFields, char* pName, void *pRlsRef, void* pVdMethods);
