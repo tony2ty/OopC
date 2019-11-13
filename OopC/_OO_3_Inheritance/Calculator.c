@@ -64,9 +64,7 @@ void* EXTEND(Calculator)(Calculator* pInst)
 
 void DELETE(Calculator)(Calculator* pInst)
 {
-    //DODELETE(pInst, Calculator, Object);
-    Object *pSuper = SWITCH(pInst, Calculator, Object);
-    DELETE(Object)(pSuper);
+    DODELETE(pInst, Calculator, Object);
 }
 
 Calculator* CREATE(Calculator)()
