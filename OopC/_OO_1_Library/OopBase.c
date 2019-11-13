@@ -320,8 +320,46 @@ void*   InsertInstance(void* pVdChain, void* pVdInstance)
     InstanceChain *pChain = pVdChain;
     Instance *pInstance = pVdInstance;
 
-    //pChain can't be null.
-    if (!pInstance) { return NULL; }
+	if (pChain == NULL)
+	{
+		if (pInstance != NULL)
+		{
+			if (pInstance->pRlsRef != NULL && pInstance->pRlsRef->fnRelease != NULL)
+			{
+				pInstance->pRlsRef->fnRelease(pInstance->pRlsRef->pToClear);
+
+				free(pInstance->pRlsRef);
+			}
+
+			pInstance->pMethods->pTail->pNext == NULL;
+			while (pInstance->pMethods->pHead)
+			{
+				Method* pTmp = pInstance->pMethods->pHead;
+				pInstance->pMethods->pHead = pInstance->pMethods->pHead->pNext;
+
+				free(pTmp->pName);
+				free(pTmp);
+			}
+			free(pInstance->pMethods);
+			
+			free(pInstance->pFields);
+			free(pInstance->pName);
+			free(pInstance);
+		}
+		return NULL;
+	}
+	if (pInstance == NULL)
+	{
+		if (pChain->pHead == NULL)
+		{
+			free(pChain);
+		}
+		else
+		{
+			Delete(pChain);
+		}
+		return NULL;
+	}
 
     //this kind of situation can't occur:
     //pChain->pHead && !pChain->pTail || !pChain->pHead && pChain->pTail == true
