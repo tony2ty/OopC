@@ -157,7 +157,7 @@ void DELETE(Actor)(Actor *pInst)
 
 Actor *CREATE(Actor)()
 {
-	DOCREATE(pCreate, Actor, Object, GenerateReleaserRef(Clear, pCreate),
+	DOCREATE(pCreate, Actor, Object, CLASSEXTRAMEM(Clear, pCreate),
 		METHOD(pCreate, Type)
 		METHOD(pCreate, Gender)
 		METHOD(pCreate, Face)

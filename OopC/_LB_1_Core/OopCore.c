@@ -221,7 +221,7 @@ void DELETE(String)(String *pInst)
 }
 String *CREATE(String)(const char *pInit)
 {
-    DOCREATE(pCreate, String, Object, GenerateReleaserRef(Clear, pCreate),
+    DOCREATE(pCreate, String, Object, CLASSEXTRAMEM(Clear, pCreate),
         METHOD(pCreate, GetInnerPtr)
         METHOD(pCreate, GetLength));
 

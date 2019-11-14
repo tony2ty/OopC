@@ -89,7 +89,7 @@ ModelGenerator *CREATE(ModelGenerator)()
     }
     bHasBeenGenerated = true;
 
-	DOCREATE(pCreate, ModelGenerator, Object, GenerateReleaserRef(Clear, pCreate),
+	DOCREATE(pCreate, ModelGenerator, Object, CLASSEXTRAMEM(Clear, pCreate),
 		METHOD(pCreate, GetModel));
 
     pSingleton = pCreate;

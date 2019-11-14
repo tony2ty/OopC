@@ -84,7 +84,7 @@ void DELETE(IImage)(IImage *pInst)
 
 IImage *CREATE(IImage)()
 {
-	DOCREATE(pCreate, IImage, Object, GenerateReleaserRef(Clear, pCreate),
+	DOCREATE(pCreate, IImage, Object, CLASSEXTRAMEM(Clear, pCreate),
 		METHOD(pCreate, DoPaint)
 		METHOD(pCreate, SetOprtSys)
 		AMETHOD(pCreate, ParseFile));

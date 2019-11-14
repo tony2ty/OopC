@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 	Actor *pActor = NULL;
     INVOKE(ActorController)(pController, "Construct", &(ActorController_Construct){ &pActor, pBuilder }); TORLS(DELETE(Actor), pActor);
 
-    char *pDesc = malloc(sizeof(char) * 10); TORLS(free, pDesc);
+    char *pDesc = malloc(sizeof(char) * 10); TORLSMUTABLE(free, pDesc);
 	INVOKE(Actor)(pActor, "Type", &(Actor_Type){false, &pDesc});
 	printf("%s\n", pDesc);
 	INVOKE(Actor)(pActor, "Gender", &(Actor_Gender){false, &pDesc});

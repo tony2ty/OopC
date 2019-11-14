@@ -81,7 +81,7 @@ void DELETE(OperationScoreAdapter)(OperationScoreAdapter *pInst)
 
 OperationScoreAdapter *CREATE(OperationScoreAdapter)()
 {
-	DOCREATE(pCreate, OperationScoreAdapter, IOperationScore, GenerateReleaserRef(Clear, pCreate),
+	DOCREATE(pCreate, OperationScoreAdapter, IOperationScore, CLASSEXTRAMEM(Clear, pCreate),
 		METHOD(pCreate, DoSort)
 		METHOD(pCreate, DoSearch));
 

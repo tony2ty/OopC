@@ -182,7 +182,7 @@ void DELETE(IniWrapper)(IniWrapper* pInst)
 
 IniWrapper* CREATE(IniWrapper)()
 {
-    DOCREATE(pCreate, IniWrapper, Object, GenerateReleaserRef(Clear, pCreate),
+    DOCREATE(pCreate, IniWrapper, Object, CLASSEXTRAMEM(Clear, pCreate),
         METHOD(pCreate, Init)
         METHOD(pCreate, WriteIni)
         METHOD(pCreate, ReadIni)
