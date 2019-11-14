@@ -101,6 +101,9 @@
 
 #define DOINVOKESUPER(pInst, pFuncName, ...)                                                                                                          \
                      InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFuncInherited(pInst->pChain, pInst, pFuncName), __VA_ARGS__ }) \
+//pfnRelease should be void(*pfnRelease)(void *).
+#define CLASSEXTRAMEM(pfnRelease, pToClear)                                                                                                           \
+                     GenerateReleaserRef(pfnRelease, pToClear, false)                                                                                 \
 
 
 typedef struct { void* pNull; } ParamNull;
@@ -118,22 +121,25 @@ OOPLIB_API void ResetInvokeRetCode();
 //for releasing local memory.
 //this macro always asserts that mem will be allocated successfully,
 //while in some extreme condition failure of mem allocation will cause error.
-#define RLSLOCALMEMBRA()                                                                            \
-                      void *pLocalMemRefList = GenerateReleaserRefList()                            \
+#define RLSLOCALMEMBRA()                                                                                   \
+                      void *pLocalMemRefList = GenerateReleaserRefList()                                   \
 
-#define RLSLOCALMEMKET()                                                                            \
-                      DestroyReleaserRefList(pLocalMemRefList)                                      \
+#define RLSLOCALMEMKET()                                                                                   \
+                      DestroyReleaserRefList(pLocalMemRefList)                                             \
 
 //used to mark mem dynamically allocated which is intended to free at the end of current code block.
 //this macro always asserts that mem will be allocated successfully when calling GenerateReleaserRef(),
 //while in some extreme condition failure of mem allocation will cause error.
-#define          TORLS(fnRelease, pToClear)                                                         \
-                      InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, pToClear)) \
+#define          TORLS(fnRelease, pToClear)                                                                \
+                      InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, pToClear, false)) \
+
+#define   TORLSMUTABLE(fnRelease, pToClear)                                                                \
+                      InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, &pToClear, true)) \
 
 /********************************************************/
 /* APIs Supporting as infrastructure for OO programming */
 /********************************************************/
-OOPLIB_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear);
+OOPLIB_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear, bool bMutable);
 OOPLIB_API void* GenerateReleaserRefList();
 OOPLIB_API void   DestroyReleaserRefList(void *pVdList);
 OOPLIB_API void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef);

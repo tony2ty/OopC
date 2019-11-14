@@ -38,6 +38,7 @@ struct ReleaserRef
     ReleaserRef *pPrev;
     ReleaserRef *pNext;
 
+    bool bMutable;
 	void* pToClear;
     Releaser fnRelease;
 };
@@ -46,7 +47,7 @@ struct ReleaserRefList
     ReleaserRef *pHead;
     ReleaserRef *pTail;
 };
-void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear)
+void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear, bool bMutable)
 {
     Releaser fnRelease = pfnRelease;
 
@@ -59,6 +60,7 @@ void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToClear)
     pRet->pNext = NULL;
 	pRet->fnRelease = fnRelease;
 	pRet->pToClear = pToClear;
+    pRet->bMutable = bMutable;
 
 	return pRet;
 }
@@ -83,7 +85,14 @@ void   DestroyReleaserRefList(void *pVdList)
     {
         if (pIterator->fnRelease)
         {
-            pIterator->fnRelease(pIterator->pToClear);
+            if (pIterator->bMutable)
+            {
+                pIterator->fnRelease(*(void **)(pIterator->pToClear));
+            }
+            else
+            {
+                pIterator->fnRelease(pIterator->pToClear);
+            }
         }
     }
 
@@ -328,7 +337,14 @@ void   DestroyInstanceChain(void* pVdChain)
         //释放类实例的附加存储
         if (pItrInst->pRlsRef && pItrInst->pRlsRef->fnRelease)
         {
-            pItrInst->pRlsRef->fnRelease(pItrInst->pRlsRef->pToClear);
+            if (pItrInst->pRlsRef->bMutable)
+            {
+                pItrInst->pRlsRef->fnRelease(*(void **)(pItrInst->pRlsRef->pToClear));
+            }
+            else
+            {
+                pItrInst->pRlsRef->fnRelease(pItrInst->pRlsRef->pToClear);
+            }
             free(pItrInst->pRlsRef);
         }
         //释放实例数据域
