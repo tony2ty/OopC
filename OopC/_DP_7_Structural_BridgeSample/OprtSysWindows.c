@@ -64,7 +64,7 @@ void DELETE(OprtSysWindows)(OprtSysWindows *pInst)
 OprtSysWindows *CREATE(OprtSysWindows)()
 {
 	DOCREATE(pCreate, OprtSysWindows, IOprtSys, NULL,
-		METHOD(DoPaint));
+		METHOD(pCreate, DoPaint));
 
 	return pCreate;
 }

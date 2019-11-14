@@ -82,8 +82,8 @@ void DELETE(OperationScoreAdapter)(OperationScoreAdapter *pInst)
 OperationScoreAdapter *CREATE(OperationScoreAdapter)()
 {
 	DOCREATE(pCreate, OperationScoreAdapter, IOperationScore, GenerateReleaserRef(Clear, pCreate),
-		METHOD(DoSort)
-		METHOD(DoSearch));
+		METHOD(pCreate, DoSort)
+		METHOD(pCreate, DoSearch));
 
 	pCreate->pSorter = CREATE(QuickSorter)();
 	pCreate->pSearcher = CREATE(BinarySearcher)();

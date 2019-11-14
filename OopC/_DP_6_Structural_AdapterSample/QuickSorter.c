@@ -69,7 +69,7 @@ void DELETE(QuickSorter)(QuickSorter *pInst)
 QuickSorter *CREATE(QuickSorter)()
 {
 	DOCREATE(pCreate, QuickSorter, Object, NULL,
-		METHOD(DoSort));
+		METHOD(pCreate, DoSort));
 
 	return pCreate;
 }

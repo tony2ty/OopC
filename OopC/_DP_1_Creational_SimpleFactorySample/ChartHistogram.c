@@ -62,7 +62,7 @@ void DELETE(ChartHistogram)(ChartHistogram *pInst)
 ChartHistogram *CREATE(ChartHistogram)()
 {
     DOCREATE(pCreate, ChartHistogram, IChart, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     printf("´´½¨Öù×´Í¼.\n");
 

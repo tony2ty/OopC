@@ -64,7 +64,7 @@ void DELETE(OprtSysLinux)(OprtSysLinux *pInst)
 OprtSysLinux *CREATE(OprtSysLinux)()
 {
 	DOCREATE(pCreate, OprtSysLinux, IOprtSys, NULL,
-		METHOD(DoPaint));
+		METHOD(pCreate, DoPaint));
 
 	return pCreate;
 }

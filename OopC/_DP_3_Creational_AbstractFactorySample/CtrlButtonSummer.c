@@ -62,7 +62,7 @@ void DELETE(CtrlButtonSummer)(CtrlButtonSummer *pInst)
 CtrlButtonSummer *CREATE(CtrlButtonSummer)()
 {
     DOCREATE(pCreate, CtrlButtonSummer, ICtrlButton, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     return pCreate;
 }

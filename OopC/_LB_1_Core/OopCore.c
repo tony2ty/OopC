@@ -222,8 +222,8 @@ void DELETE(String)(String *pInst)
 String *CREATE(String)(const char *pInit)
 {
     DOCREATE(pCreate, String, Object, GenerateReleaserRef(Clear, pCreate),
-        METHOD(GetInnerPtr)
-        METHOD(GetLength));
+        METHOD(pCreate, GetInnerPtr)
+        METHOD(pCreate, GetLength));
 
     pCreate->sdsStr = sdsnew(pInit);
 

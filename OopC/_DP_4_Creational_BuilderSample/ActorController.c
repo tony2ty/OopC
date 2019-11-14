@@ -67,7 +67,7 @@ void DELETE(ActorController)(ActorController *pInst)
 ActorController *CREATE(ActorController)()
 {
 	DOCREATE(pCreate, ActorController, Object, NULL,
-		METHOD(Construct));
+		METHOD(pCreate, Construct));
 
 	return pCreate;
 }

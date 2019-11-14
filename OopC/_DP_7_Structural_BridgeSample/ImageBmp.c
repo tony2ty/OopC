@@ -70,7 +70,7 @@ void DELETE(ImageBmp)(ImageBmp *pInst)
 ImageBmp *CREATE(ImageBmp)()
 {
 	DOCREATE(pCreate, ImageBmp, IImage, NULL,
-		METHOD(ParseFile));
+		METHOD(pCreate, ParseFile));
 
 	return pCreate;
 }

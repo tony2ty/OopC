@@ -62,7 +62,7 @@ void DELETE(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst)
 CtrlComboBoxSpring *CREATE(CtrlComboBoxSpring)()
 {
     DOCREATE(pCreate, CtrlComboBoxSpring, ICtrlComboBox, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     return pCreate;
 }

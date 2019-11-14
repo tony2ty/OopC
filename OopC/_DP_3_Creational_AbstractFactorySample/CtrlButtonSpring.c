@@ -62,7 +62,7 @@ void DELETE(CtrlButtonSpring)(CtrlButtonSpring *pInst)
 CtrlButtonSpring *CREATE(CtrlButtonSpring)()
 {
     DOCREATE(pCreate, CtrlButtonSpring, ICtrlButton, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     return pCreate;
 }

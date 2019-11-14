@@ -53,7 +53,7 @@ void DELETE(ILoggerFactory)(ILoggerFactory* pInst)
 ILoggerFactory* CREATE(ILoggerFactory)()
 {
     DOCREATE(pCreate, ILoggerFactory, Object, NULL,
-        AMETHOD(CreateLogger));
+        AMETHOD(pCreate, CreateLogger));
 
 	return pCreate;
 }

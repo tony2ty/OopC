@@ -62,7 +62,7 @@ void DELETE(ChartPie)(ChartPie *pInst)
 ChartPie *CREATE(ChartPie)()
 {
     DOCREATE(pCreate, ChartPie, IChart, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     printf("´´½¨±ý×´Í¼.\n");
 

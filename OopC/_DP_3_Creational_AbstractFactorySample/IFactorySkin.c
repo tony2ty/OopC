@@ -53,9 +53,9 @@ void DELETE(IFactorySkin)(IFactorySkin *pInst)
 IFactorySkin *CREATE(IFactorySkin)()
 {
     DOCREATE(pCreate, IFactorySkin, Object, NULL,
-        AMETHOD(CreateButton)
-        AMETHOD(CreateTextField)
-        AMETHOD(CreateComboBox));
+        AMETHOD(pCreate, CreateButton)
+        AMETHOD(pCreate, CreateTextField)
+        AMETHOD(pCreate, CreateComboBox));
 
     return pCreate;
 }

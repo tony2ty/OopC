@@ -62,7 +62,7 @@ void DELETE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst)
 CtrlTextFieldSummer *CREATE(CtrlTextFieldSummer)()
 {
     DOCREATE(pCreate, CtrlTextFieldSummer, ICtrlTextField, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     return pCreate;
 }

@@ -65,7 +65,7 @@ void DELETE(LoggerFactoryFile)(LoggerFactoryFile* pInst)
 LoggerFactoryFile* CREATE(LoggerFactoryFile)()
 {
     DOCREATE(pCreate, LoggerFactoryFile, ILoggerFactory, NULL,
-        METHOD(CreateLogger));
+        METHOD(pCreate, CreateLogger));
 
 	return pCreate;
 }

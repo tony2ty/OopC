@@ -55,8 +55,8 @@ void DELETE(IOperationScore)(IOperationScore *pInst)
 IOperationScore *CREATE(IOperationScore)()
 {
 	DOCREATE(pCreate, IOperationScore, Object, NULL,
-		AMETHOD(DoSort)
-		AMETHOD(DoSearch));
+		AMETHOD(pCreate, DoSort)
+		AMETHOD(pCreate, DoSearch));
 
 	return pCreate;
 }

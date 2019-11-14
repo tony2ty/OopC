@@ -70,7 +70,7 @@ void DELETE(ImageGif)(ImageGif *pInst)
 ImageGif *CREATE(ImageGif)()
 {
 	DOCREATE(pCreate, ImageGif, IImage, NULL,
-		METHOD(ParseFile));
+		METHOD(pCreate, ParseFile));
 
 	return pCreate;
 }

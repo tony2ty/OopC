@@ -108,12 +108,12 @@ void DELETE(BuilderDevil)(BuilderDevil *pInst)
 BuilderDevil *CREATE(BuilderDevil)()
 {
 	DOCREATE(pCreate, BuilderDevil, IBuilderActor, NULL,
-		METHOD(BuildType)
-		METHOD(BuildGender)
-		METHOD(BuildFace)
-		METHOD(BuildCostume)
-		METHOD(BuildHairStyle)
-		METHOD(CreateActor));
+		METHOD(pCreate, BuildType)
+		METHOD(pCreate, BuildGender)
+		METHOD(pCreate, BuildFace)
+		METHOD(pCreate, BuildCostume)
+		METHOD(pCreate, BuildHairStyle)
+		METHOD(pCreate, CreateActor));
 
 	pCreate->pActor = CREATE(Actor)();
 

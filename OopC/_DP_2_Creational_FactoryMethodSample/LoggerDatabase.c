@@ -62,7 +62,7 @@ void DELETE(LoggerDatabase)(LoggerDatabase* pInst)
 LoggerDatabase* CREATE(LoggerDatabase)()
 {
     DOCREATE(pCreate, LoggerDatabase, ILogger, NULL,
-        METHOD(WriteLog));
+        METHOD(pCreate, WriteLog));
 
 	return pCreate;
 }

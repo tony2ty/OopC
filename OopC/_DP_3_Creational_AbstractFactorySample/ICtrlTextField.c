@@ -53,7 +53,7 @@ void DELETE(ICtrlTextField)(ICtrlTextField *pInst)
 ICtrlTextField *CREATE(ICtrlTextField)()
 {
     DOCREATE(pCreate, ICtrlTextField, Object, NULL,
-        AMETHOD(Display));
+        AMETHOD(pCreate, Display));
 
     return pCreate;
 }

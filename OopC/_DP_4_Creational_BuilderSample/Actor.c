@@ -158,11 +158,11 @@ void DELETE(Actor)(Actor *pInst)
 Actor *CREATE(Actor)()
 {
 	DOCREATE(pCreate, Actor, Object, GenerateReleaserRef(Clear, pCreate),
-		METHOD(Type)
-		METHOD(Gender)
-		METHOD(Face)
-		METHOD(Costume)
-		METHOD(HairStyle));
+		METHOD(pCreate, Type)
+		METHOD(pCreate, Gender)
+		METHOD(pCreate, Face)
+		METHOD(pCreate, Costume)
+		METHOD(pCreate, HairStyle));
 
 	pCreate->pType = NULL;
 	pCreate->pGender = NULL;

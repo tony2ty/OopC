@@ -53,7 +53,7 @@ void DELETE(ICtrlButton)(ICtrlButton *pInst)
 ICtrlButton *CREATE(ICtrlButton)()
 {
     DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
+        AMETHOD(pCreate, Display));
 
     return pCreate;
 }

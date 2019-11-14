@@ -53,12 +53,12 @@ void DELETE(IBuilderActor)(IBuilderActor *pInst)
 IBuilderActor *CREATE(IBuilderActor)()
 {
 	DOCREATE(pCreate, IBuilderActor, Object, NULL,
-		AMETHOD(BuildType)
-		AMETHOD(BuildGender)
-		AMETHOD(BuildFace)
-		AMETHOD(BuildCostume)
-		AMETHOD(BuildHairStyle)
-		AMETHOD(CreateActor));
+		AMETHOD(pCreate, BuildType)
+		AMETHOD(pCreate, BuildGender)
+		AMETHOD(pCreate, BuildFace)
+		AMETHOD(pCreate, BuildCostume)
+		AMETHOD(pCreate, BuildHairStyle)
+		AMETHOD(pCreate, CreateActor));
 
 	return pCreate;
 }

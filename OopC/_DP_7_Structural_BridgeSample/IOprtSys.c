@@ -55,7 +55,7 @@ void DELETE(IOprtSys)(IOprtSys *pInst)
 IOprtSys *CREATE(IOprtSys)()
 {
 	DOCREATE(pCreate, IOprtSys, Object, NULL,
-		AMETHOD(DoPaint));
+		AMETHOD(pCreate, DoPaint));
 
 	return pCreate;
 }

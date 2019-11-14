@@ -70,7 +70,7 @@ void DELETE(ImageJpg)(ImageJpg *pInst)
 ImageJpg *CREATE(ImageJpg)()
 {
 	DOCREATE(pCreate, ImageJpg, IImage, NULL,
-		METHOD(ParseFile));
+		METHOD(pCreate, ParseFile));
 
 	return pCreate;
 }

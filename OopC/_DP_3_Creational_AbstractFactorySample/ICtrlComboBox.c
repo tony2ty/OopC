@@ -53,7 +53,7 @@ void DELETE(ICtrlComboBox)(ICtrlComboBox *pInst)
 ICtrlComboBox *CREATE(ICtrlComboBox)()
 {
     DOCREATE(pCreate, ICtrlComboBox, Object, NULL,
-        AMETHOD(Display));
+        AMETHOD(pCreate, Display));
 
     return pCreate;
 }

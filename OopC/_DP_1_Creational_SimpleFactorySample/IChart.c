@@ -53,7 +53,7 @@ void DELETE(IChart)(IChart *pInst)
 IChart *CREATE(IChart)()
 {
     DOCREATE(pCreate, IChart, Object, NULL,
-        AMETHOD(Display));
+        AMETHOD(pCreate, Display));
 
     return pCreate;
 }

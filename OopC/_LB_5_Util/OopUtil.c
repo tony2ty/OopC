@@ -183,10 +183,10 @@ void DELETE(IniWrapper)(IniWrapper* pInst)
 IniWrapper* CREATE(IniWrapper)()
 {
     DOCREATE(pCreate, IniWrapper, Object, GenerateReleaserRef(Clear, pCreate),
-        METHOD(Init)
-        METHOD(WriteIni)
-        METHOD(ReadIni)
-        METHOD(Save));
+        METHOD(pCreate, Init)
+        METHOD(pCreate, WriteIni)
+        METHOD(pCreate, ReadIni)
+        METHOD(pCreate, Save));
 
     pCreate->pIniFileName = NULL;
     pCreate->pDict = NULL;

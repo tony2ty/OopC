@@ -62,7 +62,7 @@ void DELETE(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst)
 CtrlComboBoxSummer *CREATE(CtrlComboBoxSummer)()
 {
     DOCREATE(pCreate, CtrlComboBoxSummer, ICtrlComboBox, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     return pCreate;
 }

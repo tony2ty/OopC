@@ -62,7 +62,7 @@ void DELETE(LoggerFile)(LoggerFile* pInst)
 LoggerFile* CREATE(LoggerFile)()
 {
     DOCREATE(pCreate, LoggerFile, ILogger, NULL,
-        METHOD(WriteLog));
+        METHOD(pCreate, WriteLog));
 
 	return pCreate;
 }

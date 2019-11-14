@@ -62,7 +62,7 @@ void DELETE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst)
 CtrlTextFieldSpring *CREATE(CtrlTextFieldSpring)()
 {
     DOCREATE(pCreate, CtrlTextFieldSpring, ICtrlTextField, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     return pCreate;
 }

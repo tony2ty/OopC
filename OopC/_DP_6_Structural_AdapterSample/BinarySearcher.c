@@ -77,7 +77,7 @@ void DELETE(BinarySearcher)(BinarySearcher *pInst)
 BinarySearcher *CREATE(BinarySearcher)()
 {
 	DOCREATE(pCreate, BinarySearcher, Object, NULL,
-		METHOD(DoSearch));
+		METHOD(pCreate, DoSearch));
 
 	return pCreate;
 }

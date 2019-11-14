@@ -95,7 +95,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)$(SolutionName)\__lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OopBased.lib;OopBase.lib;</AdditionalDependencies>
+      <AdditionalDependencies>OopBased.lib;</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetDir)*.lib /Y /V $(SolutionDir)$(SolutionName)\__lib\$(PlatformTarget)\

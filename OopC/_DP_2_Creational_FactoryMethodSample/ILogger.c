@@ -53,7 +53,7 @@ void DELETE(ILogger)(ILogger* pInst)
 ILogger* CREATE(ILogger)()
 {
     DOCREATE(pCreate, ILogger, Object, NULL,
-        AMETHOD(WriteLog));
+        AMETHOD(pCreate, WriteLog));
 
 	return pCreate;
 }

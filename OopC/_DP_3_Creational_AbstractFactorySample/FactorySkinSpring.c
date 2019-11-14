@@ -83,9 +83,9 @@ void DELETE(FactorySkinSpring)(FactorySkinSpring *pInst)
 FactorySkinSpring *CREATE(FactorySkinSpring)()
 {
     DOCREATE(pCreate, FactorySkinSpring, IFactorySkin, NULL,
-        METHOD(CreateButton)
-        METHOD(CreateTextField)
-        METHOD(CreateComboBox));
+        METHOD(pCreate, CreateButton)
+        METHOD(pCreate, CreateTextField)
+        METHOD(pCreate, CreateComboBox));
 
     return pCreate;
 }

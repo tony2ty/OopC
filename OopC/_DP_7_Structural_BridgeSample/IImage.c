@@ -85,9 +85,9 @@ void DELETE(IImage)(IImage *pInst)
 IImage *CREATE(IImage)()
 {
 	DOCREATE(pCreate, IImage, Object, GenerateReleaserRef(Clear, pCreate),
-		METHOD(DoPaint)
-		METHOD(SetOprtSys)
-		AMETHOD(ParseFile));
+		METHOD(pCreate, DoPaint)
+		METHOD(pCreate, SetOprtSys)
+		AMETHOD(pCreate, ParseFile));
 
     pCreate->pOS = NULL;
 

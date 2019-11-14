@@ -63,7 +63,7 @@ void DELETE(LoggerFactoryDatabase)(LoggerFactoryDatabase* pInst)
 LoggerFactoryDatabase* CREATE(LoggerFactoryDatabase)()
 {
     DOCREATE(pCreate, LoggerFactoryDatabase, ILoggerFactory, NULL,
-        METHOD(CreateLogger));
+        METHOD(pCreate, CreateLogger));
 
 	return pCreate;
 }

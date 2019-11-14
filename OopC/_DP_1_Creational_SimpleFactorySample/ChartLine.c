@@ -62,7 +62,7 @@ void DELETE(ChartLine)(ChartLine *pInst)
 ChartLine *CREATE(ChartLine)()
 {
     DOCREATE(pCreate, ChartLine, IChart, NULL,
-        METHOD(Display));
+        METHOD(pCreate, Display));
 
     printf("¥¥Ω®’€œﬂÕº.\n");
 
