@@ -127,9 +127,9 @@ static void HairStyle(void *pParams)
 ///////////////////////////////////////////////////////////////////////
 //
 
-static void Clear(void *pToClear)
+static void Clear(void *pParams)
 {
-	Actor *pInst = (Actor *)pToClear;
+	Actor *pInst = pParams;
 	free(pInst->pType);
 	free(pInst->pGender);
 	free(pInst->pFace);
