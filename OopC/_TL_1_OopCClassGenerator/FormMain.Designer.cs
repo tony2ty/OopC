@@ -47,8 +47,6 @@
             this.ColPlaceholder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDataTypeVar = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColNameVar = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label8 = new System.Windows.Forms.Label();
-            this.TxtBxCreateParam = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -191,7 +189,7 @@
             this.ColPlaceholder,
             this.ColDataTypeVar,
             this.ColNameVar});
-            this.DgvVariables.Location = new System.Drawing.Point(22, 286);
+            this.DgvVariables.Location = new System.Drawing.Point(22, 255);
             this.DgvVariables.Name = "DgvVariables";
             this.DgvVariables.RowTemplate.Height = 23;
             this.DgvVariables.Size = new System.Drawing.Size(903, 147);
@@ -224,29 +222,10 @@
             this.ColNameVar.Name = "ColNameVar";
             this.ColNameVar.Width = 89;
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(19, 220);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(78, 16);
-            this.label8.TabIndex = 4;
-            this.label8.Text = "构造参数：";
-            // 
-            // TxtBxCreateParam
-            // 
-            this.TxtBxCreateParam.BackColor = System.Drawing.SystemColors.Info;
-            this.TxtBxCreateParam.Location = new System.Drawing.Point(103, 217);
-            this.TxtBxCreateParam.Name = "TxtBxCreateParam";
-            this.TxtBxCreateParam.Size = new System.Drawing.Size(219, 23);
-            this.TxtBxCreateParam.TabIndex = 5;
-            this.TxtBxCreateParam.Leave += new System.EventHandler(this.TxtBxCreateParam_Leave);
-            this.TxtBxCreateParam.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtBxCreateParam_MouseDoubleClick);
-            // 
             // label9
             // 
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label9.Location = new System.Drawing.Point(12, 252);
+            this.label9.Location = new System.Drawing.Point(12, 221);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(913, 2);
             this.label9.TabIndex = 7;
@@ -255,7 +234,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(19, 267);
+            this.label10.Location = new System.Drawing.Point(19, 236);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(78, 16);
             this.label10.TabIndex = 4;
@@ -264,7 +243,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(19, 447);
+            this.label11.Location = new System.Drawing.Point(19, 416);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(78, 16);
             this.label11.TabIndex = 4;
@@ -283,7 +262,7 @@
             this.ColIsAbstract,
             this.ColNameFunc,
             this.ColParameters});
-            this.DgvFunctions.Location = new System.Drawing.Point(22, 466);
+            this.DgvFunctions.Location = new System.Drawing.Point(22, 435);
             this.DgvFunctions.Name = "DgvFunctions";
             this.DgvFunctions.RowTemplate.Height = 23;
             this.DgvFunctions.Size = new System.Drawing.Size(903, 147);
@@ -334,7 +313,7 @@
             // 
             // BtnDelVariable
             // 
-            this.BtnDelVariable.Location = new System.Drawing.Point(861, 263);
+            this.BtnDelVariable.Location = new System.Drawing.Point(861, 232);
             this.BtnDelVariable.Name = "BtnDelVariable";
             this.BtnDelVariable.Size = new System.Drawing.Size(65, 23);
             this.BtnDelVariable.TabIndex = 8;
@@ -344,7 +323,7 @@
             // 
             // BtnAddVariable
             // 
-            this.BtnAddVariable.Location = new System.Drawing.Point(790, 263);
+            this.BtnAddVariable.Location = new System.Drawing.Point(790, 232);
             this.BtnAddVariable.Name = "BtnAddVariable";
             this.BtnAddVariable.Size = new System.Drawing.Size(65, 23);
             this.BtnAddVariable.TabIndex = 7;
@@ -354,7 +333,7 @@
             // 
             // BtnDelFunc
             // 
-            this.BtnDelFunc.Location = new System.Drawing.Point(861, 443);
+            this.BtnDelFunc.Location = new System.Drawing.Point(861, 412);
             this.BtnDelFunc.Name = "BtnDelFunc";
             this.BtnDelFunc.Size = new System.Drawing.Size(65, 23);
             this.BtnDelFunc.TabIndex = 11;
@@ -364,7 +343,7 @@
             // 
             // BtnAddFunc
             // 
-            this.BtnAddFunc.Location = new System.Drawing.Point(790, 443);
+            this.BtnAddFunc.Location = new System.Drawing.Point(790, 412);
             this.BtnAddFunc.Name = "BtnAddFunc";
             this.BtnAddFunc.Size = new System.Drawing.Size(65, 23);
             this.BtnAddFunc.TabIndex = 10;
@@ -374,7 +353,7 @@
             // 
             // BtnGenFile
             // 
-            this.BtnGenFile.Location = new System.Drawing.Point(820, 622);
+            this.BtnGenFile.Location = new System.Drawing.Point(820, 591);
             this.BtnGenFile.Name = "BtnGenFile";
             this.BtnGenFile.Size = new System.Drawing.Size(106, 38);
             this.BtnGenFile.TabIndex = 13;
@@ -384,7 +363,7 @@
             // 
             // BtnClose
             // 
-            this.BtnClose.Location = new System.Drawing.Point(708, 622);
+            this.BtnClose.Location = new System.Drawing.Point(708, 591);
             this.BtnClose.Name = "BtnClose";
             this.BtnClose.Size = new System.Drawing.Size(106, 38);
             this.BtnClose.TabIndex = 13;
@@ -396,12 +375,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(937, 669);
+            this.ClientSize = new System.Drawing.Size(937, 642);
             this.Controls.Add(this.DgvFunctions);
             this.Controls.Add(this.DgvVariables);
             this.Controls.Add(this.TxtBxInheritFrom);
             this.Controls.Add(this.TxtBxLicense);
-            this.Controls.Add(this.TxtBxCreateParam);
             this.Controls.Add(this.TxtBxClassName);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label6);
@@ -410,7 +388,6 @@
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label12);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.BtnAddFunc);
             this.Controls.Add(this.BtnDelFunc);
@@ -454,8 +431,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox TxtBxInheritFrom;
         private System.Windows.Forms.DataGridView DgvVariables;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox TxtBxCreateParam;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;

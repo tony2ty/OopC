@@ -14,7 +14,6 @@ namespace _TL_1_OopCClassGenerator
 {
     public partial class FormMain : Form
     {
-        private string _CreateParams;
         private List<char> _TokenOptChar;
 
         public FormMain()
@@ -36,8 +35,7 @@ namespace _TL_1_OopCClassGenerator
             {
                 this._TokenOptChar.Add(c);
             }
-
-            this._CreateParams = "";
+            
             this.BtnAddVariable.Tag = this.DgvVariables;
             this.BtnAddFunc.Tag = this.DgvFunctions;
             this.BtnDelVariable.Tag = this.DgvVariables;
@@ -138,7 +136,7 @@ namespace _TL_1_OopCClassGenerator
                 }
                 strContent.AppendLine();
                 //#endif
-                strContent.AppendLine("#endif // !" + this.TxtBxClassName.Text.Trim() + "_H__");
+                strContent.AppendLine("#endif // !" + this.TxtBxClassName.Text.Trim().ToUpper() + "_H__");
 
                 streamWriter.Write(strContent.ToString());
                 streamWriter.Flush();
@@ -242,6 +240,14 @@ namespace _TL_1_OopCClassGenerator
                 strContent.AppendLine("/////////////////////////////////////////////////////////////////////////");
                 strContent.AppendLine("//");
                 strContent.AppendLine();
+
+                strContent.AppendLine("static void Clear(void *pParams)");
+                strContent.AppendLine("{");
+                strContent.AppendLine("\t" + this.TxtBxClassName.Text.Trim() + " *pInst = pParams;");
+                strContent.AppendLine();
+                strContent.AppendLine("\t//Todo: to release class extra mem.");
+                strContent.AppendLine("}");
+                strContent.AppendLine();
                 //控制函数
                 strContent.AppendLine("bool INVOKE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " *pInst, char *pFuncName, void *pParams)");
                 strContent.AppendLine("{");
@@ -253,20 +259,20 @@ namespace _TL_1_OopCClassGenerator
                 strContent.AppendLine("\tDOEXTEND(pInst);");
                 strContent.AppendLine("}");
                 strContent.AppendLine();
-                strContent.AppendLine("void DELETE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " **ppInst)");
+                strContent.AppendLine("void DELETE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxClassName.Text.Trim() + " *pInst)");
                 strContent.AppendLine("{");
-                strContent.AppendLine("\tDODELETE(ppInst, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ");");
+                strContent.AppendLine("\tDODELETE(pInst, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ");");
                 strContent.AppendLine("}");
                 strContent.AppendLine();
-                strContent.AppendLine(this.TxtBxClassName.Text.Trim() + " *CREATE(" + this.TxtBxClassName.Text.Trim() + ")(" + this.TxtBxCreateParam.Text.Trim() + ")");
+                strContent.AppendLine(this.TxtBxClassName.Text.Trim() + " *CREATE(" + this.TxtBxClassName.Text.Trim() + ")()");
                 strContent.AppendLine("{");
                 if (string.IsNullOrEmpty(strMethodInCreate.Trim()))
                 {
-                    strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "NULL);");
+                    strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "CLASSEXTRAMEM(Clear, pCreate));");
                 }
                 else
                 {
-                    strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "NULL,");
+                    strContent.AppendLine("\tDOCREATE(pCreate, " + this.TxtBxClassName.Text.Trim() + ", " + this.TxtBxInheritFrom.Text.Trim() + ", " + "CLASSEXTRAMEM(Clear, pCreate),");
                     strContent.AppendLine(strMethodInCreate.Substring(0, strMethodInCreate.Length - 1) + ");");
                 }
                 strContent.AppendLine();
@@ -400,15 +406,6 @@ namespace _TL_1_OopCClassGenerator
                     break;
                 }
             }
-        }
-
-        private void TxtBxCreateParam_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            FormCreateParams frmCreateParamsInputer = new FormCreateParams();
-            frmCreateParamsInputer.CreateParameters = this._CreateParams;
-            frmCreateParamsInputer.ShowDialog();
-            this._CreateParams = frmCreateParamsInputer.CreateParameters;
-            this.TxtBxCreateParam.Text = frmCreateParamsInputer.CreateParameters.Replace('\n', ' ');
         }
 
         private void TxtBxLicense_MouseDoubleClick(object sender, MouseEventArgs e)
