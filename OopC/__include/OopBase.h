@@ -90,6 +90,12 @@
 #define         __DEL(theclass)                                                                                                                                       \
                      Del_ ## theclass                                                                                                                                 \
 
+#define      __EXTEND                                                                                                                                                 \
+                     __Extend                                                                                                                                         \
+
+#define        __CALL                                                                                                                                                 \
+                     __Call                                                                                                                                           \
+
 #define        METHOD(name)                                                                                                                                           \
 					 if (!InsertMethod(__Methods, GenerateMethod(name, #name))) { return NULL; }                                                                      \
 
@@ -133,8 +139,8 @@
 							 if (!__New) { DestroyMethodRing(__Methods); free(__Fld); return NULL; }                                                                  \
 					                                                                                                                                                  \
 							 __New->pFld = __Fld;                                                                                                                     \
-							 __New->Extend = Extend;                                                                                                                  \
-							 __New->Call = Call;                                                                                                                      \
+							 __New->Extend = __EXTEND;                                                                                                                \
+							 __New->Call = __CALL;                                                                                                                    \
 						 }                                                                                                                                            \
 					                                                                                                                                                  \
 						 superclass* __Super = NULL;                                                                                                                  \
