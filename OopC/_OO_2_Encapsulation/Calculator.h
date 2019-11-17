@@ -26,10 +26,10 @@
 
 #include <OopBase.h>
 
-CLASSDEF(Calculator, Object);
-
-typedef struct { double dblOperandL; double dblOperandR; } Calculator_Input;
-typedef ParamNull Calculator_Add;
-typedef struct { double* pResult; } Calculator_Output;
+CLASS(Calculator, Object);
+METHODDECLARE(
+    Input:  double dblOperandL; double dblOperandR;
+Add:    -;
+Output: double *pResult;)
 
 #endif // !CALCULATOR_H__

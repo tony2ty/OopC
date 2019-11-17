@@ -24,9 +24,9 @@
 #include "Calculator.h"
 
 
-struct Calculator
+struct Calculator_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 
     double dblOperandL;
     double dblOperandR;
@@ -36,55 +36,60 @@ struct Calculator
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-static void Input(void *pParams)
+static void Input(ParamIn *pParams)
 {
-    Calculator *pThis = ((ParamIn *)pParams)->pInst;
-    Calculator_Input *pIn = ((ParamIn *)pParams)->pIn;
+    Calculator *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    pThis->dblOperandL = pIn->dblOperandL;
-    pThis->dblOperandR = pIn->dblOperandR;
+    double dblOperandL = va_arg(vlArgs, double);
+    double dblOperandR = va_arg(vlArgs, double);
+
+    pThis->pFld->dblOperandL = dblOperandL;
+    pThis->pFld->dblOperandR = dblOperandR;
 }
 
-static void Add(void *pParams)
+static void Add(ParamIn *pParams)
 {
-    Calculator *pThis = ((ParamIn *)pParams)->pInst;
-    Calculator_Add *pIn = ((ParamIn *)pParams)->pIn;
+    Calculator *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    pThis->dblResult = pThis->dblOperandL + pThis->dblOperandR;
+    pThis->pFld->dblResult = pThis->pFld->dblOperandL + pThis->pFld->dblOperandR;
 }
 
-static void Output(void *pParams)
+static void Output(ParamIn *pParams)
 {
-    Calculator *pThis = ((ParamIn *)pParams)->pInst;
-    Calculator_Output *pIn = ((ParamIn *)pParams)->pIn;
+    Calculator *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    *pIn->pResult = pThis->dblResult;
+    double *pResult = va_arg(vlArgs, double *);
+
+    *pResult = pThis->pFld->dblResult;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(Calculator)(Calculator *pInst, char *pFuncName, void *pParams)
+static bool Call(Calculator *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(Calculator)(Calculator *pInst)
+static void *Extend(Calculator *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(Calculator)(Calculator *pInst)
+void __DEL(Calculator)(Calculator *pSelf)
 {
-    DODELETE(pInst, Calculator, Object);
+    DODEL(pSelf, Object);
 }
 
-Calculator *CREATE(Calculator)()
+Calculator *__NEW(Calculator)()
 {
-    DOCREATE(pCreate, Calculator, Object, NULL,
-        METHOD(pCreate, Input)
-        METHOD(pCreate, Add)
-        METHOD(pCreate, Output));
+    DONEW(pNew, Calculator, Object, NULL,
+        METHOD(Input)
+        METHOD(Add)
+        METHOD(Output));
 
-    return pCreate;
+    return pNew;
 }

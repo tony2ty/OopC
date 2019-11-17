@@ -21,27 +21,20 @@
 //SOFTWARE.
 
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <stddef.h>
 #include "Calculator.h"
+
 
 int main(int argc, char** argv)
 {
     RLSLOCALMEMBRA();
 
-    Calculator *pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), pCalc);
-
-    bool bRet = false;
-    double dblResult = 0;
-    INVOKE(Calculator)(pCalc, "ToString", NULL);
-    INVOKE(Calculator)(pCalc, "Equal", &(Object_Equal){ &bRet, pCalc });
-    INVOKE(Calculator)(pCalc, "Input", &(Calculator_Input){ 11, 13 });
-    INVOKE(Calculator)(pCalc, "Add", NULL);
-    INVOKE(Calculator)(pCalc, "Output", &(Calculator_Output){ &dblResult });
-    printf("\n11 + 13 = ? %f.\n", dblResult);
-
-	system("pause");
+    Calculator *pCalc = NEW(Calculator); TORLS(DEL(Calculator), pCalc);
+    pCalc->Call(pCalc, "Input", 10, 13);
+    pCalc->Call(pCalc, "Add");
+    double dblRet = 0;
+    pCalc->Call(pCalc, "Output", &dblRet);
+    printf("\n10 + 13 = ? %f.\n", dblRet);
 
     RLSLOCALMEMKET();
 
