@@ -27,7 +27,7 @@
 #ifdef OOPUTIL_API
 #else
     #define OOPUTIL_API __declspec(dllimport)
-#endif // OOPNET_API
+#endif // OOPUTIL_API
 
 #include <OopBase.h>
 
@@ -35,28 +35,24 @@
 /****************** IniWrapper ********************/
 /**************************************************/
 
-CLASSDEFEXP(OOPUTIL_API, IniWrapper, Object);
-
-/* 
- * no file will result in initialization failure. */
-typedef struct { const char* pIniFileName; bool* pRet; }
-			   IniWrapper_Init;
-/*
- * Create new section by passing null to pKey; 
- * Value cannot be set if both section and key are not found;
- * writing new key to an existing section means creating new key-value; */
-typedef struct { const char* pSection; const char* pKey; const char* pValue; bool* pRet; }
-			   IniWrapper_WriteIni;
-/*
- * ppRetVal is read-only.
- * "" will be returned when section or key not found. */
-typedef struct { const char* pSection; const char* pKey; const char** ppRetVal; bool* pRet; }
-			   IniWrapper_ReadIni;
-/*
- * null pSaveAs will cause in-place save operation;
- * if pSaveAs is not null, all ini config will be writed into the file specified by pSaveAs. */
-typedef struct { const char* pSaveAs; bool* pRet; }
-			   IniWrapper_Save;
+CLASSEXP(OOPUTIL_API, IniWrapper, Object);
+METHODDECLARE(
+	/* 
+	 * no file will result in initialization failure. */
+	Init:     const char* pIniFileName; bool* pRet;
+	/*
+	 * Create new section by passing null to pKey; 
+	 * Value cannot be set if both section and key are not found;
+	 * writing new key to an existing section means creating new key-value; */
+	WriteIni: const char* pSection; const char* pKey; const char* pVal; bool *pRet;
+	/*
+	 * ppRetVal is read-only.
+	 * "" will be returned when section or key not found. */
+	ReadIni:  const char* pSection; const char *pKey; const char** ppRetVal; bool *pRet;
+	/*
+	 * null pSaveAs will cause in-place save operation;
+	 * if pSaveAs is not null, all ini config will be writed into the file specified by pSaveAs. */
+	Save:     const char* pSaveAs; bool *pRet;)
 
 #endif // !OOPUTIL_H__
 
