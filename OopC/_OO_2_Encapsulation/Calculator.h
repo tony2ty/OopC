@@ -29,7 +29,7 @@
 CLASS(Calculator, Object);
 METHODDECLARE(
     Input:  double dblOperandL; double dblOperandR;
-Add:    -;
-Output: double *pResult;)
+	Add:    -;
+	Output: double *pResult;)
 
 #endif // !CALCULATOR_H__

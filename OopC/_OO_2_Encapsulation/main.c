@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     RLSLOCALMEMBRA();
 
     Calculator *pCalc = NEW(Calculator); TORLS(DEL(Calculator), pCalc);
-    pCalc->Call(pCalc, "Input", 10, 13);
+    pCalc->Call(pCalc, "Input", 10.0, 13.0);//!!! not 10 13, note the decimal point !!!
     pCalc->Call(pCalc, "Add");
     double dblRet = 0;
     pCalc->Call(pCalc, "Output", &dblRet);

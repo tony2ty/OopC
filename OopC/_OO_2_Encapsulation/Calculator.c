@@ -69,12 +69,12 @@ static void Output(ParamIn *pParams)
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-static bool __CALL(Calculator *pSelf, const char *pMethodName, ...)
+static bool __CALL(Calculator)(Calculator *pSelf, const char *pMethodName, ...)
 {
     DOCALL(pSelf, pMethodName);
 }
 
-static void *__EXTEND(Calculator *pSelf)
+static void *__EXTEND(Calculator)(Calculator *pSelf)
 {
     DOEXTEND(pSelf);
 }
