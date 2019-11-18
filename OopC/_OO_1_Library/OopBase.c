@@ -415,7 +415,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
     InstanceChain *pChain = _pChain;
 
     MthdRef toExecute = NULL;
-	void* pInstRefExact = NULL;
+	void* pObjExact = NULL;
 
     Instance* pFindInst = FindInstance(pChain, pObj);
     if (!pFindInst)
@@ -428,7 +428,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
     {
         Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
         toExecute = pFindMthd ? pFindMthd->fnExec : toExecute;
-		pInstRefExact = pFindMthd ? pIterator->pObj : pInstRefExact;
+        pObjExact = pFindMthd ? pIterator->pObj : pObjExact;
     }
 
     if (!toExecute)
@@ -439,7 +439,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
             if (pFindMthd)
             {
                 toExecute = pFindMthd->fnExec;
-				pInstRefExact = pIterator->pObj;
+                pObjExact = pIterator->pObj;
                 break;
             }
         }
@@ -450,7 +450,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
         //通过父类指针调用子类方法时，需要保证各层父类中存在该方法的声明
         if (!pFindInst->pNext)
         {
-			toExecute(&(ParamIn) { pInstRefExact, vlArgs});
+			toExecute(&(ParamIn) { pObjExact, vlArgs});
             CallCode = CALLSUCCESS;
             return true;
         }
@@ -468,7 +468,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
 
             if (bValidCall)
             {
-				toExecute(&(ParamIn) { pInstRefExact, vlArgs });
+				toExecute(&(ParamIn) { pObjExact, vlArgs });
                 CallCode = CALLSUCCESS;
                 return true;
             }
@@ -482,6 +482,48 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
     else
     {
 		CallCode = METHODNOTFOUND;
+        return false;
+    }
+}
+
+bool RedirectCallSuper(void* _pChain, void* pObj, const char* pMethodName, ...)
+{
+    InstanceChain *pChain = _pChain;
+
+    MthdRef toExecute = NULL;
+    void *pObjExact = NULL;
+
+    Instance* pFindInst = FindInstance(pChain, pObj);
+    if (!pFindInst)
+    {
+        CallCode = INSTANCENOTFOUND;
+        return false;
+    }
+
+    for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
+    {
+        Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
+        if (pFindMthd)
+        {
+            toExecute = pFindMthd->fnExec;
+            pObjExact = pIterator->pObj;
+            break;
+        }
+    }
+
+    if (toExecute)
+    {
+        va_list vlArgs;
+        va_start(vlArgs, pMethodName);
+        toExecute(&(ParamIn) { pObjExact, vlArgs });
+        va_end(vlArgs);
+
+        CallCode = CALLSUCCESS;
+        return true;
+    }
+    else
+    {
+        CallCode = METHODNOTFOUND;
         return false;
     }
 }
