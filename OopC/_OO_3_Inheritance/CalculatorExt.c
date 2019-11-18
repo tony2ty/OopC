@@ -55,9 +55,9 @@ OVERRIDE static void Multiply(ParamIn* pParams)
 	double dblOpR = va_arg(vlArgs, double);
 	double* pdblRet = va_arg(vlArgs, double*);
 
-	//调用转发
-	Calculator* pSuper = SWITCH(pThis, Calculator);
-	pSuper->Call(pSuper, "Multiply", dblOpL, dblOpR, pdblRet);
+	//当前方法OVERRIDE父类的方法，
+    //通过SUPER调用父类的方法
+    SUPER(pThis, "Multiply", dblOpL, dblOpR, pdblRet);
 }
 
 static void Divide(ParamIn* pParams)

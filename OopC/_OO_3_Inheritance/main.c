@@ -67,9 +67,9 @@ int main(int argc, char** argv)
 		}
 
 		double dblRet = 0;
-		pBase->Call(pBase, "Subtract", 11, 5, &dblRet);
+		pBase->Call(pBase, "Subtract", 11.0, 5.0, &dblRet);
 		printf("11 - 5  = ? %f.\n", dblRet);
-		pBase->Call(pBase, "Multiply", 11, 7, &dblRet);
+		pBase->Call(pBase, "Multiply", 11.0, 7.0, &dblRet);
 		printf("11 * 7  = ? %f.\n", dblRet);
 	}
 
