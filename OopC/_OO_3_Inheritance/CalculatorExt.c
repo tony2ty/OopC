@@ -24,65 +24,78 @@
 #include "CalculatorExt.h"
 
 
-struct CalculatorExt
+struct CalculatorExt_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 
-static void Add(void* pParams)
+static void Add(ParamIn* pParams)
 {
-	CalculatorExt* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExt_Add* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorExt* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-    *pIn->pdblRet = pIn->dblOpL + pIn->dblOpR;
+	double dblOpL = va_arg(vlArgs, double);
+	double dblOpR = va_arg(vlArgs, double);
+	double* pdblRet = va_arg(vlArgs, double*);
+
+    *pdblRet = dblOpL + dblOpR;
 }
 
 //static void Subtract(void* pParams);//直接继承
 
-OVERRIDE static void Multiply(void* pParams)
+OVERRIDE static void Multiply(ParamIn* pParams)
 {
-	CalculatorExt* pThis = ((ParamIn*)pParams)->pInst;
-	Calculator_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorExt* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
+
+	double dblOpL = va_arg(vlArgs, double);
+	double dblOpR = va_arg(vlArgs, double);
+	double* pdblRet = va_arg(vlArgs, double*);
 
 	//调用转发
-	DOINVOKESUPER(pThis, "Multiply", pIn);
+	Calculator* pSuper = SWITCH(pThis, Calculator);
+	pSuper->Call(pSuper, "Multiply", dblOpL, dblOpR, pdblRet);
 }
 
-static void Divide(void* pParams)
+static void Divide(ParamIn* pParams)
 {
-	CalculatorExt* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorExt_Divide* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorExt* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	*pIn->pdblRet = pIn->dblOpL / pIn->dblOpR;//除0.。。
+	double dblOpL = va_arg(vlArgs, double);
+	double dblOpR = va_arg(vlArgs, double);
+	double* pdblRet = va_arg(vlArgs, double*);
+
+	*pdblRet = dblOpL / dblOpR;//除0.。。
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CalculatorExt)(CalculatorExt* pInst, char* pFuncName, void* pParams)
+static bool __CALL(CalculatorExt)(CalculatorExt* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(CalculatorExt)(CalculatorExt* pInst)
+static void* __EXTEND(CalculatorExt)(CalculatorExt* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(CalculatorExt)(CalculatorExt* pInst)
+void __DEL(CalculatorExt)(CalculatorExt* pSelf)
 {
-    DODELETE(pInst, CalculatorExt, Calculator);
+	DODEL(pSelf, Calculator);
 }
 
-CalculatorExt* CREATE(CalculatorExt)()
+CalculatorExt* __NEW(CalculatorExt)()
 {
-    DOCREATE(pCreate, CalculatorExt, Calculator, NULL,
-        METHOD(pCreate, Add)
-        METHOD(pCreate, Multiply)
-        METHOD(pCreate, Divide));
+	DONEW(pNew, CalculatorExt, Calculator, NULL,
+		METHOD(Add)
+		METHOD(Multiply)
+		METHOD(Divide));
 
-	return pCreate;
+	return pNew;
 }

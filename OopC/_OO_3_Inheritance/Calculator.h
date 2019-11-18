@@ -26,9 +26,9 @@
 
 #include <OopBase.h>
 
-CLASSDEF(Calculator, Object);
-
-typedef struct { double dblOpL; double dblOpR; double *pdblRet; } Calculator_Subtract;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } Calculator_Multiply;
+CLASS(Calculator, Object);
+METHODDECLARE(
+	Subtract: double dblOpL; double dblOpR; double* pdblRet;
+	Multiply: double dblOpL; double dblOpR; double* pdblRet;)
 
 #endif // !CALCULATOR_H__

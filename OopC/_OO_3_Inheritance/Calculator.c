@@ -24,54 +24,62 @@
 #include "Calculator.h"
 
 
-struct Calculator
+struct Calculator_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
 
-static void Subtract(void* pParams)
+static void Subtract(ParamIn* pParams)
 {
-	Calculator* pThis = ((ParamIn*)pParams)->pInst;
-	Calculator_Subtract* pIn = ((ParamIn*)pParams)->pIn;
+	Calculator* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	*pIn->pdblRet = pIn->dblOpL - pIn->dblOpR;
+	double dblOpL = va_arg(vlArgs, double);
+	double dblOpR = va_arg(vlArgs, double);
+	double* pdblRet = va_arg(vlArgs, double*);
+
+	*pdblRet = dblOpL - dblOpR;
 }
 
-static void Multiply(void* pParams)
+static void Multiply(ParamIn* pParams)
 {
-	Calculator* pThis = ((ParamIn*)pParams)->pInst;
-	Calculator_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+	Calculator* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	*pIn->pdblRet = pIn->dblOpL * pIn->dblOpR;
+	double dblOpL = va_arg(vlArgs, double);
+	double dblOpR = va_arg(vlArgs, double);
+	double* pdblRet = va_arg(vlArgs, double*);
+
+	*pdblRet = dblOpL * dblOpR;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(Calculator)(Calculator* pInst, char* pFuncName, void* pParams)
+static bool __CALL(Calculator)(Calculator* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(Calculator)(Calculator* pInst)
+static void* __EXTEND(Calculator)(Calculator* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(Calculator)(Calculator* pInst)
+void __DEL(Calculator)(Calculator* pSelf)
 {
-    DODELETE(pInst, Calculator, Object);
+	DODEL(pSelf, Object);
 }
 
-Calculator* CREATE(Calculator)()
+Calculator* __NEW(Calculator)()
 {
-    DOCREATE(pCreate, Calculator, Object, NULL,
-        METHOD(pCreate, Subtract)
-        METHOD(pCreate, Multiply));
+	DONEW(pNew, Calculator, Object, NULL,
+		METHOD(Subtract)
+		METHOD(Multiply));
 
-	return pCreate;
+	return pNew;
 }

@@ -26,9 +26,9 @@
 
 #include "Calculator.h"
 
-CLASSDEF(CalculatorExt, Calculator);
-
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExt_Add;
-typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorExt_Divide;
+CLASS(CalculatorExt, Calculator);
+METHODDECLARE(
+	Add:    double dblOpL; double dblOpR; double* pdblRet;
+	Divide: double dblOpL; double dblOpR; double* pdblRet;)
 
 #endif // !CALCULATOREXT_H__

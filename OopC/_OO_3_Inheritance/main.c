@@ -35,10 +35,10 @@ int main(int argc, char** argv)
 	//
 
 	{
-        Calculator* pCalc = CREATE(Calculator)(); TORLS(DELETE(Calculator), pCalc);
+		Calculator* pCalc = NEW(Calculator); TORLS(DEL(Calculator), pCalc);
 
 		double dblRet = 0;
-		INVOKE(Calculator)(pCalc, "Subtract", &(Calculator_Subtract){10, 12, &dblRet});
+		pCalc->Call(pCalc, "Subtract", 10.0, 12.0, &dblRet); //Attention: 10.0, not 10
 		printf("10 - 12 = ? %f.\n", dblRet);
 	}
 
@@ -46,30 +46,30 @@ int main(int argc, char** argv)
 	//
 
 	{
-        CalculatorExt* pCalcExt = CREATE(CalculatorExt)(); TORLS(DELETE(CalculatorExt), pCalcExt);
+		CalculatorExt* pCalcExt = NEW(CalculatorExt); TORLS(DEL(CalculatorExt), pCalcExt);
 
 		double dblRet = 0;
-		INVOKE(CalculatorExt)(pCalcExt, "Add", &(CalculatorExt_Add){11, 21, & dblRet});
+		pCalcExt->Call(pCalcExt, "Add", 11.0, 21.0, &dblRet);
 		printf("11 + 21 = ? %f.\n", dblRet);
-		INVOKE(CalculatorExt)(pCalcExt, "Subtract", &(Calculator_Subtract){11, 5, & dblRet});
+		pCalcExt->Call(pCalcExt, "Subtract", 11.0, 5.0, &dblRet);
 		printf("11 - 5  = ? %f.\n", dblRet);
-		INVOKE(CalculatorExt)(pCalcExt, "Multiply", &(Calculator_Multiply){11, 7, & dblRet});
+		pCalcExt->Call(pCalcExt, "Multiply", 11.0, 7.0, &dblRet);
 		printf("11 * 7  = ? %f.\n", dblRet);
-		INVOKE(CalculatorExt)(pCalcExt, "Divide", &(CalculatorExt_Divide){11, 1, & dblRet});
+		pCalcExt->Call(pCalcExt, "Divide", 11.0, 1.0, &dblRet);
 		printf("11 / 1  = ? %f.\n", dblRet);
 	}
 
 	{
         Calculator* pBase = NULL;
 		{
-			CalculatorExt* pExact = CREATE(CalculatorExt)(); TORLS(DELETE(CalculatorExt), pExact);
-			pBase = SWITCH(pExact, CalculatorExt, Calculator);
+			CalculatorExt* pExact = NEW(CalculatorExt); TORLS(DEL(CalculatorExt), pExact);
+			pBase = SWITCH(pExact, Calculator);
 		}
 
 		double dblRet = 0;
-		INVOKE(Calculator)(pBase, "Subtract", &(Calculator_Subtract){11, 5, & dblRet});
+		pBase->Call(pBase, "Subtract", 11, 5, &dblRet);
 		printf("11 - 5  = ? %f.\n", dblRet);
-		INVOKE(Calculator)(pBase, "Multiply", &(Calculator_Multiply){11, 7, & dblRet});
+		pBase->Call(pBase, "Multiply", 11, 7, &dblRet);
 		printf("11 * 7  = ? %f.\n", dblRet);
 	}
 
