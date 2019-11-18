@@ -74,6 +74,9 @@
 #define           DEL(theclass)                                                                    \
 					 Del_ ## theclass                                                              \
 
+#define         SUPER(pthis, methodname, ...)                                                      \
+                     RedirectCallSuper(pthis->pFld->__pChain, pthis, methodname, __VA_ARGS__)      \
+
 #define        SWITCH(pObj, superclass)                                                            \
 					 ConvertByType(pObj->Extend(pObj), pObj, #superclass)                          \
 
@@ -229,6 +232,7 @@ OOPBASE_API void* GenerateInstanceChain();
 OOPBASE_API void*   InsertInstance(void* pChain, void* pInstance);
 
 OOPBASE_API bool  RedirectCall(void* pChain, void* pObj, const char* pMethodName, va_list vlArgs);
+OOPBASE_API bool  RedirectCallSuper(void* pChain, void* pObj, const char* pMethodName, ...);
 OOPBASE_API void* ConvertByType(void* pChain, void* pObj, const char* pBaseName);
 
 
