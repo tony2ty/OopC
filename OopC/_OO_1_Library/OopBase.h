@@ -90,11 +90,14 @@
 #define         __DEL(theclass)                                                                                                                                       \
                      Del_ ## theclass                                                                                                                                 \
 
-#define      __EXTEND                                                                                                                                                 \
+#define      __EXTEND(theclass)                                                                                                                                       \
                      __Extend                                                                                                                                         \
 
-#define        __CALL                                                                                                                                                 \
+#define        __CALL(theclass)                                                                                                                                       \
                      __Call                                                                                                                                           \
+
+#define       __CLEAR(theclass)                                                                                                                                       \
+                     __Clear                                                                                                                                          \
 
 #define        METHOD(name)                                                                                                                                           \
 					 if (!InsertMethod(__Methods, GenerateMethod(name, #name))) { return NULL; }                                                                      \
@@ -139,8 +142,8 @@
 							 if (!__New) { DestroyMethodRing(__Methods); free(__Fld); return NULL; }                                                                  \
 					                                                                                                                                                  \
 							 __New->pFld = __Fld;                                                                                                                     \
-							 __New->Extend = __EXTEND;                                                                                                                \
-							 __New->Call = __CALL;                                                                                                                    \
+							 __New->Extend = __EXTEND(theclass);                                                                                                      \
+							 __New->Call = __CALL(theclass);                                                                                                          \
 						 }                                                                                                                                            \
 					                                                                                                                                                  \
 						 superclass* __Super = NULL;                                                                                                                  \
@@ -234,7 +237,7 @@ OOPBASE_API void* ConvertByType(void* pChain, void* pObj, const char* pBaseName)
 /********************************************************/
 CLASSEXP(OOPBASE_API, Object, NULL);
 METHODDECLARE(
-Equal:    bool* pRet; void* pToCompare;
-ToString: -;)
+	Equal:    bool* pRet; void* pToCompare;
+	ToString: -;)
 
 #endif // !OOPBASE_H__
