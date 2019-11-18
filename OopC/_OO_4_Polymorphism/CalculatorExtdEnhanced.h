@@ -26,6 +26,6 @@
 
 #include "CalculatorBase.h"
 
-CLASSDEF(CalculatorExtdEnhanced, CalculatorBase);
+CLASS(CalculatorExtdEnhanced, CalculatorBase);
 
 #endif // !CALCULATOREXTENHANCED_H__

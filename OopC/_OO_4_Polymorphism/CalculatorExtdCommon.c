@@ -25,79 +25,95 @@
 
 #include <stdio.h>
 
-struct CalculatorExtdCommon
+struct CalculatorExtdCommon_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Add(void* pParams)
+OVERRIDE static void Add(ParamIn* pParams)
 {
-	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
-    CalculatorBase_Add *pIn = ((ParamIn *)pParams)->pIn;
+    CalculatorExtdCommon* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("Add operation using common calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL + pIn->dblOpR;
+	*pdblRet = dblOpL + dblOpR;
 }
 
-OVERRIDE static void Subtract(void* pParams)
+OVERRIDE static void Subtract(ParamIn* pParams)
 {
-	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Subtract* pIn = ((ParamIn*)pParams)->pIn;
+    CalculatorExtdCommon* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("Subtract operation using common calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL - pIn->dblOpR;
+	*pdblRet = dblOpL - dblOpR;
 }
 
-OVERRIDE static void Multiply(void* pParams)
+OVERRIDE static void Multiply(ParamIn* pParams)
 {
-	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+    CalculatorExtdCommon* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("Multiply operation using common calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL * pIn->dblOpR;
+	*pdblRet = dblOpL * dblOpR;
 }
 
-OVERRIDE static void Divide(void* pParams)
+OVERRIDE static void Divide(ParamIn* pParams)
 {
-	CalculatorExtdCommon* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Divide* pIn = ((ParamIn*)pParams)->pIn;
+    CalculatorExtdCommon* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("Divide operation using common calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL / pIn->dblOpR;// */0
+	*pdblRet = dblOpL / dblOpR;// */0
 }
 
 /////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CalculatorExtdCommon)(CalculatorExtdCommon* pInst, char* pFuncName, void* pParams)
+static bool __CALL(CalculatorExtdCommon)(CalculatorExtdCommon *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(CalculatorExtdCommon)(CalculatorExtdCommon* pInst)
+static void *__EXTEND(CalculatorExtdCommon)(CalculatorExtdCommon *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CalculatorExtdCommon)(CalculatorExtdCommon* pInst)
+void __DEL(CalculatorExtdCommon)(CalculatorExtdCommon *pSelf)
 {
-    DODELETE(pInst, CalculatorExtdCommon, CalculatorBase);
+    DODEL(pSelf, CalculatorBase);
 }
 
-CalculatorExtdCommon* CREATE(CalculatorExtdCommon)()
+CalculatorExtdCommon *__NEW(CalculatorExtdCommon)()
 {
-    DOCREATE(pCreate, CalculatorExtdCommon, CalculatorBase, NULL,
-        METHOD(pCreate, Add)
-        METHOD(pCreate, Subtract)
-        METHOD(pCreate, Multiply)
-        METHOD(pCreate, Divide));
+    DONEW(pNew, CalculatorExtdCommon, CalculatorBase, NULL,
+        METHOD(Add)
+        METHOD(Subtract)
+        METHOD(Multiply)
+        METHOD(Divide));
 
-	return pCreate;
+    return pNew;
 }

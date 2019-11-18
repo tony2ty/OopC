@@ -26,11 +26,11 @@
 
 #include <OopBase.h>
 
-CLASSDEF(CalculatorBase, Object);
-
-ABSTRACT typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorBase_Add;
-ABSTRACT typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorBase_Subtract;
-ABSTRACT typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorBase_Multiply;
-ABSTRACT typedef struct { double dblOpL; double dblOpR; double* pdblRet; } CalculatorBase_Divide;
+CLASS(CalculatorBase, Object);
+METHODDECLARE(
+    ABSTRACT Add:      double dblOpL; double dblOpR; double* pdblRet;
+    ABSTRACT Subtract: double dblOpL; double dblOpR; double* pdblRet;
+    ABSTRACT Multiply: double dblOpL; double dblOpR; double* pdblRet;
+    ABSTRACT Divide:   double dblOpL; double dblOpR; double* pdblRet;)
 
 #endif // !CALCULATORBASE_H__

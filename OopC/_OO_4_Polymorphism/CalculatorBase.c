@@ -24,9 +24,9 @@
 #include "CalculatorBase.h"
 
 
-struct CalculatorBase
+struct CalculatorBase_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////////////////
@@ -35,28 +35,28 @@ struct CalculatorBase
 //////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CalculatorBase)(CalculatorBase* pInst, char* pFuncName, void* pParams)
+static bool __CALL(CalculatorBase)(CalculatorBase *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(CalculatorBase)(CalculatorBase* pInst)
+static void *__EXTEND(CalculatorBase)(CalculatorBase *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CalculatorBase)(CalculatorBase* pInst)
+void __DEL(CalculatorBase)(CalculatorBase *pSelf)
 {
-    DODELETE(pInst, CalculatorBase, Object);
+    DODEL(pSelf, Object);
 }
 
-CalculatorBase* CREATE(CalculatorBase)()
+CalculatorBase *__NEW(CalculatorBase)()
 {
-    DOCREATE(pCreate, CalculatorBase, Object, NULL,
-        AMETHOD(pCreate, Add)
-        AMETHOD(pCreate, Subtract)
-        AMETHOD(pCreate, Multiply)
-        AMETHOD(pCreate, Divide));
+    DONEW(pNew, CalculatorBase, Object, NULL,
+        AMETHOD(Add)
+        AMETHOD(Subtract)
+        AMETHOD(Multiply)
+        AMETHOD(Divide));
 
-	return pCreate;
+    return pNew;
 }

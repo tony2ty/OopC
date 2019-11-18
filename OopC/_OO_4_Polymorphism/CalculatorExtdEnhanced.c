@@ -25,79 +25,95 @@
 
 #include <stdio.h>
 
-struct CalculatorExtdEnhanced
+struct CalculatorExtdEnhanced_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 };
 
 ///////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Add(void* pParams)
+OVERRIDE static void Add(ParamIn* pParams)
 {
-	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Add* pIn = ((ParamIn*)pParams)->pIn;
+    CalculatorExtdEnhanced* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("Add operation using enhanced calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL + pIn->dblOpR;
+	*pdblRet = dblOpL + dblOpR;
 }
 
-OVERRIDE static void Subtract(void* pParams)
+OVERRIDE static void Subtract(ParamIn* pParams)
 {
-	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Subtract* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorExtdEnhanced* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("Subtract operation using enhanced calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL - pIn->dblOpR;
+	*pdblRet = dblOpL - dblOpR;
 }
 
-OVERRIDE static void Multiply(void* pParams)
+OVERRIDE static void Multiply(ParamIn* pParams)
 {
-	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Multiply* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorExtdEnhanced* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("multiply operation using enhanced calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL * pIn->dblOpR;
+	*pdblRet = dblOpL * dblOpR;
 }
 
-OVERRIDE static void Divide(void* pParams)
+OVERRIDE static void Divide(ParamIn* pParams)
 {
-	CalculatorExtdEnhanced* pThis = ((ParamIn*)pParams)->pInst;
-	CalculatorBase_Divide* pIn = ((ParamIn*)pParams)->pIn;
+	CalculatorExtdEnhanced* pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    double dblOpL = va_arg(vlArgs, double);
+    double dblOpR = va_arg(vlArgs, double);
+    double* pdblRet = va_arg(vlArgs, double*);
 
     printf("divide operation using enhanced calculator.\n");
 
-	*pIn->pdblRet = pIn->dblOpL / pIn->dblOpR;// */0
+	*pdblRet = dblOpL / dblOpR;// */0
 }
 
 ///////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst, char* pFuncName, void* pParams)
+static bool __CALL(CalculatorExtdEnhanced)(CalculatorExtdEnhanced *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst)
+static void *__EXTEND(CalculatorExtdEnhanced)(CalculatorExtdEnhanced *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CalculatorExtdEnhanced)(CalculatorExtdEnhanced* pInst)
+void __DEL(CalculatorExtdEnhanced)(CalculatorExtdEnhanced *pSelf)
 {
-    DODELETE(pInst, CalculatorExtdEnhanced, CalculatorBase);
+    DODEL(pSelf, CalculatorBase);
 }
 
-CalculatorExtdEnhanced* CREATE(CalculatorExtdEnhanced)()
+CalculatorExtdEnhanced *__NEW(CalculatorExtdEnhanced)()
 {
-    DOCREATE(pCreate, CalculatorExtdEnhanced, CalculatorBase, NULL,
-        METHOD(pCreate, Add)
-        METHOD(pCreate, Subtract)
-        METHOD(pCreate, Multiply)
-        METHOD(pCreate, Divide));
+    DONEW(pNew, CalculatorExtdEnhanced, CalculatorBase, NULL,
+        METHOD(Add)
+        METHOD(Subtract)
+        METHOD(Multiply)
+        METHOD(Divide));
 
-	return pCreate;
+    return pNew;
 }
