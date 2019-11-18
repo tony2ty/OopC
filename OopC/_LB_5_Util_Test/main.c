@@ -7,22 +7,17 @@ int main(int argc, char **argv)
 {
     RLSLOCALMEMBRA();
 
-    FILE *fp = fopen("./my.ini", "w");
-    assert(fp != NULL);
-
-    IniWrapper *pIni = CREATE(IniWrapper)(); TORLS(DELETE(IniWrapper), pIni);
+	IniWrapper* pIni = NEW(IniWrapper); TORLS(DEL(IniWrapper), pIni);
 
     bool bRet = false;
-    INVOKE(IniWrapper)(pIni, "Init", &(IniWrapper_Init){"./my.ini", &bRet});
-    INVOKE(IniWrapper)(pIni, "WriteIni", &(IniWrapper_WriteIni){"firstsec", NULL, NULL, &bRet});
-    INVOKE(IniWrapper)(pIni, "WriteIni", &(IniWrapper_WriteIni){"firstsec", "firstkey", "val1", &bRet});
-    INVOKE(IniWrapper)(pIni, "WriteIni", &(IniWrapper_WriteIni){"firstsec", "firstkey", "val2", &bRet});
+	pIni->Call(pIni, "Init", "./my.ini", &bRet);
+	pIni->Call(pIni, "WriteIni", "firstsec", NULL, NULL, &bRet);
+	pIni->Call(pIni, "WriteIni", "firstsec", "firstkey", "val1", &bRet);
+	pIni->Call(pIni, "WriteIni", "firstsec", "firstkey", "val2", &bRet);
     char *pVal = NULL;
-    INVOKE(IniWrapper)(pIni, "ReadIni", &(IniWrapper_ReadIni){"firstsec", "firstkey", &pVal, &bRet});
-    printf("The val of firstkey in firstsec is : %s.\n", pVal);
-    INVOKE(IniWrapper)(pIni, "Save", &(IniWrapper_Save){NULL, &bRet});
-
-    fclose(fp);
+	pIni->Call(pIni, "ReadIni", "firstsec", "firstkey", &pVal, &bRet);
+	printf("The val of firstkey in firstsec is : %s.\n", pVal);
+	pIni->Call(pIni, "Save", NULL, &bRet);
 
     RLSLOCALMEMKET();
     
