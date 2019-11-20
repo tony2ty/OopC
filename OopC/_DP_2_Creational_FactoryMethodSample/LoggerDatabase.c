@@ -56,13 +56,13 @@ static void* __EXTEND(LoggerDatabase)(LoggerDatabase* pSelf, const char* pMethod
 
 void __DEL(LoggerDatabase)(LoggerDatabase* pSelf)
 {
-	DODEL(pSelf, Object);
+	DODEL(pSelf, ILogger);
 }
 
 LoggerDatabase* __NEW(LoggerDatabase)()
 {
-	DONEW(pNew, LoggerDatabase, Object, NULL,
-		AMETHOD(WriteLog));
+	DONEW(pNew, LoggerDatabase, ILogger, NULL,
+		METHOD(WriteLog));
 
 	return pNew;
 }

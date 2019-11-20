@@ -56,13 +56,13 @@ static void* __EXTEND(LoggerFile)(LoggerFile* pSelf, const char* pMethodName, ..
 
 void __DEL(LoggerFile)(LoggerFile* pSelf)
 {
-	DODEL(pSelf, Object);
+	DODEL(pSelf, ILogger);
 }
 
 LoggerFile* __NEW(LoggerFile)()
 {
-	DONEW(pNew, LoggerFile, Object, NULL,
-		AMETHOD(WriteLog));
+	DONEW(pNew, LoggerFile, ILogger, NULL,
+		METHOD(WriteLog));
 
 	return pNew;
 }
