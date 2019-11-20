@@ -30,10 +30,10 @@
 #include "ICtrlTextField.h"
 #include "ICtrlComboBox.h"
 
-CLASSDEF(IFactorySkin, Object);
-
-ABSTRACT typedef struct { ICtrlButton **ppButton; } IFactorySkin_CreateButton;
-ABSTRACT typedef struct { ICtrlTextField **ppTextField; }IFactorySkin_CreateTextField;
-ABSTRACT typedef struct { ICtrlComboBox **ppComboBox; }IFactorySkin_CreateComboBox;
+CLASS(IFactorySkin, Object);
+METHODDECLARE(
+    ABSTRACT CreateButton : ICtrlButton * *ppButton;
+    ABSTRACT CreateTextField : ICtrlTextField * *pTextField;
+    ABSTRACT CreateComboBox : ICtrlComboBox * *ppComboBox;)
 
 #endif // !IFACTORYSKIN_H__

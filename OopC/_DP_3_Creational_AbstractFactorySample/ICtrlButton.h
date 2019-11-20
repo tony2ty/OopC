@@ -26,8 +26,8 @@
 
 #include <OopBase.h>
 
-CLASSDEF(ICtrlButton, Object);
-
-ABSTRACT typedef ParamNull ICtrlButton_Display;
+CLASS(ICtrlButton, Object);
+METHODDECLARE(
+    ABSTRACT Display : -;)
 
 #endif // !ICTRLBUTTON_H__

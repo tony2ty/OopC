@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlButtonSpring
+struct CtrlButtonSpring_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    CtrlButtonSpring *pThis = ((ParamIn *)pParams)->pInst;
-    ICtrlButton_Display *pIn = ((ParamIn *)pParams)->pIn;
+    CtrlButtonSpring *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
     printf("ÏÔÊ¾Ç³ÂÌÉ«°´Å¥¡£\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void Display(void *pParams)
 //////////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CtrlButtonSpring)(CtrlButtonSpring *pInst, char *pFuncName, void *pParams)
+static bool __CALL(CtrlButtonSpring)(CtrlButtonSpring *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(CtrlButtonSpring)(CtrlButtonSpring *pInst)
+static void *__EXTEND(CtrlButtonSpring)(CtrlButtonSpring *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CtrlButtonSpring)(CtrlButtonSpring *pInst)
+void __DEL(CtrlButtonSpring)(CtrlButtonSpring *pSelf)
 {
-    DODELETE(pInst, CtrlButtonSpring, ICtrlButton);
+    DODEL(pSelf, ICtrlButton);
 }
 
-CtrlButtonSpring *CREATE(CtrlButtonSpring)()
+CtrlButtonSpring *__NEW(CtrlButtonSpring)()
 {
-    DOCREATE(pCreate, CtrlButtonSpring, ICtrlButton, NULL,
-        METHOD(pCreate, Display));
+    DONEW(pNew, CtrlButtonSpring, ICtrlButton, NULL,
+        METHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

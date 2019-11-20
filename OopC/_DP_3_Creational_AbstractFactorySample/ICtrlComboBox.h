@@ -26,8 +26,8 @@
 
 #include <OopBase.h>
 
-CLASSDEF(ICtrlComboBox, Object);
-
-ABSTRACT typedef ParamNull ICtrlComboBox_Display;
+CLASS(ICtrlComboBox, Object);
+METHODDECLARE(
+    ABSTRACT Display : -;)
 
 #endif // !ICTRLCOMBOBOX_H__

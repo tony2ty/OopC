@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlComboBoxSpring
+struct CtrlComboBoxSpring_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    CtrlComboBoxSpring *pThis = ((ParamIn *)pParams)->pInst;
-    ICtrlComboBox_Display *pIn = ((ParamIn *)pParams)->pIn;
+    CtrlComboBoxSpring *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
     printf("显示绿色边框组合框.\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void Display(void *pParams)
 //////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst, char *pFuncName, void *pParams)
+static bool __CALL(CtrlComboBoxSpring)(CtrlComboBoxSpring *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst)
+static void *__EXTEND(CtrlComboBoxSpring)(CtrlComboBoxSpring *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CtrlComboBoxSpring)(CtrlComboBoxSpring *pInst)
+void __DEL(CtrlComboBoxSpring)(CtrlComboBoxSpring *pSelf)
 {
-    DODELETE(pInst, CtrlComboBoxSpring, ICtrlComboBox);
+    DODEL(pSelf, ICtrlComboBox);
 }
 
-CtrlComboBoxSpring *CREATE(CtrlComboBoxSpring)()
+CtrlComboBoxSpring *__NEW(CtrlComboBoxSpring)()
 {
-    DOCREATE(pCreate, CtrlComboBoxSpring, ICtrlComboBox, NULL,
-        METHOD(pCreate, Display));
+    DONEW(pNew, CtrlComboBoxSpring, ICtrlComboBox, NULL,
+        METHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

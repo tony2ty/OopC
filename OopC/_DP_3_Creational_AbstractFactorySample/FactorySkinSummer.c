@@ -27,65 +27,71 @@
 #include "CtrlTextFieldSummer.h"
 #include "CtrlComboBoxSummer.h"
 
-struct FactorySkinSummer
+struct FactorySkinSummer_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void CreateButton(void *pParams)
+OVERRIDE static void CreateButton(ParamIn *pParams)
 {
-    FactorySkinSummer *pThis = ((ParamIn *)pParams)->pInst;
-    IFactorySkin_CreateButton *pIn = ((ParamIn *)pParams)->pIn;
+    FactorySkinSummer *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    CtrlButtonSummer *pButton = CREATE(CtrlButtonSummer)();
-    *pIn->ppButton = SWITCH(pButton, CtrlButtonSummer, ICtrlButton);
+    ICtrlButton **ppButton = va_arg(vlArgs, ICtrlButton **);
+
+    CtrlButtonSummer *pButton = NEW(CtrlButtonSummer);
+    *ppButton = SWITCH(pButton, ICtrlButton);
 }
 
-OVERRIDE static void CreateTextField(void *pParams)
+OVERRIDE static void CreateTextField(ParamIn *pParams)
 {
-    FactorySkinSummer *pThis = ((ParamIn *)pParams)->pInst;
-    IFactorySkin_CreateTextField *pIn = ((ParamIn *)pParams)->pIn;
+    FactorySkinSummer *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    CtrlTextFieldSummer *pTextField = CREATE(CtrlTextFieldSummer)();
-    *pIn->ppTextField = SWITCH(pTextField, CtrlTextFieldSummer, ICtrlTextField);
+    ICtrlTextField **ppTextField = va_arg(vlArgs, ICtrlTextField **);
+
+    CtrlTextFieldSummer *pTextField = NEW(CtrlTextFieldSummer);
+    *ppTextField = SWITCH(pTextField, ICtrlTextField);
 }
 
-OVERRIDE static void CreateComboBox(void *pParams)
+OVERRIDE static void CreateComboBox(ParamIn *pParams)
 {
-    FactorySkinSummer *pThis = ((ParamIn *)pParams)->pInst;
-    IFactorySkin_CreateComboBox *pIn = ((ParamIn *)pParams)->pIn;
+    FactorySkinSummer *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    CtrlComboBoxSummer *pComboBox = CREATE(CtrlComboBoxSummer)();
-    *pIn->ppComboBox = SWITCH(pComboBox, CtrlComboBoxSummer, ICtrlComboBox);
+    ICtrlComboBox **ppComboBox = va_arg(vlArgs, ICtrlComboBox **);
+
+    CtrlComboBoxSummer *pComboBox = NEW(CtrlComboBoxSummer);
+    *ppComboBox = SWITCH(pComboBox, ICtrlComboBox);
 }
 
 ////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(FactorySkinSummer)(FactorySkinSummer *pInst, char *pFuncName, void *pParams)
+static bool __CALL(FactorySkinSummer)(FactorySkinSummer *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(FactorySkinSummer)(FactorySkinSummer *pInst)
+static void *__EXTEND(FactorySkinSummer)(FactorySkinSummer *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(FactorySkinSummer)(FactorySkinSummer *pInst)
+void __DEL(FactorySkinSummer)(FactorySkinSummer *pSelf)
 {
-    DODELETE(pInst, FactorySkinSummer, IFactorySkin);
+    DODEL(pSelf, IFactorySkin);
 }
 
-FactorySkinSummer *CREATE(FactorySkinSummer)()
+FactorySkinSummer *__NEW(FactorySkinSummer)()
 {
-    DOCREATE(pCreate, FactorySkinSummer, IFactorySkin, NULL,
-        METHOD(pCreate, CreateButton)
-        METHOD(pCreate, CreateTextField)
-        METHOD(pCreate, CreateComboBox));
+    DONEW(pNew, FactorySkinSummer, IFactorySkin, NULL,
+        METHOD(CreateButton)
+        METHOD(CreateTextField)
+        METHOD(CreateComboBox));
 
-    return pCreate;
+    return pNew;
 }

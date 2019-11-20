@@ -26,6 +26,6 @@
 
 #include "ICtrlTextField.h"
 
-CLASSDEF(CtrlTextFieldSummer, ICtrlTextField);
+CLASS(CtrlTextFieldSummer, ICtrlTextField);
 
 #endif // !CTRLTEXTFIELDSUMMER_H__

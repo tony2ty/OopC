@@ -24,9 +24,9 @@
 #include "ICtrlComboBox.h"
 
 
-struct ICtrlComboBox
+struct ICtrlComboBox_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -35,25 +35,25 @@ struct ICtrlComboBox
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ICtrlComboBox)(ICtrlComboBox *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ICtrlComboBox)(ICtrlComboBox *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ICtrlComboBox)(ICtrlComboBox *pInst)
+static void *__EXTEND(ICtrlComboBox)(ICtrlComboBox *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ICtrlComboBox)(ICtrlComboBox *pInst)
+void __DEL(ICtrlComboBox)(ICtrlComboBox *pSelf)
 {
-    DODELETE(pInst, ICtrlComboBox, Object);
+    DODEL(pSelf, Object);
 }
 
-ICtrlComboBox *CREATE(ICtrlComboBox)()
+ICtrlComboBox *__NEW(ICtrlComboBox)()
 {
-    DOCREATE(pCreate, ICtrlComboBox, Object, NULL,
-        AMETHOD(pCreate, Display));
+    DONEW(pNew, ICtrlComboBox, Object, NULL,
+        AMETHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

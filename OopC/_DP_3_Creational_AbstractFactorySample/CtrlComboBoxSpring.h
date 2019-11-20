@@ -26,6 +26,6 @@
 
 #include "ICtrlComboBox.h"
 
-CLASSDEF(CtrlComboBoxSpring, ICtrlComboBox);
+CLASS(CtrlComboBoxSpring, ICtrlComboBox);
 
 #endif // !CTRLCOMBOBOXSPRING_H__

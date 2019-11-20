@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlTextFieldSpring
+struct CtrlTextFieldSpring_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    CtrlTextFieldSpring *pThis = ((ParamIn *)pParams)->pInst;
-    ICtrlTextField_Display *pIn = ((ParamIn *)pParams)->pIn;
+    CtrlTextFieldSpring *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
     printf("显示绿色边框文本框。\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void Display(void *pParams)
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst, char *pFuncName, void *pParams)
+static bool __CALL(CtrlTextFieldSpring)(CtrlTextFieldSpring *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst)
+static void *__EXTEND(CtrlTextFieldSpring)(CtrlTextFieldSpring *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CtrlTextFieldSpring)(CtrlTextFieldSpring *pInst)
+void __DEL(CtrlTextFieldSpring)(CtrlTextFieldSpring *pSelf)
 {
-    DODELETE(pInst, CtrlTextFieldSpring, ICtrlTextField);
+    DODEL(pSelf, ICtrlTextField);
 }
 
-CtrlTextFieldSpring *CREATE(CtrlTextFieldSpring)()
+CtrlTextFieldSpring *__NEW(CtrlTextFieldSpring)()
 {
-    DOCREATE(pCreate, CtrlTextFieldSpring, ICtrlTextField, NULL,
-        METHOD(pCreate, Display));
+    DONEW(pNew, CtrlTextFieldSpring, ICtrlTextField, NULL,
+        METHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

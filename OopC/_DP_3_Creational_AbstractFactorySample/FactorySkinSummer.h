@@ -26,6 +26,6 @@
 
 #include "IFactorySkin.h"
 
-CLASSDEF(FactorySkinSummer, IFactorySkin);
+CLASS(FactorySkinSummer, IFactorySkin);
 
 #endif // !FACTORYSKINSUMMER_H__

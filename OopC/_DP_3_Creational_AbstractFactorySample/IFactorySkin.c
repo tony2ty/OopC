@@ -24,9 +24,9 @@
 #include "IFactorySkin.h"
 
 
-struct IFactorySkin
+struct IFactorySkin_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -35,27 +35,27 @@ struct IFactorySkin
 ///////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(IFactorySkin)(IFactorySkin *pInst, char *pFuncName, void *pParams)
+static bool __CALL(IFactorySkin)(IFactorySkin *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(IFactorySkin)(IFactorySkin *pInst)
+static void *__EXTEND(IFactorySkin)(IFactorySkin *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(IFactorySkin)(IFactorySkin *pInst)
+void __DEL(IFactorySkin)(IFactorySkin *pSelf)
 {
-    DODELETE(pInst, IFactorySkin, Object);
+    DODEL(pSelf, Object);
 }
 
-IFactorySkin *CREATE(IFactorySkin)()
+IFactorySkin *__NEW(IFactorySkin)()
 {
-    DOCREATE(pCreate, IFactorySkin, Object, NULL,
-        AMETHOD(pCreate, CreateButton)
-        AMETHOD(pCreate, CreateTextField)
-        AMETHOD(pCreate, CreateComboBox));
+    DONEW(pNew, IFactorySkin, Object, NULL,
+        AMETHOD(CreateButton)
+        AMETHOD(CreateTextField)
+        AMETHOD(CreateComboBox));
 
-    return pCreate;
+    return pNew;
 }

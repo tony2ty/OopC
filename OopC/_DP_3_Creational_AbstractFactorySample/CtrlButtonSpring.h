@@ -26,6 +26,6 @@
 
 #include "ICtrlButton.h"
 
-CLASSDEF(CtrlButtonSpring, ICtrlButton);
+CLASS(CtrlButtonSpring, ICtrlButton);
 
 #endif // !CTRLBUTTONSPRING_H__

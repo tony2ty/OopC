@@ -27,65 +27,71 @@
 #include "CtrlTextFieldSpring.h"
 #include "CtrlComboBoxSpring.h"
 
-struct FactorySkinSpring
+struct FactorySkinSpring_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void CreateButton(void *pParams)
+OVERRIDE static void CreateButton(ParamIn *pParams)
 {
-    FactorySkinSpring *pThis = ((ParamIn *)pParams)->pInst;
-    IFactorySkin_CreateButton *pIn = ((ParamIn *)pParams)->pIn;
+    FactorySkinSpring *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    CtrlButtonSpring *pButton = CREATE(CtrlButtonSpring)();
-    *pIn->ppButton = SWITCH(pButton, CtrlButtonSpring, ICtrlButton);
+    ICtrlButton **ppButton = va_arg(vlArgs, ICtrlButton **);
+
+    CtrlButtonSpring *pButton = NEW(CtrlButtonSpring);
+    *ppButton = SWITCH(pButton, ICtrlButton);
 }
 
-OVERRIDE static void CreateTextField(void *pParams)
+OVERRIDE static void CreateTextField(ParamIn *pParams)
 {
-    FactorySkinSpring *pThis = ((ParamIn *)pParams)->pInst;
-    IFactorySkin_CreateTextField *pIn = ((ParamIn *)pParams)->pIn;
+    FactorySkinSpring *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    CtrlTextFieldSpring *pTextField = CREATE(CtrlTextFieldSpring)();
-    *pIn->ppTextField = SWITCH(pTextField, CtrlTextFieldSpring, ICtrlTextField);
+    ICtrlTextField **ppTextField = va_arg(vlArgs, ICtrlTextField **);
+
+    CtrlTextFieldSpring *pTextField = NEW(CtrlTextFieldSpring);
+    *ppTextField = SWITCH(pTextField, ICtrlTextField);
 }
 
-OVERRIDE static void CreateComboBox(void *pParams)
+OVERRIDE static void CreateComboBox(ParamIn *pParams)
 {
-    FactorySkinSpring *pThis = ((ParamIn *)pParams)->pInst;
-    IFactorySkin_CreateComboBox *pIn = ((ParamIn *)pParams)->pIn;
+    FactorySkinSpring *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    CtrlComboBoxSpring *pComboBox = CREATE(CtrlComboBoxSpring)();
-    *pIn->ppComboBox = SWITCH(pComboBox, CtrlComboBoxSpring, ICtrlComboBox);
+    ICtrlComboBox **ppComboBox = va_arg(vlArgs, ICtrlComboBox **);
+
+    CtrlComboBoxSpring *pComboBox = NEW(CtrlComboBoxSpring);
+    *ppComboBox = SWITCH(pComboBox, ICtrlComboBox);
 }
 
 ////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(FactorySkinSpring)(FactorySkinSpring *pInst, char *pFuncName, void *pParams)
+static bool __CALL(FactorySkinSpring)(FactorySkinSpring *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(FactorySkinSpring)(FactorySkinSpring *pInst)
+static void *__EXTEND(FactorySkinSpring)(FactorySkinSpring *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(FactorySkinSpring)(FactorySkinSpring *pInst)
+void __DEL(FactorySkinSpring)(FactorySkinSpring *pSelf)
 {
-    DODELETE(pInst, FactorySkinSpring, IFactorySkin);
+    DODEL(pSelf, IFactorySkin);
 }
 
-FactorySkinSpring *CREATE(FactorySkinSpring)()
+FactorySkinSpring *__NEW(FactorySkinSpring)()
 {
-    DOCREATE(pCreate, FactorySkinSpring, IFactorySkin, NULL,
-        METHOD(pCreate, CreateButton)
-        METHOD(pCreate, CreateTextField)
-        METHOD(pCreate, CreateComboBox));
+    DONEW(pNew, FactorySkinSpring, IFactorySkin, NULL,
+        METHOD(CreateButton)
+        METHOD(CreateTextField)
+        METHOD(CreateComboBox));
 
-    return pCreate;
+    return pNew;
 }

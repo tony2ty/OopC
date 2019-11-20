@@ -24,9 +24,9 @@
 #include "ICtrlButton.h"
 
 
-struct ICtrlButton
+struct ICtrlButton_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////
@@ -35,25 +35,25 @@ struct ICtrlButton
 ///////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ICtrlButton)(ICtrlButton *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ICtrlButton)(ICtrlButton *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ICtrlButton)(ICtrlButton *pInst)
+static void *__EXTEND(ICtrlButton)(ICtrlButton *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ICtrlButton)(ICtrlButton *pInst)
+void __DEL(ICtrlButton)(ICtrlButton *pSelf)
 {
-    DODELETE(pInst, ICtrlButton, Object);
+    DODEL(pSelf, Object);
 }
 
-ICtrlButton *CREATE(ICtrlButton)()
+ICtrlButton *__NEW(ICtrlButton)()
 {
-    DOCREATE(pCreate, ICtrlButton, Object, NULL,
-        AMETHOD(pCreate, Display));
+    DONEW(pNew, ICtrlButton, Object, NULL,
+        AMETHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

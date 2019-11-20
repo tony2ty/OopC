@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlComboBoxSummer
+struct CtrlComboBoxSummer_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    CtrlComboBoxSummer *pThis = ((ParamIn *)pParams)->pInst;
-    ICtrlComboBox_Display *pIn = ((ParamIn *)pParams)->pIn;
+    CtrlComboBoxSummer *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
     printf("显示蓝色边框组合框.\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void Display(void *pParams)
 //////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst, char *pFuncName, void *pParams)
+static bool __CALL(CtrlComboBoxSummer)(CtrlComboBoxSummer *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst)
+static void *__EXTEND(CtrlComboBoxSummer)(CtrlComboBoxSummer *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CtrlComboBoxSummer)(CtrlComboBoxSummer *pInst)
+void __DEL(CtrlComboBoxSummer)(CtrlComboBoxSummer *pSelf)
 {
-    DODELETE(pInst, CtrlComboBoxSummer, ICtrlComboBox);
+    DODEL(pSelf, ICtrlComboBox);
 }
 
-CtrlComboBoxSummer *CREATE(CtrlComboBoxSummer)()
+CtrlComboBoxSummer *__NEW(CtrlComboBoxSummer)()
 {
-    DOCREATE(pCreate, CtrlComboBoxSummer, ICtrlComboBox, NULL,
-        METHOD(pCreate, Display));
+    DONEW(pNew, CtrlComboBoxSummer, ICtrlComboBox, NULL,
+        METHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

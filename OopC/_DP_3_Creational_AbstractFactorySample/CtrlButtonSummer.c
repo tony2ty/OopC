@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlButtonSummer
+struct CtrlButtonSummer_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    CtrlButtonSummer *pThis = ((ParamIn *)pParams)->pInst;
-    ICtrlButton_Display *pIn = ((ParamIn *)pParams)->pIn;
+    CtrlButtonSummer *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
     printf("ÏÔÊ¾Ç³À¶É«°´Å¥¡£\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void Display(void *pParams)
 /////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CtrlButtonSummer)(CtrlButtonSummer *pInst, char *pFuncName, void *pParams)
+static bool __CALL(CtrlButtonSummer)(CtrlButtonSummer *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(CtrlButtonSummer)(CtrlButtonSummer *pInst)
+static void *__EXTEND(CtrlButtonSummer)(CtrlButtonSummer *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CtrlButtonSummer)(CtrlButtonSummer *pInst)
+void __DEL(CtrlButtonSummer)(CtrlButtonSummer *pSelf)
 {
-    DODELETE(pInst, CtrlButtonSummer, ICtrlButton);
+    DODEL(pSelf, ICtrlButton);
 }
 
-CtrlButtonSummer *CREATE(CtrlButtonSummer)()
+CtrlButtonSummer *__NEW(CtrlButtonSummer)()
 {
-    DOCREATE(pCreate, CtrlButtonSummer, ICtrlButton, NULL,
-        METHOD(pCreate, Display));
+    DONEW(pNew, CtrlButtonSummer, ICtrlButton, NULL,
+        METHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

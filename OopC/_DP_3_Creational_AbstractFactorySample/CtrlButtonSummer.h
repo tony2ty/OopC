@@ -26,6 +26,6 @@
 
 #include "ICtrlButton.h"
 
-CLASSDEF(CtrlButtonSummer, ICtrlButton);
+CLASS(CtrlButtonSummer, ICtrlButton);
 
 #endif // !CTRLBUTTONSUMMER_H__

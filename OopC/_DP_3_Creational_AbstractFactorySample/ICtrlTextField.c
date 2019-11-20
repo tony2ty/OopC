@@ -24,9 +24,9 @@
 #include "ICtrlTextField.h"
 
 
-struct ICtrlTextField
+struct ICtrlTextField_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -35,25 +35,25 @@ struct ICtrlTextField
 ///////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ICtrlTextField)(ICtrlTextField *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ICtrlTextField)(ICtrlTextField *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ICtrlTextField)(ICtrlTextField *pInst)
+static void *__EXTEND(ICtrlTextField)(ICtrlTextField *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ICtrlTextField)(ICtrlTextField *pInst)
+void __DEL(ICtrlTextField)(ICtrlTextField *pSelf)
 {
-    DODELETE(pInst, ICtrlTextField, Object);
+    DODEL(pSelf, Object);
 }
 
-ICtrlTextField *CREATE(ICtrlTextField)()
+ICtrlTextField *__NEW(ICtrlTextField)()
 {
-    DOCREATE(pCreate, ICtrlTextField, Object, NULL,
-        AMETHOD(pCreate, Display));
+    DONEW(pNew, ICtrlTextField, Object, NULL,
+        AMETHOD(Display));
 
-    return pCreate;
+    return pNew;
 }

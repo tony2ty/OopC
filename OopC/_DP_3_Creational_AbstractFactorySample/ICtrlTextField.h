@@ -26,8 +26,8 @@
 
 #include <OopBase.h>
 
-CLASSDEF(ICtrlTextField, Object);
-
-ABSTRACT typedef ParamNull ICtrlTextField_Display;
+CLASS(ICtrlTextField, Object);
+METHODDECLARE(
+    ABSTRACT Display : -;)
 
 #endif // !ICTRLTEXTFIELD_H__

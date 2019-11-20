@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlTextFieldSummer
+struct CtrlTextFieldSummer_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 };
 
 /////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    CtrlTextFieldSummer *pThis = ((ParamIn *)pParams)->pInst;
-    ICtrlTextField_Display *pIn = ((ParamIn *)pParams)->pIn;
+    CtrlTextFieldSummer *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
     printf("显示蓝色边框文本框。\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void Display(void *pParams)
 /////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst, char *pFuncName, void *pParams)
+static bool __CALL(CtrlTextFieldSummer)(CtrlTextFieldSummer *pSelf, const char *pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst)
+static void *__EXTEND(CtrlTextFieldSummer)(CtrlTextFieldSummer *pSelf)
 {
-    DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(CtrlTextFieldSummer)(CtrlTextFieldSummer *pInst)
+void __DEL(CtrlTextFieldSummer)(CtrlTextFieldSummer *pSelf)
 {
-    DODELETE(pInst, CtrlTextFieldSummer, ICtrlTextField);
+    DODEL(pSelf, ICtrlTextField);
 }
 
-CtrlTextFieldSummer *CREATE(CtrlTextFieldSummer)()
+CtrlTextFieldSummer *__NEW(CtrlTextFieldSummer)()
 {
-    DOCREATE(pCreate, CtrlTextFieldSummer, ICtrlTextField, NULL,
-        METHOD(pCreate, Display));
+    DONEW(pNew, CtrlTextFieldSummer, ICtrlTextField, NULL,
+        METHOD(Display));
 
-    return pCreate;
+    return pNew;
 }
