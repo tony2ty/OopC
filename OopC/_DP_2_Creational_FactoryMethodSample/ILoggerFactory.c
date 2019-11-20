@@ -24,9 +24,9 @@
 #include "ILoggerFactory.h"
 
 
-struct ILoggerFactory
+struct ILoggerFactory_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -35,25 +35,25 @@ struct ILoggerFactory
 ////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ILoggerFactory)(ILoggerFactory* pInst, char* pFuncName, void* pParams)
+static bool __CALL(ILoggerFactory)(ILoggerFactory* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(ILoggerFactory)(ILoggerFactory* pInst)
+static void* __EXTEND(ILoggerFactory)(ILoggerFactory* pSelf, const char* pMethodName, ...)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ILoggerFactory)(ILoggerFactory* pInst)
+void __DEL(ILoggerFactory)(ILoggerFactory* pSelf)
 {
-    DODELETE(pInst, ILoggerFactory, Object);
+	DODEL(pSelf, Object);
 }
 
-ILoggerFactory* CREATE(ILoggerFactory)()
+ILoggerFactory* __NEW(ILoggerFactory)()
 {
-    DOCREATE(pCreate, ILoggerFactory, Object, NULL,
-        AMETHOD(pCreate, CreateLogger));
+	DONEW(pNew, ILoggerFactory, Object, NULL,
+		AMETHOD(CreateLogger));
 
-	return pCreate;
+	return pNew;
 }

@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct LoggerFile
+struct LoggerFile_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void WriteLog(void* pParams)
+OVERRIDE static void WriteLog(ParamIn* pParams)
 {
-	LoggerFile* pThis = ((ParamIn*)pParams)->pInst;
-	ILogger_WriteLog* pIn = ((ParamIn*)pParams)->pIn;
+	LoggerFile* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
 	printf("文件日志记录.\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void WriteLog(void* pParams)
 //////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(LoggerFile)(LoggerFile* pInst, char* pFuncName, void* pParams)
+static bool __CALL(LoggerFile)(LoggerFile* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(LoggerFile)(LoggerFile* pInst)
+static void* __EXTEND(LoggerFile)(LoggerFile* pSelf, const char* pMethodName, ...)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(LoggerFile)(LoggerFile* pInst)
+void __DEL(LoggerFile)(LoggerFile* pSelf)
 {
-    DODELETE(pInst, LoggerFile, ILogger);
+	DODEL(pSelf, Object);
 }
 
-LoggerFile* CREATE(LoggerFile)()
+LoggerFile* __NEW(LoggerFile)()
 {
-    DOCREATE(pCreate, LoggerFile, ILogger, NULL,
-        METHOD(pCreate, WriteLog));
+	DONEW(pNew, LoggerFile, Object, NULL,
+		AMETHOD(WriteLog));
 
-	return pCreate;
+	return pNew;
 }

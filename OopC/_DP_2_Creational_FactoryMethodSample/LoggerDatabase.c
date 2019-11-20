@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct LoggerDatabase
+struct LoggerDatabase_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 ///////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void WriteLog(void* pParams)
+OVERRIDE static void WriteLog(ParamIn* pParams)
 {
-	LoggerDatabase* pThis = ((ParamIn*)pParams)->pInst;
-	ILogger_WriteLog* pIn = ((ParamIn*)pParams)->pIn;
+	LoggerDatabase* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
 	printf("数据库日志记录。\n");
 }
@@ -44,25 +44,25 @@ OVERRIDE static void WriteLog(void* pParams)
 ///////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(LoggerDatabase)(LoggerDatabase* pInst, char* pFuncName, void* pParams)
+static bool __CALL(LoggerDatabase)(LoggerDatabase* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(LoggerDatabase)(LoggerDatabase* pInst)
+static void* __EXTEND(LoggerDatabase)(LoggerDatabase* pSelf, const char* pMethodName, ...)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(LoggerDatabase)(LoggerDatabase* pInst)
+void __DEL(LoggerDatabase)(LoggerDatabase* pSelf)
 {
-    DODELETE(pInst, LoggerDatabase, ILogger);
+	DODEL(pSelf, Object);
 }
 
-LoggerDatabase* CREATE(LoggerDatabase)()
+LoggerDatabase* __NEW(LoggerDatabase)()
 {
-    DOCREATE(pCreate, LoggerDatabase, ILogger, NULL,
-        METHOD(pCreate, WriteLog));
+	DONEW(pNew, LoggerDatabase, Object, NULL,
+		AMETHOD(WriteLog));
 
-	return pCreate;
+	return pNew;
 }

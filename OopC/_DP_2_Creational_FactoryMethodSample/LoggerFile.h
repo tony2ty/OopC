@@ -26,6 +26,6 @@
 
 #include "ILogger.h"
 
-CLASSDEF(LoggerFile, ILogger);
+CLASS(LoggerFile, ILogger);
 
 #endif // !LOGGERFILE_H__

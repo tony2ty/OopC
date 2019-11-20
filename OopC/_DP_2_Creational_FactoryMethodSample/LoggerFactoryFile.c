@@ -25,9 +25,9 @@
 
 #include "LoggerFile.h"
 
-struct LoggerFactoryFile
+struct LoggerFactoryFile_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 
 	ILogger* pLogger;
 };
@@ -35,37 +35,39 @@ struct LoggerFactoryFile
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void CreateLogger(void* pParams)
+OVERRIDE static void CreateLogger(ParamIn* pParams)
 {
-	LoggerFactoryFile* pThis = ((ParamIn*)pParams)->pInst;
-	ILoggerFactory_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
+	LoggerFactoryFile* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	LoggerFile* pLoggerFile = CREATE(LoggerFile)();
-	*pIn->ppRet = SWITCH(pLoggerFile, LoggerFile, ILogger);
+	ILogger** ppRet = va_arg(vlArgs, ILogger * *);
+
+	LoggerFile* pLoggerFile = NEW(LoggerFile);
+	*ppRet = SWITCH(pLoggerFile, ILogger);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(LoggerFactoryFile)(LoggerFactoryFile* pInst, char* pFuncName, void* pParams)
+static bool __CALL(LoggerFactoryFile)(LoggerFactoryFile* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(LoggerFactoryFile)(LoggerFactoryFile* pInst)
+static void* __EXTEND(LoggerFactoryFile)(LoggerFactoryFile* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(LoggerFactoryFile)(LoggerFactoryFile* pInst)
+void __DEL(LoggerFactoryFile)(LoggerFactoryFile* pSelf)
 {
-    DODELETE(pInst, LoggerFactoryFile, ILoggerFactory);
+	DODEL(pSelf, ILoggerFactory);
 }
 
-LoggerFactoryFile* CREATE(LoggerFactoryFile)()
+LoggerFactoryFile* __NEW(LoggerFactoryFile)()
 {
-    DOCREATE(pCreate, LoggerFactoryFile, ILoggerFactory, NULL,
-        METHOD(pCreate, CreateLogger));
+	DONEW(pNew, LoggerFactoryFile, ILoggerFactory, NULL,
+		METHOD(CreateLogger));
 
-	return pCreate;
+	return pNew;
 }

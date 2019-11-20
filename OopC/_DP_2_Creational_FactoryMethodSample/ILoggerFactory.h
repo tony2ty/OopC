@@ -27,8 +27,8 @@
 #include <OopBase.h>
 #include "ILogger.h"
 
-CLASSDEF(ILoggerFactory, Object);
-
-ABSTRACT typedef struct { ILogger** ppRet; } ILoggerFactory_CreateLogger;
+CLASS(ILoggerFactory, Object);
+METHODDECLARE(
+	ABSTRACT CreateLogger: ILogger * *ppRet;)
 
 #endif // !ILOGGERFACTORY_H__

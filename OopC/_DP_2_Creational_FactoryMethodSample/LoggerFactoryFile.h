@@ -26,6 +26,6 @@
 
 #include "ILoggerFactory.h"
 
-CLASSDEF(LoggerFactoryFile, ILoggerFactory);
+CLASS(LoggerFactoryFile, ILoggerFactory);
 
 #endif // !LOGGERFACTORYFILE_H__

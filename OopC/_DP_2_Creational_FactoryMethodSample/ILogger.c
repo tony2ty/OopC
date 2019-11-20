@@ -24,9 +24,9 @@
 #include "ILogger.h"
 
 
-struct ILogger
+struct ILogger_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 //////////////////////////////////////////////////////////
@@ -35,25 +35,25 @@ struct ILogger
 //////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ILogger)(ILogger* pInst, char* pFuncName, void* pParams)
+static bool __CALL(ILogger)(ILogger* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(ILogger)(ILogger* pInst)
+static void* __EXTEND(ILogger)(ILogger* pSelf, const char* pMethodName, ...)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ILogger)(ILogger* pInst)
+void __DEL(ILogger)(ILogger* pSelf)
 {
-    DODELETE(pInst, ILogger, Object);
+	DODEL(pSelf, Object);
 }
 
-ILogger* CREATE(ILogger)()
+ILogger* __NEW(ILogger)()
 {
-    DOCREATE(pCreate, ILogger, Object, NULL,
-        AMETHOD(pCreate, WriteLog));
+	DONEW(pNew, ILogger, Object, NULL,
+		AMETHOD(WriteLog));
 
-	return pCreate;
+	return pNew;
 }

@@ -25,45 +25,47 @@
 
 #include "LoggerDatabase.h"
 
-struct LoggerFactoryDatabase
+struct LoggerFactoryDatabase_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 /////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void CreateLogger(void* pParams)
+OVERRIDE static void CreateLogger(ParamIn* pParams)
 {
-	LoggerFactoryDatabase* pThis = ((ParamIn*)pParams)->pInst;
-	ILoggerFactory_CreateLogger* pIn = ((ParamIn*)pParams)->pIn;
+	LoggerFactoryDatabase* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	LoggerDatabase* pLoggerDatabase = CREATE(LoggerDatabase)();
-	*pIn->ppRet = SWITCH(pLoggerDatabase, LoggerDatabase, ILogger);
+	ILogger** ppRet = va_arg(vlArgs, ILogger * *);
+
+	LoggerDatabase* pLoggerDatabase = NEW(LoggerDatabase);
+	*ppRet = SWITCH(pLoggerDatabase, ILogger);
 }
 
 ///////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(LoggerFactoryDatabase)(LoggerFactoryDatabase* pInst, char* pFuncName, void* pParams)
+static bool __CALL(LoggerFactoryDatabase)(LoggerFactoryDatabase* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void* EXTEND(LoggerFactoryDatabase)(LoggerFactoryDatabase* pInst)
+static void* __EXTEND(LoggerFactoryDatabase)(LoggerFactoryDatabase* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(LoggerFactoryDatabase)(LoggerFactoryDatabase* pInst)
+void __DEL(LoggerFactoryDatabase)(LoggerFactoryDatabase* pSelf)
 {
-    DODELETE(pInst, LoggerFactoryDatabase, ILoggerFactory);
+	DODEL(pSelf, ILoggerFactory);
 }
 
-LoggerFactoryDatabase* CREATE(LoggerFactoryDatabase)()
+LoggerFactoryDatabase* __NEW(LoggerFactoryDatabase)()
 {
-    DOCREATE(pCreate, LoggerFactoryDatabase, ILoggerFactory, NULL,
-        METHOD(pCreate, CreateLogger));
+	DONEW(pNew, LoggerFactoryDatabase, ILoggerFactory, NULL,
+		METHOD(CreateLogger));
 
-	return pCreate;
+	return pNew;
 }
