@@ -25,46 +25,44 @@
 
 #include <stdio.h>
 
-struct ChartPie
+struct ChartPie_Fld
 {
-    CHAINDEF;
+	CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn* pParams)
 {
-    ChartPie *pThis = ((ParamIn *)pParams)->pInst;
-    IChart_Display *pIn = ((ParamIn *)pParams)->pIn;
+	ChartPie* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-    printf("ÏÔÊ¾±ý×´Í¼.\n");
+	printf("ÏÔÊ¾±ý×´Í¼.\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ChartPie)(ChartPie *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ChartPie)(ChartPie* pSelf, const char* pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ChartPie)(ChartPie *pInst)
+static void* __EXTEND(ChartPie)(ChartPie* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ChartPie)(ChartPie *pInst)
+void __DEL(ChartPie)(ChartPie* pSelf)
 {
-    DODELETE(pInst, ChartPie, IChart);
+	DODEL(pSelf, IChart);
 }
 
-ChartPie *CREATE(ChartPie)()
+ChartPie* __NEW(ChartPie)()
 {
-    DOCREATE(pCreate, ChartPie, IChart, NULL,
-        METHOD(pCreate, Display));
+	DONEW(pNew, ChartPie, IChart, NULL,
+		METHOD(Display));
 
-    printf("´´½¨±ý×´Í¼.\n");
-
-    return pCreate;
+	return pNew;
 }

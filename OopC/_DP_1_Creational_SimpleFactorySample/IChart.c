@@ -24,9 +24,9 @@
 #include "IChart.h"
 
 
-struct IChart
+struct IChart_Fld
 {
-    CHAINDEF;
+	CHAINDECLARE;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -35,25 +35,25 @@ struct IChart
 ///////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(IChart)(IChart *pInst, char *pFuncName, void *pParams)
+static bool __CALL(IChart)(IChart* pSelf, const char* pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(IChart)(IChart *pInst)
+static void* __EXTEND(IChart)(IChart* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(IChart)(IChart *pInst)
+void __DEL(IChart)(IChart* pSelf)
 {
-    DODELETE(pInst, IChart, Object);
+	DODEL(pSelf, Object);
 }
 
-IChart *CREATE(IChart)()
+IChart* __NEW(IChart)()
 {
-    DOCREATE(pCreate, IChart, Object, NULL,
-        AMETHOD(pCreate, Display));
+	DONEW(pNew, IChart, Object, NULL,
+		AMETHOD(Display));
 
-    return pCreate;
+	return pNew;
 }

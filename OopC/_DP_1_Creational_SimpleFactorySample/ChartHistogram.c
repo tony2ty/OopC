@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct ChartHistogram
+struct ChartHistogram_Fld
 {
-    CHAINDEF;
+	CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    ChartHistogram *pThis = ((ParamIn *)pParams)->pInst;
-    IChart_Display *pIn = ((ParamIn *)pParams)->pIn;
+	ChartHistogram* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
     printf("ÏÔÊ¾Öù×´Í¼.\n");
 }
@@ -44,27 +44,25 @@ OVERRIDE static void Display(void *pParams)
 ////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ChartHistogram)(ChartHistogram *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ChartHistogram)(ChartHistogram* pSelf, const char* pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ChartHistogram)(ChartHistogram *pInst)
+static void* __EXTEND(ChartHistogram)(ChartHistogram* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ChartHistogram)(ChartHistogram *pInst)
+void __DEL(ChartHistogram)(ChartHistogram* pSelf)
 {
-    DODELETE(pInst, ChartHistogram, IChart);
+	DODEL(pSelf, IChart);
 }
 
-ChartHistogram *CREATE(ChartHistogram)()
+ChartHistogram* __NEW(ChartHistogram)()
 {
-    DOCREATE(pCreate, ChartHistogram, IChart, NULL,
-        METHOD(pCreate, Display));
+	DONEW(pNew, ChartHistogram, IChart, NULL,
+		METHOD(Display));
 
-    printf("´´½¨Öù×´Í¼.\n");
-
-    return pCreate;
+	return pNew;
 }

@@ -26,6 +26,6 @@
 
 #include "IChart.h"
 
-CLASSDEF(ChartHistogram, IChart);
+CLASS(ChartHistogram, IChart);
 
 #endif // !CHARTHISTOGRAM_H__

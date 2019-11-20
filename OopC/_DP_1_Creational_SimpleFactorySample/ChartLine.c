@@ -25,18 +25,18 @@
 
 #include <stdio.h>
 
-struct ChartLine
+struct ChartLine_Fld
 {
-    CHAINDEF;
+	CHAINDECLARE;
 };
 
 ///////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(void *pParams)
+OVERRIDE static void Display(ParamIn *pParams)
 {
-    ChartLine *pThis = ((ParamIn *)pParams)->pInst;
-    IChart_Display *pIn = ((ParamIn *)pParams)->pIn;
+	ChartLine* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
     printf("显示折线图。\n");
 }
@@ -44,27 +44,25 @@ OVERRIDE static void Display(void *pParams)
 ///////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ChartLine)(ChartLine *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ChartLine)(ChartLine* pSelf, const char* pMethodName, ...)
 {
-    DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ChartLine)(ChartLine *pInst)
+static void* __EXTEND(ChartLine)(ChartLine* pSelf)
 {
-    DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ChartLine)(ChartLine *pInst)
+void __DEL(ChartLine)(ChartLine* pSelf)
 {
-    DODELETE(pInst, ChartLine, IChart);
+	DODEL(pSelf, IChart);
 }
 
-ChartLine *CREATE(ChartLine)()
+ChartLine* __NEW(ChartLine)()
 {
-    DOCREATE(pCreate, ChartLine, IChart, NULL,
-        METHOD(pCreate, Display));
+	DONEW(pNew, ChartLine, IChart, NULL,
+		METHOD(Display));
 
-    printf("创建折线图.\n");
-
-    return pCreate;
+	return pNew;
 }

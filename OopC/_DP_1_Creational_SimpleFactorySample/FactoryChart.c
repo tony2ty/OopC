@@ -36,24 +36,24 @@ IChart * FactoryChart_GetByName(char * pName)
 
     if (!strcmp(pName, "histogram"))
     {
-        ChartHistogram *pHistogram = CREATE(ChartHistogram)();
-        pRet = SWITCH(pHistogram, ChartHistogram, IChart);
+		ChartHistogram* pHistogram = NEW(ChartHistogram);
+        pRet = SWITCH(pHistogram, IChart);
 
         printf("初始化设置柱状图。\n");
     }
 
     if (!strcmp(pName, "line"))
     {
-        ChartLine *pLine = CREATE(ChartLine)();
-        pRet = SWITCH(pLine, ChartLine, IChart);
+		ChartLine* pLine = NEW(ChartLine);
+        pRet = SWITCH(pLine, IChart);
 
         printf("初始化设置折线图.\n");
     }
 
     if (!strcmp(pName, "pie"))
     {
-        ChartPie *pPie = CREATE(ChartPie)();
-        pRet = SWITCH(pPie, ChartPie, IChart);
+		ChartPie* pPie = NEW(ChartPie);
+        pRet = SWITCH(pPie, IChart);
 
         printf("初始化设置饼状图.\n");
     }
