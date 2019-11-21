@@ -31,8 +31,8 @@ int main(int argc, char **argv)
 
 	IOperationScore *pOprtScr = NULL;
 	{
-        OperationScoreAdapter *pAdapter = CREATE(OperationScoreAdapter)(); TORLS(DELETE(OperationScoreAdapter), pAdapter);
-		pOprtScr = SWITCH(pAdapter, OperationScoreAdapter, IOperationScore);
+        OperationScoreAdapter *pAdapter = NEW(OperationScoreAdapter); TORLS(DEL(OperationScoreAdapter), pAdapter);
+		pOprtScr = SWITCH(pAdapter, IOperationScore);
 	}
 
 	int arr[] = {4, 2, 10, 6, 8};
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 	}
 	printf("\n");
 
-	INVOKE(IOperationScore)(pOprtScr, "DoSort", &(IOperationScore_DoSort){arr, szLen});
+    pOprtScr->Call(pOprtScr, "DoSort", arr, szLen);
 	//≈≈–Ú∫Û
 	printf("After sort: ");
 	for (size_t i = 0; i < szLen; i++)
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 	printf("\n");
 
 	int nIndexFind = -1;
-	INVOKE(IOperationScore)(pOprtScr, "DoSearch", &(IOperationScore_DoSearch){arr, szLen, 6, &nIndexFind});
+    pOprtScr->Call(pOprtScr, "DoSearch", arr, szLen, 6, &nIndexFind);
 	printf("Index of 6 is: %d.\n", nIndexFind);
 
     RLSLOCALMEMKET();

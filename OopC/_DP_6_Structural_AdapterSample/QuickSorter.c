@@ -25,51 +25,56 @@
 
 #include <stdlib.h>
 
-struct QuickSorter
+struct QuickSorter_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
+/*
+ * ±È½ÏÆ÷ */
 static int Comparer(const void *pL, const void *pR)
 {
 	return *(int *)pL - *(int *)pR;
 }
 
-static void DoSort(void *pParams)
+static void DoSort(ParamIn *pParams)
 {
-	QuickSorter *pThis = ((ParamIn *)pParams)->pInst;
-	QuickSorter_DoSort *pIn = ((ParamIn *)pParams)->pIn;
+    QuickSorter *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    int *pArr = va_arg(vlArgs, int *);
+    size_t szLen = va_arg(vlArgs, size_t);
 
 	//Todo: 
-	qsort(pIn->pArr, pIn->szLen, sizeof(int), Comparer);
+	qsort(pArr, szLen, sizeof(int), Comparer);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(QuickSorter)(QuickSorter *pInst, char *pFuncName, void *pParams)
+static bool __CALL(QuickSorter)(QuickSorter *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(QuickSorter)(QuickSorter *pInst)
+static void *__EXTEND(QuickSorter)(QuickSorter *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(QuickSorter)(QuickSorter *pInst)
+void __DEL(QuickSorter)(QuickSorter *pSelf)
 {
-	DODELETE(pInst, QuickSorter, Object);
+    DODEL(pSelf, Object);
 }
 
-QuickSorter *CREATE(QuickSorter)()
+QuickSorter *__NEW(QuickSorter)()
 {
-	DOCREATE(pCreate, QuickSorter, Object, NULL,
-		METHOD(pCreate, DoSort));
+    DONEW(pNew, QuickSorter, Object, NULL,
+        METHOD(DoSort));
 
-	return pCreate;
+    return pNew;
 }

@@ -25,8 +25,8 @@
 
 #include <OopBase.h>
 
-CLASSDEF(QuickSorter, Object);
-
-typedef struct { int *pArr; size_t szLen; } QuickSorter_DoSort;
+CLASS(QuickSorter, Object);
+METHODDECLARE(
+    DoSort: int *pArr; size_t szLen;)
 
 #endif // !QuickSorter_H__

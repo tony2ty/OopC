@@ -24,9 +24,9 @@
 #include "IOperationScore.h"
 
 
-struct IOperationScore
+struct IOperationScore_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
@@ -37,26 +37,26 @@ struct IOperationScore
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(IOperationScore)(IOperationScore *pInst, char *pFuncName, void *pParams)
+static bool __CALL(IOperationScore)(IOperationScore *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(IOperationScore)(IOperationScore *pInst)
+static void *__EXTEND(IOperationScore)(IOperationScore *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(IOperationScore)(IOperationScore *pInst)
+void __DEL(IOperationScore)(IOperationScore *pSelf)
 {
-	DODELETE(pInst, IOperationScore, Object);
+    DODEL(pSelf, Object);
 }
 
-IOperationScore *CREATE(IOperationScore)()
+IOperationScore *__NEW(IOperationScore)()
 {
-	DOCREATE(pCreate, IOperationScore, Object, NULL,
-		AMETHOD(pCreate, DoSort)
-		AMETHOD(pCreate, DoSearch));
+    DONEW(pNew, IOperationScore, Object, NULL,
+        AMETHOD(DoSort)
+        AMETHOD(DoSearch));
 
-	return pCreate;
+    return pNew;
 }

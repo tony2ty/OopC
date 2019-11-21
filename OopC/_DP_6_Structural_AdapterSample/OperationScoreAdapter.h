@@ -25,6 +25,6 @@
 
 #include "IOperationScore.h"
 
-CLASSDEF(OperationScoreAdapter, IOperationScore);
+CLASS(OperationScoreAdapter, IOperationScore);
 
 #endif // !OperationScoreAdapter_H__

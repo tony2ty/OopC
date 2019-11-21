@@ -26,9 +26,9 @@
 #include "QuickSorter.h"
 #include "BinarySearcher.h"
 
-struct OperationScoreAdapter
+struct OperationScoreAdapter_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 	QuickSorter * pSorter;
 	BinarySearcher * pSearcher;
@@ -37,56 +37,65 @@ struct OperationScoreAdapter
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void Clear(void *pToClear)
+OVERRIDE static void DoSort(ParamIn *pParams)
 {
-	OperationScoreAdapter *pInst = (OperationScoreAdapter *)pToClear;
-	DELETE(QuickSorter)(pInst->pSorter);
-	DELETE(BinarySearcher)(pInst->pSearcher);
-}
+    OperationScoreAdapter *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-OVERRIDE static void DoSort(void *pParams)
-{
-	OperationScoreAdapter *pThis = ((ParamIn *)pParams)->pInst;
-	IOperationScore_DoSort *pIn = ((ParamIn *)pParams)->pIn;
+    int *pArr = va_arg(vlArgs, int *);
+    size_t szLen = va_arg(vlArgs, size_t);
 
 	//Todo: 
-	INVOKE(QuickSorter)(pThis->pSorter, "DoSort", &(QuickSorter_DoSort){pIn->pArr, pIn->szLen});
+    pThis->pFld->pSorter->Call(pThis->pFld->pSorter, "DoSort", pArr, szLen);
 }
-OVERRIDE static void DoSearch(void *pParams)
+OVERRIDE static void DoSearch(ParamIn *pParams)
 {
-	OperationScoreAdapter *pThis = ((ParamIn *)pParams)->pInst;
-	IOperationScore_DoSearch *pIn = ((ParamIn *)pParams)->pIn;
+    OperationScoreAdapter *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    int *pArrToSearch = va_arg(vlArgs, int *);
+    size_t szLen = va_arg(vlArgs, size_t);
+    int nKey = va_arg(vlArgs, int);
+    int *pRetIndexFind = va_arg(vlArgs, int *);
 
 	//Todo: 
-	INVOKE(BinarySearcher)(pThis->pSearcher, "DoSearch", &(BinarySearcher_DoSearch){pIn->pArrToSearch, pIn->szLen, pIn->nKey, pIn->pRetIndexFind});
+    pThis->pFld->pSearcher->Call(pThis->pFld->pSearcher, "DoSearch", pArrToSearch, szLen, nKey, pRetIndexFind);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(OperationScoreAdapter)(OperationScoreAdapter *pInst, char *pFuncName, void *pParams)
+static void __CLEAR(OperationScoreAdapter)(void *pParams)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    OperationScoreAdapter *pSelf = pParams;
+
+    DEL(QuickSorter)(pSelf->pFld->pSorter);
+    DEL(BinarySearcher)(pSelf->pFld->pSearcher);
 }
 
-void *EXTEND(OperationScoreAdapter)(OperationScoreAdapter *pInst)
+static bool __CALL(OperationScoreAdapter)(OperationScoreAdapter *pSelf, const char *pMethodName, ...)
 {
-	DOEXTEND(pInst);
+    DOCALL(pSelf, pMethodName);
 }
 
-void DELETE(OperationScoreAdapter)(OperationScoreAdapter *pInst)
+static void *__EXTEND(OperationScoreAdapter)(OperationScoreAdapter *pSelf)
 {
-	DODELETE(pInst, OperationScoreAdapter, IOperationScore);
+    DOEXTEND(pSelf);
 }
 
-OperationScoreAdapter *CREATE(OperationScoreAdapter)()
+void __DEL(OperationScoreAdapter)(OperationScoreAdapter *pSelf)
 {
-	DOCREATE(pCreate, OperationScoreAdapter, IOperationScore, CLASSEXTRAMEM(Clear, pCreate),
-		METHOD(pCreate, DoSort)
-		METHOD(pCreate, DoSearch));
+    DODEL(pSelf, Object);
+}
 
-	pCreate->pSorter = CREATE(QuickSorter)();
-	pCreate->pSearcher = CREATE(BinarySearcher)();
+OperationScoreAdapter *__NEW(OperationScoreAdapter)()
+{
+    DONEW(pNew, OperationScoreAdapter, IOperationScore, __CLEAR(OperationScoreAdapter),
+        METHOD(DoSort)
+        METHOD(DoSearch));
 
-	return pCreate;
+    pNew->pFld->pSearcher = NEW(BinarySearcher);
+    pNew->pFld->pSorter = NEW(QuickSorter);
+
+    return pNew;
 }

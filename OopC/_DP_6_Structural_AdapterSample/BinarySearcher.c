@@ -25,32 +25,39 @@
 
 #include <stdlib.h>
 
-struct BinarySearcher
+struct BinarySearcher_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
+/*
+ * ±È½ÏÆ÷ */
 static int Comparer(const void *pL, const void *pR)
 {
 	return *(int *)pL - *(int *)pR;
 }
 
-static void DoSearch(void *pParams)
+static void DoSearch(ParamIn *pParams)
 {
-	BinarySearcher *pThis = ((ParamIn *)pParams)->pInst;
-	BinarySearcher_DoSearch *pIn = ((ParamIn *)pParams)->pIn;
+    BinarySearcher *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    int *pArrToSearch = va_arg(vlArgs, int *);
+    size_t szLen = va_arg(vlArgs, size_t);
+    int nKey = va_arg(vlArgs, int);
+    int *pRetIndexFind = va_arg(vlArgs, int *);
 
 	//Todo: 
-	int *pFind = bsearch(&pIn->nKey, pIn->pArrToSearch, pIn->szLen, sizeof(int), Comparer);
-	for (size_t i = 0; i < pIn->szLen; i++)
+	int *pFind = bsearch(&nKey, pArrToSearch, szLen, sizeof(int), Comparer);
+	for (size_t i = 0; i < szLen; i++)
 	{
-		if (&pIn->pArrToSearch[i] == pFind)
+		if (&pArrToSearch[i] == pFind)
 		{
-			*pIn->pRetIndexFind = i;
+			*pRetIndexFind = i;
 			return;
 		}
 	}
@@ -59,25 +66,25 @@ static void DoSearch(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(BinarySearcher)(BinarySearcher *pInst, char *pFuncName, void *pParams)
+static bool __CALL(BinarySearcher)(BinarySearcher *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(BinarySearcher)(BinarySearcher *pInst)
+static void *__EXTEND(BinarySearcher)(BinarySearcher *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(BinarySearcher)(BinarySearcher *pInst)
+void __DEL(BinarySearcher)(BinarySearcher *pSelf)
 {
-	DODELETE(pInst, BinarySearcher, Object);
+    DODEL(pSelf, Object);
 }
 
-BinarySearcher *CREATE(BinarySearcher)()
+BinarySearcher *__NEW(BinarySearcher)()
 {
-	DOCREATE(pCreate, BinarySearcher, Object, NULL,
-		METHOD(pCreate, DoSearch));
+    DONEW(pNew, BinarySearcher, Object, NULL,
+        METHOD(DoSearch));
 
-	return pCreate;
+    return pNew;
 }

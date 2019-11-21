@@ -25,9 +25,9 @@
 
 #include <OopBase.h>
 
-CLASSDEF(IOperationScore, Object);
-
-ABSTRACT typedef struct { int *pArr; size_t szLen; } IOperationScore_DoSort;
-ABSTRACT typedef struct { int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind; } IOperationScore_DoSearch;
+CLASS(IOperationScore, Object);
+METHODDECLARE(
+    DoSort: int *pArr; size_t szLen;
+    DoSearch: int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind;)
 
 #endif // !IOperationScore_H__
