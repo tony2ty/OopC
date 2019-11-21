@@ -222,12 +222,12 @@ OOPBASE_API void* GenerateReleaserRefList();
 OOPBASE_API void   DestroyReleaserRefList(void *pList);
 OOPBASE_API void*   InsertReleaserRef(void *pList, void *pReleaserRef);
 
-OOPBASE_API void* GenerateMethod(void(*pfnMethod)(ParamIn *), char* pMethodName);
+OOPBASE_API void* GenerateMethod(void(*pfnMethod)(ParamIn *), const char* pMethodName);
 OOPBASE_API void* GenerateMethodRing();
 OOPBASE_API void   DestroyMethodRing(void *pMethodRing);
 OOPBASE_API void*   InsertMethod(void *pMethodRing, void *pMethod);
 
-OOPBASE_API void* GenerateInstance(void *pObj, void* pFld, char* pClassName, void *pReleaserRef, void* pMethodRing);
+OOPBASE_API void* GenerateInstance(void *pObj, void* pFld, const char* pClassName, void *pReleaserRef, void* pMethodRing);
 OOPBASE_API void* GenerateInstanceChain();
 OOPBASE_API void*   InsertInstance(void* pChain, void* pInstance);
 

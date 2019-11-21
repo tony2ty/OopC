@@ -140,7 +140,7 @@ struct Method { Method* pPrev; Method* pNext; char* pMethodName; MthdRef fnExec;
 typedef struct MethodRing MethodRing;
 struct MethodRing { Method* pHead; Method* pTail; };
 
-void* GenerateMethod(void(*pfnMethod)(ParamIn *), char* pMethodName)
+void* GenerateMethod(void(*pfnMethod)(ParamIn *), const char* pMethodName)
 {
     MthdRef fnExec = pfnMethod;
 
@@ -243,7 +243,7 @@ struct Instance { Instance* pPrev; Instance* pNext; char* pClassName; void *pObj
 typedef struct InstanceChain InstanceChain;
 struct InstanceChain { Instance* pHead; Instance* pTail; };
 
-void* GenerateInstance(void *pObj, void* pFld, char* pClassName, void *_pReleaserRef, void* _pMethodRing)
+void* GenerateInstance(void *pObj, void* pFld, const char* pClassName, void *_pReleaserRef, void* _pMethodRing)
 {
     MethodRing *pMethodRing = _pMethodRing;
     ReleaserRef *pReleaserRef = _pReleaserRef;
