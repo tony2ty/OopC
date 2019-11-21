@@ -35,7 +35,7 @@
 /***************** String ************************/
 /*************************************************/
 
-CLASSDEFEXP(OOPCORE_API, String, Object);
+CLASSEXP(OOPCORE_API, String, Object);
 
 //1.×Ö·û±éÀú
 /*

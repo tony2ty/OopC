@@ -31,9 +31,9 @@
 #include <stdio.h>
 #include "sds.h"
 
-struct String
+struct String_Fld
 {
-    CHAINDEF;
+    CHAINDECLARE;
 
     sds sdsStr;
 };
