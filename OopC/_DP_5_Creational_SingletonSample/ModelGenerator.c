@@ -30,31 +30,33 @@ static bool bHasBeenGenerated = false;
 //单例
 static ModelGenerator *pSingleton = NULL;
 
-struct ModelGenerator
+struct ModelGenerator_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void GetModel(void *pParams)
+static void GetModel(ParamIn *pParams)
 {
-    ModelGenerator *pThis = ((ParamIn *)pParams)->pInst;
-    ModelGenerator_GetModel *pIn = ((ParamIn *)pParams)->pIn;
+    ModelGenerator *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    int *pIntRetAsModel = va_arg(vlArgs, int *);
 
     //Todo: 
-    *pIn->pIntRetAsModel = 11;
+    *pIntRetAsModel = 11;
     printf("Model generated.\n");
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void Clear(void *pParams)
+static void __CLEAR(ModelGenerator)(void *pParams)
 {
-    ModelGenerator *pInst = pParams;
+    ModelGenerator *pSelf = pParams;
 
     //对象销毁后，便没有单例了，
     //因此标识变量设为false
@@ -62,22 +64,22 @@ static void Clear(void *pParams)
     pSingleton = NULL;
 }
 
-bool INVOKE(ModelGenerator)(ModelGenerator *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ModelGenerator)(ModelGenerator *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ModelGenerator)(ModelGenerator *pInst)
+static void *__EXTEND(ModelGenerator)(ModelGenerator *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ModelGenerator)(ModelGenerator *pInst)
+void __DEL(ModelGenerator)(ModelGenerator *pSelf)
 {
-	DODELETE(pInst, ModelGenerator, Object);
+    DODEL(pSelf, Object);
 }
 
-ModelGenerator *CREATE(ModelGenerator)()
+ModelGenerator *__NEW(ModelGenerator)()
 {
     //这里通过变量判断，
     //单例出现并发问题的情况就归结为
@@ -89,10 +91,10 @@ ModelGenerator *CREATE(ModelGenerator)()
     }
     bHasBeenGenerated = true;
 
-	DOCREATE(pCreate, ModelGenerator, Object, CLASSEXTRAMEM(Clear, pCreate),
-		METHOD(pCreate, GetModel));
+    DONEW(pNew, ModelGenerator, Object, __CLEAR(ModelGenerator),
+        METHOD(GetModel));
 
-    pSingleton = pCreate;
+    pSingleton = pNew;
 
-	return pCreate;
+    return pNew;
 }
