@@ -24,9 +24,9 @@
 #include "IBuilderActor.h"
 
 
-struct IBuilderActor
+struct IBuilderActor_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -35,30 +35,30 @@ struct IBuilderActor
 ////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(IBuilderActor)(IBuilderActor *pInst, char *pFuncName, void *pParams)
+static bool __CALL(IBuilderActor)(IBuilderActor* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(IBuilderActor)(IBuilderActor *pInst)
+static void* __EXTEND(IBuilderActor)(IBuilderActor* pSelf)
 {
-	DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(IBuilderActor)(IBuilderActor *pInst)
+void __DEL(IBuilderActor)(IBuilderActor* pSelf)
 {
-	DODELETE(pInst, IBuilderActor, Object);
+	DODEL(pSelf, Object);
 }
 
-IBuilderActor *CREATE(IBuilderActor)()
+IBuilderActor* __NEW(IBuilderActor)()
 {
-	DOCREATE(pCreate, IBuilderActor, Object, NULL,
-		AMETHOD(pCreate, BuildType)
-		AMETHOD(pCreate, BuildGender)
-		AMETHOD(pCreate, BuildFace)
-		AMETHOD(pCreate, BuildCostume)
-		AMETHOD(pCreate, BuildHairStyle)
-		AMETHOD(pCreate, CreateActor));
+	DONEW(pNew, IBuilderActor, Object, NULL,
+		AMETHOD(BuildType)
+		AMETHOD(BuildGender)
+		AMETHOD(BuildFace)
+		AMETHOD(BuildCostume)
+		AMETHOD(BuildHairStyle)
+		AMETHOD(CreateActor));
 
-	return pCreate;
+	return pNew;
 }

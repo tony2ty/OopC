@@ -28,14 +28,16 @@
 
 #include "Actor.h"
 
-CLASSDEF(IBuilderActor, Object);
-
-ABSTRACT typedef ParamNull IBuilderActor_BuildType;
-ABSTRACT typedef ParamNull IBuilderActor_BuildGender;
-ABSTRACT typedef ParamNull IBuilderActor_BuildFace;
-ABSTRACT typedef ParamNull IBuilderActor_BuildCostume;
-ABSTRACT typedef ParamNull IBuilderActor_BuildHairStyle;
-ABSTRACT typedef struct { Actor **ppRet; } IBuilderActor_CreateActor;
+CLASS(IBuilderActor, Object);
+METHODDECLARE(
+	ABSTRACT BuildType : bool *pRet;
+	ABSTRACT BuildGender : bool* pRet;
+	ABSTRACT BuildFace : bool* pRet;
+	ABSTRACT BuildCostume : bool* pRet;
+	ABSTRACT BuildHairStyle : bool* pRet;
+	/*
+	 * ppActor: 返回创建好的演员对象 */
+	ABSTRACT CreateActor : Actor **ppActor;)
 
 #endif // !IBUILDERACTOR_H__
 

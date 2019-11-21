@@ -24,50 +24,80 @@
 #include "ActorController.h"
 
 
-struct ActorController
+struct ActorController_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 };
 
 ////////////////////////////////////////////////////////////////////////////
 //
 
-static void Construct(void *pParams)
+static void Construct(ParamIn*pParams)
 {
-	ActorController *pThis = ((ParamIn *)pParams)->pInst;
-	ActorController_Construct *pIn = ((ParamIn *)pParams)->pIn;
+	ActorController* pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	INVOKE(IBuilderActor)(pIn->pBuilder, "BuildType", NULL);
-	INVOKE(IBuilderActor)(pIn->pBuilder, "BuildGender", NULL);
-	INVOKE(IBuilderActor)(pIn->pBuilder, "BuildFace", NULL);
-	INVOKE(IBuilderActor)(pIn->pBuilder, "BuildCostume", NULL);
-	INVOKE(IBuilderActor)(pIn->pBuilder, "BuildHairStyle", NULL);
+	Actor** ppActor = va_arg(vlArgs, Actor * *);
+	IBuilderActor* pBuilder = va_arg(vlArgs, IBuilderActor*);
+	bool* pRet = va_arg(vlArgs, bool*);
 
-	INVOKE(IBuilderActor)(pIn->pBuilder, "CreateActor", &(IBuilderActor_CreateActor){ pIn->ppRet });
+	bool bTmp = false;
+	pBuilder->Call(pBuilder, "BuildType", &bTmp);
+	if (!bTmp)
+	{
+		*pRet = false;
+		return;
+	}
+	pBuilder->Call(pBuilder, "BuildGender", &bTmp);
+	if (!bTmp)
+	{
+		*pRet = false;
+		return;
+	}
+	pBuilder->Call(pBuilder, "BuildFace", &bTmp);
+	if (!bTmp)
+	{
+		*pRet = false;
+		return;
+	}
+	pBuilder->Call(pBuilder, "BuildCostume", &bTmp);
+	if (!bTmp)
+	{
+		*pRet = false;
+		return;
+	}
+	pBuilder->Call(pBuilder, "BuildHairStyle", &bTmp);
+	if (!bTmp)
+	{
+		*pRet = false;
+		return;
+	}
+
+	pBuilder->Call(pBuilder, "CreateActor", ppActor);
 }
 
 ////////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ActorController)(ActorController *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ActorController)(ActorController* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ActorController)(ActorController *pInst)
+static void* __EXTEND(ActorController)(ActorController* pSelf)
 {
-	DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ActorController)(ActorController *pInst)
+void __DEL(ActorController)(ActorController* pSelf)
 {
-	DODELETE(pInst, ActorController, Object);
+	DODEL(pSelf, Object);
 }
 
-ActorController *CREATE(ActorController)()
+ActorController* __NEW(ActorController)()
 {
-	DOCREATE(pCreate, ActorController, Object, NULL,
-		METHOD(pCreate, Construct));
+	DONEW(pNew, ActorController, Object, NULL,
+		METHOD(Construct));
 
-	return pCreate;
+	return pNew;
 }

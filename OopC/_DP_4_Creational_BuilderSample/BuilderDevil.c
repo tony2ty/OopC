@@ -24,9 +24,9 @@
 #include "BuilderDevil.h"
 
 
-struct BuilderDevil
+struct BuilderDevil_Fld
 {
-	CHAINDEF;
+	CHAINDECLARE;
 
 	Actor *pActor;
 };
@@ -34,88 +34,100 @@ struct BuilderDevil
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void BuildType(void *pParams)
+OVERRIDE static void BuildType(ParamIn*pParams)
 {
-	BuilderDevil *pThis = ((ParamIn *)pParams)->pInst;
-    IBuilderActor_BuildType *pIn = ((ParamIn *)pParams)->pIn;
+	BuilderDevil *pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	char *pTmp = "¶ñÄ§";
-	INVOKE(Actor)(pThis->pActor, "Type", &(Actor_Type){true, &pTmp});
+	bool* pRet = va_arg(vlArgs, bool*);
+
+	const char *pTmp = "¶ñÄ§";
+	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetType", pTmp, pRet);
 }
 
-OVERRIDE static void BuildGender(void *pParams)
+OVERRIDE static void BuildGender(ParamIn*pParams)
 {
-	BuilderDevil *pThis = ((ParamIn *)pParams)->pInst;
-    IBuilderActor_BuildGender *pIn = ((ParamIn *)pParams)->pIn;
+	BuilderDevil *pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	char *pTmp = "Ñý";
-	INVOKE(Actor)(pThis->pActor, "Gender", &(Actor_Gender){true, &pTmp});
+	bool* pRet = va_arg(vlArgs, bool*);
+
+	const char *pTmp = "Ñý";
+	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetGender", pTmp, pRet);
 }
 
-OVERRIDE static void BuildFace(void *pParams)
+OVERRIDE static void BuildFace(ParamIn*pParams)
 {
-	BuilderDevil *pThis = ((ParamIn *)pParams)->pInst;
-    IBuilderActor_BuildFace *pIn = ((ParamIn *)pParams)->pIn;
+	BuilderDevil *pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	char *pTmp = "³óÂª";
-	INVOKE(Actor)(pThis->pActor, "Face", &(Actor_Face){true, &pTmp});
+	bool* pRet = va_arg(vlArgs, bool*);
+
+	const char *pTmp = "³óÂª";
+	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetFace", pTmp, pRet);
 }
 
-OVERRIDE static void BuildCostume(void *pParams)
+OVERRIDE static void BuildCostume(ParamIn*pParams)
 {
-	BuilderDevil *pThis = ((ParamIn *)pParams)->pInst;
-    IBuilderActor_BuildCostume *pIn = ((ParamIn *)pParams)->pIn;
+	BuilderDevil *pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	char *pTmp = "ºÚÒÂ";
-	INVOKE(Actor)(pThis->pActor, "Costume", &(Actor_Costume){true, &pTmp});
+	bool* pRet = va_arg(vlArgs, bool*);
+
+	const char *pTmp = "ºÚÒÂ";
+	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetCostume", pTmp, pRet);
 }
 
-OVERRIDE static void BuildHairStyle(void *pParams)
+OVERRIDE static void BuildHairStyle(ParamIn*pParams)
 {
-	BuilderDevil *pThis = ((ParamIn *)pParams)->pInst;
-    IBuilderActor_BuildHairStyle *pIn = ((ParamIn *)pParams)->pIn;
+	BuilderDevil *pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	char *pTmp = "¹âÍ·";
-	INVOKE(Actor)(pThis->pActor, "HairStyle", &(Actor_HairStyle){true, &pTmp});
+	bool* pRet = va_arg(vlArgs, bool*);
+
+	const char *pTmp = "¹âÍ·";
+	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetHairStyle", pTmp, pRet);
 }
 
-OVERRIDE static void CreateActor(void *pParams)
+OVERRIDE static void CreateActor(ParamIn*pParams)
 {
-	BuilderDevil *pThis = ((ParamIn *)pParams)->pInst;
-    IBuilderActor_CreateActor *pIn = ((ParamIn *)pParams)->pIn;
+	BuilderDevil *pThis = pParams->pThis;
+	va_list vlArgs = pParams->vlArgs;
 
-	*pIn->ppRet = pThis->pActor;
+	Actor** ppRet = va_arg(vlArgs, Actor * *);
+
+	*ppRet = pThis->pFld->pActor;
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(BuilderDevil)(BuilderDevil *pInst, char *pFuncName, void *pParams)
+static bool __CALL(BuilderDevil)(BuilderDevil* pSelf, const char* pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(BuilderDevil)(BuilderDevil *pInst)
+static void* __EXTEND(BuilderDevil)(BuilderDevil* pSelf)
 {
-	DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(BuilderDevil)(BuilderDevil *pInst)
+void __DEL(BuilderDevil)(BuilderDevil* pSelf)
 {
-	DODELETE(pInst, BuilderDevil, IBuilderActor);
+	DODEL(pSelf, IBuilderActor);
 }
 
-BuilderDevil *CREATE(BuilderDevil)()
+BuilderDevil* __NEW(BuilderDevil)()
 {
-	DOCREATE(pCreate, BuilderDevil, IBuilderActor, NULL,
-		METHOD(pCreate, BuildType)
-		METHOD(pCreate, BuildGender)
-		METHOD(pCreate, BuildFace)
-		METHOD(pCreate, BuildCostume)
-		METHOD(pCreate, BuildHairStyle)
-		METHOD(pCreate, CreateActor));
+	DONEW(pNew, BuilderDevil, IBuilderActor, NULL,
+		METHOD(BuildType)
+		METHOD(BuildGender)
+		METHOD(BuildFace)
+		METHOD(BuildCostume)
+		METHOD(BuildHairStyle)
+		METHOD(CreateActor));
 
-	pCreate->pActor = CREATE(Actor)();
+	pNew->pFld->pActor = NEW(Actor);
 
-	return pCreate;
+	return pNew;
 }

@@ -12,35 +12,35 @@ int main(int argc, char **argv)
 {
     RLSLOCALMEMBRA();
 
+	bool bRet = false;
+
 	IBuilderActor *pBuilder = NULL;
 	{
-		//BuilderHero *pBuilderHero = CREATE(BuilderHero)(); TORLS(DELETE(BuilderHero), pBuilderHero);
+		//BuilderHero *pBuilderHero = NEW(BuilderHero); TORLS(DEL(BuilderHero), pBuilderHero);
 		//pBuilder = SWITCH(pBuilderHero, BuilderHero, IBuilderActor);
 
-		//BuilderAngel *pBuilderAngel = CREATE(BuilderAngel)(); TORLS(DELETE(BuilderAngel), pBuilderAngel);
+		//BuilderAngel *pBuilderAngel = NEW(BuilderAngel); TORLS(DEL(BuilderAngel), pBuilderAngel);
 		//pBuilder = SWITCH(pBuilderAngel, BuilderAngel, IBuilderActor);
 
-        BuilderDevil *pBuilderDevil = CREATE(BuilderDevil)(); TORLS(DELETE(BuilderDevil), pBuilderDevil);
-		pBuilder = SWITCH(pBuilderDevil, BuilderDevil, IBuilderActor);
+        BuilderDevil *pBuilderDevil = NEW(BuilderDevil); TORLS(DEL(BuilderDevil), pBuilderDevil);
+		pBuilder = SWITCH(pBuilderDevil, IBuilderActor);
 	}
 
-    ActorController *pController = CREATE(ActorController)(); TORLS(DELETE(ActorController), pController);
+    ActorController *pController = NEW(ActorController); TORLS(DEL(ActorController), pController);
 	Actor *pActor = NULL;
-    INVOKE(ActorController)(pController, "Construct", &(ActorController_Construct){ &pActor, pBuilder }); TORLS(DELETE(Actor), pActor);
+	pController->Call(pController, "Construct", &pActor, pBuilder, &bRet); TORLS(DEL(Actor), pActor);
 
     char *pDesc = malloc(sizeof(char) * 10); TORLSMUTABLE(free, pDesc);
-	INVOKE(Actor)(pActor, "Type", &(Actor_Type){false, &pDesc});
+	pActor->Call(pActor, "GetType", &pDesc, &bRet);
 	printf("%s\n", pDesc);
-	INVOKE(Actor)(pActor, "Gender", &(Actor_Gender){false, &pDesc});
+	pActor->Call(pActor, "GetGender", &pDesc, &bRet);
 	printf("%s\n", pDesc);
-	INVOKE(Actor)(pActor, "Face", &(Actor_Face){false, &pDesc});
+	pActor->Call(pActor, "GetFace", &pDesc, &bRet);
 	printf("%s\n", pDesc);
-	INVOKE(Actor)(pActor, "Costume", &(Actor_Costume){false, &pDesc});
+	pActor->Call(pActor, "GetCostume", &pDesc, &bRet);
 	printf("%s\n", pDesc);
-	INVOKE(Actor)(pActor, "HairStyle", &(Actor_HairStyle){false, &pDesc});
+	pActor->Call(pActor, "GetHairStyle", &pDesc, &bRet);
 	printf("%s\n", pDesc);
-
-	system("pause");
 
     RLSLOCALMEMKET();
 

@@ -29,9 +29,9 @@
 #include "Actor.h"
 #include "IBuilderActor.h"
 
-CLASSDEF(ActorController, Object);
-
-typedef struct { Actor **ppRet; IBuilderActor *pBuilder; } ActorController_Construct;
+CLASS(ActorController, Object);
+METHODDECLARE(
+	Construct: Actor * *ppRet; IBuilderActor* pBuilder; bool* pRet;)
 
 #endif // !ACTORCONTROLLER_H__
 

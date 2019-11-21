@@ -26,6 +26,6 @@
 
 #include "IBuilderActor.h"
 
-CLASSDEF(BuilderDevil, IBuilderActor);
+CLASS(BuilderDevil, IBuilderActor);
 
 #endif // !BUILDERDEVIL_H__
