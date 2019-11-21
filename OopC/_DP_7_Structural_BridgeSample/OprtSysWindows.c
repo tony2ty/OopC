@@ -25,19 +25,19 @@
 
 #include <stdio.h>
 
-struct OprtSysWindows
+struct OprtSysWindows_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void DoPaint(void *pParams)
+OVERRIDE static void DoPaint(ParamIn *pParams)
 {
-	OprtSysWindows *pThis = ((ParamIn *)pParams)->pInst;
-	IOprtSys_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
+	OprtSysWindows *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
 	//Todo: 
     printf("在Windows操作系统中显示图像.\n");
@@ -46,25 +46,26 @@ OVERRIDE static void DoPaint(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(OprtSysWindows)(OprtSysWindows *pInst, char *pFuncName, void *pParams)
+static bool __CALL(OprtSysWindows)(OprtSysWindows *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(OprtSysWindows)(OprtSysWindows *pInst)
+static void *__EXTEND(OprtSysWindows)(OprtSysWindows *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(OprtSysWindows)(OprtSysWindows *pInst)
+void __DEL(OprtSysWindows)(OprtSysWindows *pSelf)
 {
-	DODELETE(pInst, OprtSysWindows, IOprtSys);
+    DODEL(pSelf, IOprtSys);
 }
 
-OprtSysWindows *CREATE(OprtSysWindows)()
+OprtSysWindows *__NEW(OprtSysWindows)()
 {
-	DOCREATE(pCreate, OprtSysWindows, IOprtSys, NULL,
-		METHOD(pCreate, DoPaint));
+    DONEW(pNew, OprtSysWindows, IOprtSys, NULL,
+        METHOD(DoPaint));
 
-	return pCreate;
+    return pNew;
 }
+

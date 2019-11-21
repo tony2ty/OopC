@@ -25,52 +25,51 @@
 
 #include <stdio.h>
 
-struct ImageBmp
+struct ImageBmp_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(ParamIn *pParams)
 {
-	ImageBmp *pThis = ((ParamIn *)pParams)->pInst;
-	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+    ImageBmp *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    RLSLOCALMEMBRA();
+    const char *pFileName = va_arg(vlArgs, const char *);
 
 	//Todo: 
-    printf("解析Bmp格式图片 %s\n", pIn->pFileName);
-    Matrix *pMat = CREATE(Matrix)(); TORLS(DELETE(Matrix), pMat);
-    DOINVOKESUPER(pThis, "DoPaint", &(IImage_DoPaint){pMat});
-
-    RLSLOCALMEMKET();
+    printf("解析Bmp格式图片 %s\n", pFileName);
+    Matrix *pMat = NEW(Matrix);
+    SUPER(pThis, "DoPaint", pMat);
+    DEL(Matrix)(pMat);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ImageBmp)(ImageBmp *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ImageBmp)(ImageBmp *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+	DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ImageBmp)(ImageBmp *pInst)
+static void *__EXTEND(ImageBmp)(ImageBmp *pSelf)
 {
-	DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(ImageBmp)(ImageBmp *pInst)
+void __DEL(ImageBmp)(ImageBmp *pSelf)
 {
-	DODELETE(pInst, ImageBmp, IImage);
+	DODEL(pSelf, IImage);
 }
 
-ImageBmp *CREATE(ImageBmp)()
+ImageBmp *__NEW(ImageBmp)()
 {
-	DOCREATE(pCreate, ImageBmp, IImage, NULL,
-		METHOD(pCreate, ParseFile));
+	DONEW(pNew, ImageBmp, IImage, NULL,
+		METHOD(ParseFile));
 
-	return pCreate;
+	return pNew;
 }

@@ -25,52 +25,51 @@
 
 #include <stdio.h>
 
-struct ImageJpg
+struct ImageJpg_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(ParamIn *pParams)
 {
-	ImageJpg *pThis = ((ParamIn *)pParams)->pInst;
-	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+	ImageJpg *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    RLSLOCALMEMBRA();
+    const char *pFileName = va_arg(vlArgs, const char *);
 
-	//Todo: 
-    printf("解析Jpg格式图片 %s\n", pIn->pFileName);
-    Matrix *pMat = CREATE(Matrix)(); TORLS(DELETE(Matrix), pMat);
-    DOINVOKESUPER(pThis, "DoPaint", &(IImage_DoPaint){pMat});
-
-    RLSLOCALMEMKET();
+    //Todo: 
+    printf("解析Jpg格式图片 %s\n", pFileName);
+    Matrix *pMat = NEW(Matrix);
+    SUPER(pThis, "DoPaint", pMat);
+    DEL(Matrix)(pMat);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ImageJpg)(ImageJpg *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ImageJpg)(ImageJpg *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ImageJpg)(ImageJpg *pInst)
+static void *__EXTEND(ImageJpg)(ImageJpg *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ImageJpg)(ImageJpg *pInst)
+void __DEL(ImageJpg)(ImageJpg *pSelf)
 {
-	DODELETE(pInst, ImageJpg, IImage);
+    DODEL(pSelf, IImage);
 }
 
-ImageJpg *CREATE(ImageJpg)()
+ImageJpg *__NEW(ImageJpg)()
 {
-	DOCREATE(pCreate, ImageJpg, IImage, NULL,
-		METHOD(pCreate, ParseFile));
+    DONEW(pNew, ImageJpg, IImage, NULL,
+        METHOD(ParseFile));
 
-	return pCreate;
+    return pNew;
 }

@@ -24,9 +24,9 @@
 #include "IImage.h"
 
 
-struct IImage
+struct IImage_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 	IOprtSys * pOS;
 };
@@ -34,62 +34,64 @@ struct IImage
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void DoPaint(void *pParams)
+static void DoPaint(ParamIn *pParams)
 {
-	IImage *pThis = ((ParamIn *)pParams)->pInst;
-	IImage_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
+    IImage *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    Matrix * pMat = va_arg(vlArgs, Matrix *);
 
 	//Todo: 
-    INVOKE(IOprtSys)(pThis->pOS, "DoPaint", &(IOprtSys_DoPaint){pIn->pMat});
+    pThis->pFld->pOS->Call(pThis->pFld->pOS, "DoPaint", pMat);
 }
-static void SetOprtSys(void *pParams)
+static void SetOprtSys(ParamIn *pParams)
 {
-	IImage *pThis = ((ParamIn *)pParams)->pInst;
-	IImage_SetOprtSys *pIn = ((ParamIn *)pParams)->pIn;
+	IImage *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
+
+    IOprtSys *pOS = va_arg(vlArgs, IOprtSys *);
 
 	//Todo: 
-    pThis->pOS = pIn->pOS;
+    pThis->pFld->pOS = pOS;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 
-static void Clear(void *pToClear)
+static void __CLEAR(IImage)(void *pParams)
 {
-    IImage *pInst = pToClear;
-    if (pInst->pOS)
+    IImage *pSelf = pParams;
+
+    if (pSelf->pFld->pOS)
     {
-        DELETE(IOprtSys)(pInst->pOS);
+        DEL(IOprtSys)(pSelf->pFld->pOS);
     }
-    pInst->pOS = NULL;
+    pSelf->pFld->pOS = NULL;
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-bool INVOKE(IImage)(IImage *pInst, char *pFuncName, void *pParams)
+static bool __CALL(IImage)(IImage *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(IImage)(IImage *pInst)
+static void *__EXTEND(IImage)(IImage *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(IImage)(IImage *pInst)
+void __DEL(IImage)(IImage *pSelf)
 {
-	DODELETE(pInst, IImage, Object);
+    DODEL(pSelf, Object);
 }
 
-IImage *CREATE(IImage)()
+IImage *__NEW(IImage)()
 {
-	DOCREATE(pCreate, IImage, Object, CLASSEXTRAMEM(Clear, pCreate),
-		METHOD(pCreate, DoPaint)
-		METHOD(pCreate, SetOprtSys)
-		AMETHOD(pCreate, ParseFile));
+	DONEW(pNew, IImage, Object, __CLEAR(IImage),
+		METHOD(DoPaint)
+		METHOD(SetOprtSys)
+		AMETHOD(ParseFile));
 
-    pCreate->pOS = NULL;
+    pNew->pFld->pOS = NULL;
 
-	return pCreate;
+	return pNew;
 }

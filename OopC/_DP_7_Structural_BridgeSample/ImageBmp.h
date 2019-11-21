@@ -25,6 +25,6 @@
 
 #include "IImage.h"
 
-CLASSDEF(ImageBmp, IImage);
+CLASS(ImageBmp, IImage);
 
 #endif // !ImageBmp_H__

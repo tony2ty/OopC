@@ -25,6 +25,6 @@
 
 #include "IImage.h"
 
-CLASSDEF(ImageGif, IImage);
+CLASS(ImageGif, IImage);
 
 #endif // !ImageGif_H__

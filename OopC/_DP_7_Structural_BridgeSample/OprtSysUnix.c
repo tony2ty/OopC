@@ -25,19 +25,19 @@
 
 #include <stdio.h>
 
-struct OprtSysUnix
+struct OprtSysUnix_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void DoPaint(void *pParams)
+OVERRIDE static void DoPaint(ParamIn *pParams)
 {
-	OprtSysUnix *pThis = ((ParamIn *)pParams)->pInst;
-	IOprtSys_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
+	OprtSysUnix *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
 	//Todo: 
     printf("在Unix操作系统中显示图像.\n");
@@ -46,25 +46,25 @@ OVERRIDE static void DoPaint(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(OprtSysUnix)(OprtSysUnix *pInst, char *pFuncName, void *pParams)
+static bool __CALL(OprtSysUnix)(OprtSysUnix *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(OprtSysUnix)(OprtSysUnix *pInst)
+static void *__EXTEND(OprtSysUnix)(OprtSysUnix *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(OprtSysUnix)(OprtSysUnix *pInst)
+void __DEL(OprtSysUnix)(OprtSysUnix *pSelf)
 {
-	DODELETE(pInst, OprtSysUnix, IOprtSys);
+    DODEL(pSelf, IOprtSys);
 }
 
-OprtSysUnix *CREATE(OprtSysUnix)()
+OprtSysUnix *__NEW(OprtSysUnix)()
 {
-	DOCREATE(pCreate, OprtSysUnix, IOprtSys, NULL,
-		METHOD(pCreate, DoPaint));
+    DONEW(pNew, OprtSysUnix, IOprtSys, NULL,
+        METHOD(DoPaint));
 
-	return pCreate;
+    return pNew;
 }

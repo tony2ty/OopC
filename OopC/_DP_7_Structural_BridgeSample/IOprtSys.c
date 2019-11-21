@@ -24,9 +24,9 @@
 #include "IOprtSys.h"
 
 
-struct IOprtSys
+struct IOprtSys_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
@@ -37,25 +37,25 @@ struct IOprtSys
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(IOprtSys)(IOprtSys *pInst, char *pFuncName, void *pParams)
+static bool __CALL(IOprtSys)(IOprtSys *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(IOprtSys)(IOprtSys *pInst)
+static void *__EXTEND(IOprtSys)(IOprtSys *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(IOprtSys)(IOprtSys *pInst)
+void __DEL(IOprtSys)(IOprtSys *pSelf)
 {
-	DODELETE(pInst, IOprtSys, Object);
+    DODEL(pSelf, Object);
 }
 
-IOprtSys *CREATE(IOprtSys)()
+IOprtSys *__NEW(IOprtSys)()
 {
-	DOCREATE(pCreate, IOprtSys, Object, NULL,
-		AMETHOD(pCreate, DoPaint));
+	DONEW(pNew, IOprtSys, Object, NULL,
+		AMETHOD(DoPaint));
 
-	return pCreate;
+	return pNew;
 }

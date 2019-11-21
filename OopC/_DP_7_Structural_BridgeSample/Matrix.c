@@ -24,9 +24,9 @@
 #include "Matrix.h"
 
 
-struct Matrix
+struct Matrix_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
@@ -37,24 +37,25 @@ struct Matrix
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(Matrix)(Matrix *pInst, char *pFuncName, void *pParams)
+static bool __CALL(Matrix)(Matrix *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(Matrix)(Matrix *pInst)
+static void *__EXTEND(Matrix)(Matrix *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(Matrix)(Matrix *pInst)
+void __DEL(Matrix)(Matrix *pSelf)
 {
-	DODELETE(pInst, Matrix, Object);
+    DODEL(pSelf, Object);
 }
 
-Matrix *CREATE(Matrix)()
+Matrix *__NEW(Matrix)()
 {
-	DOCREATE(pCreate, Matrix, Object, NULL);
+	DONEW(pNew, Matrix, Object, NULL
+        );
 
-	return pCreate;
+	return pNew;
 }

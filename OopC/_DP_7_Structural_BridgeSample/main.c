@@ -41,8 +41,8 @@ int main(int argc, char **argv)
         //pImage = SWITCH(pBmp, ImageBmp, IImage);//Bmp
         //ImageGif *pGif = CREATE(ImageGif)(); TORLS(DELETE(ImageGif), pGif);
         //pImage = SWITCH(pGif, ImageGif, IImage);//Gif
-        ImageJpg *pJpg = CREATE(ImageJpg)(); TORLS(DELETE(ImageJpg), pJpg);
-        pImage = SWITCH(pJpg, ImageJpg, IImage);//Jpg
+        ImageJpg *pJpg = NEW(ImageJpg); TORLS(DEL(ImageJpg), pJpg);
+        pImage = SWITCH(pJpg, IImage);//Jpg
         //ImagePng *pPng = CREATE(ImagePng)(); TORLS(DELETE(ImagePng), pPng);
         //pImage = SWITCH(pPng, ImagePng, IImage);//Png
 
@@ -50,16 +50,16 @@ int main(int argc, char **argv)
         {
             //OprtSysLinux *pLinux = CREATE(OprtSysLinux)();
             //pOS = SWITCH(pLinux, OprtSysLinux, IOprtSys);//Linux
-            OprtSysUnix *pUnix = CREATE(OprtSysUnix)(); //TORLS(DELETE(OprtSysUnix), pUnix);//pOS实例作为pImage的一部分注入，pImage销毁时随之自动销毁，不需要额外销毁。可以取消注释试试
-            pOS = SWITCH(pUnix, OprtSysUnix, IOprtSys);//Unix
+            OprtSysUnix *pUnix = NEW(OprtSysUnix); //TORLS(DELETE(OprtSysUnix), pUnix);//pOS实例作为pImage的一部分注入，pImage销毁时随之自动销毁，不需要额外销毁。可以取消注释试试
+            pOS = SWITCH(pUnix, IOprtSys);//Unix
             //OprtSysWindows *pWindows = CREATE(OprtSysWindows)();
             //pOS = SWITCH(pWindows, OprtSysWindows, IOprtSys);//Windows
         }
 
-        INVOKE(IImage)(pImage, "SetOprtSys", &(IImage_SetOprtSys){pOS});
+        pImage->Call(pImage, "SetOprtSys", pOS);
     }
 
-    INVOKE(IImage)(pImage, "ParseFile", &(IImage_ParseFile){"中国地图"});
+    pImage->Call(pImage, "ParseFile", "中国地图");
 
     RLSLOCALMEMKET();
 

@@ -25,6 +25,6 @@
 
 #include "IOprtSys.h"
 
-CLASSDEF(OprtSysWindows, IOprtSys);
+CLASS(OprtSysWindows, IOprtSys);
 
 #endif // !OprtSysWindows_H__

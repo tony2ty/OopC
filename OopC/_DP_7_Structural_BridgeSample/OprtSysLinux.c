@@ -25,19 +25,19 @@
 
 #include <stdio.h>
 
-struct OprtSysLinux
+struct OprtSysLinux_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void DoPaint(void *pParams)
+OVERRIDE static void DoPaint(ParamIn *pParams)
 {
-	OprtSysLinux *pThis = ((ParamIn *)pParams)->pInst;
-	IOprtSys_DoPaint *pIn = ((ParamIn *)pParams)->pIn;
+    OprtSysLinux *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
 	//Todo: 
     printf("在Linux操作系统中显示图像.\n");
@@ -46,25 +46,25 @@ OVERRIDE static void DoPaint(void *pParams)
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(OprtSysLinux)(OprtSysLinux *pInst, char *pFuncName, void *pParams)
+static bool __CALL(OprtSysLinux)(OprtSysLinux *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(OprtSysLinux)(OprtSysLinux *pInst)
+static void *__EXTEND(OprtSysLinux)(OprtSysLinux *pSelf)
 {
-	DOEXTEND(pInst);
+	DOEXTEND(pSelf);
 }
 
-void DELETE(OprtSysLinux)(OprtSysLinux *pInst)
+void __DEL(OprtSysLinux)(OprtSysLinux *pSelf)
 {
-	DODELETE(pInst, OprtSysLinux, IOprtSys);
+	DODEL(pSelf, IOprtSys);
 }
 
-OprtSysLinux *CREATE(OprtSysLinux)()
+OprtSysLinux *__NEW(OprtSysLinux)()
 {
-	DOCREATE(pCreate, OprtSysLinux, IOprtSys, NULL,
-		METHOD(pCreate, DoPaint));
+	DONEW(pNew, OprtSysLinux, IOprtSys, NULL,
+		METHOD(DoPaint));
 
-	return pCreate;
+	return pNew;
 }

@@ -25,6 +25,6 @@
 
 #include "IImage.h"
 
-CLASSDEF(ImageJpg, IImage);
+CLASS(ImageJpg, IImage);
 
 #endif // !ImageJpg_H__

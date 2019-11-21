@@ -25,52 +25,51 @@
 
 #include <stdio.h>
 
-struct ImageGif
+struct ImageGif_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(ParamIn *pParams)
 {
-	ImageGif *pThis = ((ParamIn *)pParams)->pInst;
-	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+	ImageGif *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    RLSLOCALMEMBRA();
+    const char *pFileName = va_arg(vlArgs, const char *);
 
 	//Todo: 
-    printf("解析Gif格式图片 %s\n", pIn->pFileName);
-    Matrix *pMat = CREATE(Matrix)(); TORLS(DELETE(Matrix), pMat);
-    DOINVOKESUPER(pThis, "DoPaint", &(IImage_DoPaint){pMat});
-
-    RLSLOCALMEMKET();
+    printf("解析Gif格式图片 %s\n", pFileName);
+    Matrix *pMat = NEW(Matrix);
+    SUPER(pThis, "DoPaint", pMat);
+    DEL(Matrix)(pMat);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ImageGif)(ImageGif *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ImageGif)(ImageGif *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ImageGif)(ImageGif *pInst)
+static void *__EXTEND(ImageGif)(ImageGif *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ImageGif)(ImageGif *pInst)
+void __DEL(ImageGif)(ImageGif *pSelf)
 {
-	DODELETE(pInst, ImageGif, IImage);
+    DODEL(pSelf, IImage);
 }
 
-ImageGif *CREATE(ImageGif)()
+ImageGif *__NEW(ImageGif)()
 {
-	DOCREATE(pCreate, ImageGif, IImage, NULL,
-		METHOD(pCreate, ParseFile));
+    DONEW(pNew, ImageGif, IImage, NULL,
+        METHOD(ParseFile));
 
-	return pCreate;
+    return pNew;
 }

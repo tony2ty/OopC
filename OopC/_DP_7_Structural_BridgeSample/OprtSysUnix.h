@@ -25,6 +25,6 @@
 
 #include "IOprtSys.h"
 
-CLASSDEF(OprtSysUnix, IOprtSys);
+CLASS(OprtSysUnix, IOprtSys);
 
 #endif // !OprtSysUnix_H__

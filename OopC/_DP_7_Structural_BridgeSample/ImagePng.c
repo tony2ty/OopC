@@ -25,52 +25,52 @@
 
 #include <stdio.h>
 
-struct ImagePng
+struct ImagePng_Fld
 {
-	CHAINDEF;
+    CHAINDECLARE;
 
 };
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void ParseFile(void *pParams)
+OVERRIDE static void ParseFile(ParamIn *pParams)
 {
-	ImagePng *pThis = ((ParamIn *)pParams)->pInst;
-	IImage_ParseFile *pIn = ((ParamIn *)pParams)->pIn;
+	ImagePng *pThis = pParams->pThis;
+    va_list vlArgs = pParams->vlArgs;
 
-    RLSLOCALMEMBRA();
+    const char *pFileName = va_arg(vlArgs, const char *);
 
-	//Todo: 
-    printf("解析Png格式图片 %s\n", pIn->pFileName);
-    Matrix *pMat = CREATE(Matrix)(); TORLS(DELETE(Matrix), pMat);
-    DOINVOKESUPER(pThis, "DoPaint", &(IImage_DoPaint){pMat});
-
-    RLSLOCALMEMKET();
+    //Todo: 
+    printf("解析Png格式图片 %s\n", pFileName);
+    Matrix *pMat = NEW(Matrix);
+    SUPER(pThis, "DoPaint", pMat);
+    DEL(Matrix)(pMat);
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-bool INVOKE(ImagePng)(ImagePng *pInst, char *pFuncName, void *pParams)
+static bool __CALL(ImagePng)(ImagePng *pSelf, const char *pMethodName, ...)
 {
-	DOINVOKE(pInst, pFuncName, pParams);
+    DOCALL(pSelf, pMethodName);
 }
 
-void *EXTEND(ImagePng)(ImagePng *pInst)
+static void *__EXTEND(ImagePng)(ImagePng *pSelf)
 {
-	DOEXTEND(pInst);
+    DOEXTEND(pSelf);
 }
 
-void DELETE(ImagePng)(ImagePng *pInst)
+void __DEL(ImagePng)(ImagePng *pSelf)
 {
-	DODELETE(pInst, ImagePng, IImage);
+    DODEL(pSelf, IImage);
 }
 
-ImagePng *CREATE(ImagePng)()
+ImagePng *__NEW(ImagePng)()
 {
-	DOCREATE(pCreate, ImagePng, IImage, NULL,
-		METHOD(pCreate, ParseFile));
+    DONEW(pNew, ImagePng, IImage, NULL,
+        METHOD(ParseFile));
 
-	return pCreate;
+    return pNew;
 }
+
