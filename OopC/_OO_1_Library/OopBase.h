@@ -32,7 +32,7 @@
 
 #include <stdbool.h>
 #include <stdarg.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 
 /******************************************************/
@@ -201,6 +201,9 @@ int GetCallCode();
 
 #define   RLSLOCALMEMKET()                                                                                      \
                         DestroyReleaserRefList(__LocalMemRefList)                                               \
+
+#define        RLSMARKER                                                                                        \
+						__LocalMemRefList                                                                       \
 /*
  * used to mark mem dynamically allocated which is intended to free at the end of current code block.
  * this macro always asserts that mem will be allocated successfully when calling GenerateReleaserRef(),
@@ -210,12 +213,24 @@ int GetCallCode();
 
 #define     TORLSMUTABLE(fnRelease, pToRelease)                                                                 \
                         InsertReleaserRef(__LocalMemRefList, GenerateReleaserRef(fnRelease, &pToRelease, true)) \
+/*
+ * To malloc memory safely by passing into releaseMarker.
+ * If the releaseMarker left NULL, you must remember to release the mem block mannually. */
+#define           MALLOC(szLen, releaseMarker)                                                                  \
+						MallocMarked(szLen, releaseMarker)                                                      \
+/*
+ * To calloc memory safely by passing into releaseMarker.
+ * If the releaseMarker left NULL, you must remember to release the mem block mannually. */
+#define           CALLOC(szItemCount, szItemLen, releaseMarker)                                                 \
+						CallocMarked(szItemCount, szItemLen, releaseMarker)                                     \
+
+OOPBASE_API void* MallocMarked(size_t szLen, void* pList);
+OOPBASE_API void* CallocMarked(size_t szItemCount, size_t szItemLen, void* pList);
 
 
 /********************************************************/
 /* APIs Supporting as infrastructure for OO programming */
 /********************************************************/
-
 OOPBASE_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToRelease, bool bMutable);
 OOPBASE_API void* GenerateReleaserRefList();
 OOPBASE_API void   DestroyReleaserRefList(void *pList);

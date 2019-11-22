@@ -31,6 +31,26 @@
 /**********************************************************/
 /*********** Simple api for memory releasing **************/
 /**********************************************************/
+void* MallocMarked(size_t szLen, void* pList)
+{
+	void* pBlk = malloc(szLen);
+	if (pBlk)
+	{
+		InsertReleaserRef(pList, GenerateReleaserRef(free, pBlk, false));
+	}
+	return pBlk;
+}
+
+void* CallocMarked(size_t szItemCount, size_t szItemLen, void *pList)
+{
+	void* pBlk = calloc(szItemCount, szItemLen);
+	if (pBlk)
+	{
+		InsertReleaserRef(pList, GenerateReleaserRef(free, pBlk, false));
+	}
+	return pBlk;
+}
+
 typedef void(*Releaser)(void*);
 
 typedef struct ReleaserRef ReleaserRef;
