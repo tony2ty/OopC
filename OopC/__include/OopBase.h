@@ -215,14 +215,13 @@ int GetCallCode();
 /********************************************************/
 /* APIs Supporting as infrastructure for OO programming */
 /********************************************************/
-typedef struct { void* pThis; va_list vlArgs; } ParamIn;
 
 OOPBASE_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToRelease, bool bMutable);
 OOPBASE_API void* GenerateReleaserRefList();
 OOPBASE_API void   DestroyReleaserRefList(void *pList);
 OOPBASE_API void*   InsertReleaserRef(void *pList, void *pReleaserRef);
 
-OOPBASE_API void* GenerateMethod(void(*pfnMethod)(ParamIn *), const char* pMethodName);
+OOPBASE_API void* GenerateMethod(void(*pfnMethod)(void* _pThis, va_list vlArgs), const char* pMethodName);
 OOPBASE_API void* GenerateMethodRing();
 OOPBASE_API void   DestroyMethodRing(void *pMethodRing);
 OOPBASE_API void*   InsertMethod(void *pMethodRing, void *pMethod);
