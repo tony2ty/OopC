@@ -47,15 +47,15 @@ static void SetType(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pType) + 1;
-	void *pTmp = realloc(pThis->pFld->pType, szLen);
-	if (!pTmp)
+	if (strlen(pThis->pFld->pType) + 1 < szLen)
 	{
-		*pRet = false;
-		return;
-	}
-	else
-	{
-		pThis->pFld->pType = pTmp;
+		free(pThis->pFld->pType);
+		pThis->pFld->pType = malloc(szLen);
+		if (!pThis->pFld->pType)
+		{
+			*pRet = false;
+			return;
+		}
 	}
 	memcpy(pThis->pFld->pType, pType, szLen);
 	*pRet = true;
@@ -69,15 +69,10 @@ static void GetType(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pThis->pFld->pType) + 1;
-	void *pTmp = realloc(*ppType, szLen);
-	if (!pTmp)
+	if (*ppType || !(*ppType = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
-	}
-	else
-	{
-		*ppType = pTmp;
 	}
 	memcpy(*ppType, pThis->pFld->pType, szLen);
 	*pRet = true;
@@ -91,15 +86,15 @@ static void SetGender(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pGender) + 1;
-	void *pTmp = realloc(pThis->pFld->pGender, szLen);
-	if (!pTmp)
+	if (strlen(pThis->pFld->pGender) + 1 < szLen)
 	{
-		*pRet = false;
-		return;
-	}
-	else
-	{
-		pThis->pFld->pGender = pTmp;
+		free(pThis->pFld->pGender);
+		pThis->pFld->pGender = malloc(szLen);
+		if (!pThis->pFld->pGender)
+		{
+			*pRet = false;
+			return;
+		}
 	}
 	memcpy(pThis->pFld->pGender, pGender, szLen);
 	*pRet = true;
@@ -113,15 +108,10 @@ static void GetGender(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pThis->pFld->pGender) + 1;
-	void *pTmp = realloc(*ppGender, szLen);
-	if (!pTmp)
+	if (*ppGender || !(*ppGender = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
-	}
-	else
-	{
-		*ppGender = pTmp;
 	}
 	memcpy(*ppGender, pThis->pFld->pGender, szLen);
 	*pRet = true;
@@ -135,15 +125,15 @@ static void SetFace(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pFace) + 1;
-	void *pTmp = realloc(pThis->pFld->pFace, szLen);
-	if (!pTmp)
+	if (strlen(pThis->pFld->pFace) + 1 < szLen)
 	{
-		*pRet = false;
-		return;
-	}
-	else
-	{
-		pThis->pFld->pFace = pTmp;
+		free(pThis->pFld->pFace);
+		pThis->pFld->pFace = malloc(szLen);
+		if (!pThis->pFld->pFace)
+		{
+			*pRet = false;
+			return;
+		}
 	}
 	memcpy(pThis->pFld->pFace, pFace, szLen);
 	*pRet = true;
@@ -157,15 +147,10 @@ static void GetFace(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pThis->pFld->pFace) + 1;
-	void *pTmp = realloc(*ppFace, szLen);
-	if (!pTmp)
+	if (*ppFace || !(*ppFace = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
-	}
-	else
-	{
-		*ppFace = pTmp;
 	}
 	memcpy(*ppFace, pThis->pFld->pFace, szLen);
 	*pRet = true;
@@ -179,15 +164,15 @@ static void SetCostume(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pCostume) + 1;
-	void* pTmp = realloc(pThis->pFld->pCostume, szLen);
-	if (!pTmp)
+	if (strlen(pThis->pFld->pCostume) + 1 < szLen)
 	{
-		*pRet = false;
-		return;
-	}
-	else
-	{
-		pThis->pFld->pCostume = pTmp;
+		free(pThis->pFld->pCostume);
+		pThis->pFld->pCostume = malloc(szLen);
+		if (!pThis->pFld->pCostume)
+		{
+			*pRet = false;
+			return;
+		}
 	}
 	memcpy(pThis->pFld->pCostume, pCostume, szLen);
 	*pRet = true;
@@ -201,15 +186,10 @@ static void GetCostume(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pThis->pFld->pCostume) + 1;
-	void* pTmp = realloc(*ppCostume, szLen);
-	if (!pTmp)
+	if (*ppCostume || !(*ppCostume = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
-	}
-	else
-	{
-		*ppCostume = pTmp;
 	}
 	memcpy(*ppCostume, pThis->pFld->pCostume, szLen);
 	*pRet = true;
@@ -223,15 +203,15 @@ static void SetHairStyle(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pHairStyle) + 1;
-	void* pTmp = realloc(pThis->pFld->pHairStyle, szLen);
-	if (!pTmp)
+	if (strlen(pThis->pFld->pHairStyle) + 1 < szLen)
 	{
-		*pRet = false;
-		return;
-	}
-	else
-	{
-		pThis->pFld->pHairStyle = pTmp;
+		free(pThis->pFld->pHairStyle);
+		pThis->pFld->pHairStyle = malloc(szLen);
+		if (!pThis->pFld->pHairStyle)
+		{
+			*pRet = false;
+			return;
+		}
 	}
 	memcpy(pThis->pFld->pHairStyle, pHairStyle, szLen);
 	*pRet = true;
@@ -245,15 +225,10 @@ static void GetHairStyle(void *_pThis, va_list vlArgs)
 	bool* pRet = va_arg(vlArgs, bool*);
 
 	size_t szLen = strlen(pThis->pFld->pHairStyle) + 1;
-	void* pTmp = realloc(*ppHairStyle, szLen);
-	if (!pTmp)
+	if (*ppHairStyle || !(*ppHairStyle = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
-	}
-	else
-	{
-		*ppHairStyle = pTmp;
 	}
 	memcpy(*ppHairStyle, pThis->pFld->pHairStyle, szLen);
 	*pRet = true;

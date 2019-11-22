@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     ActorController *pController = NEW(ActorController); TORLS(DEL(ActorController), pController);
 	Actor *pActor = NULL;
 	pController->Call(pController, "Construct", &pActor, pBuilder, &bRet); TORLS(DEL(Actor), pActor);
-
+	!!!
     char *pDesc = malloc(sizeof(char) * 10); TORLSMUTABLE(free, pDesc);
 	pActor->Call(pActor, "GetType", &pDesc, &bRet);
 	printf("%s\n", pDesc);
