@@ -132,7 +132,7 @@ void*   InsertReleaserRef(void *_pList, void *_pReleaserRef)
 /**********************************************************/
 /* 
  * 1.datastructure and some related api */
-typedef void(*MthdRef)(ParamIn*);
+typedef void(*MthdRef)(void *_pThis, va_list vlArgs);
 
 typedef struct Method Method;
 struct Method { Method* pPrev; Method* pNext; char* pMethodName; MthdRef fnExec; };
@@ -140,7 +140,7 @@ struct Method { Method* pPrev; Method* pNext; char* pMethodName; MthdRef fnExec;
 typedef struct MethodRing MethodRing;
 struct MethodRing { Method* pHead; Method* pTail; };
 
-void* GenerateMethod(void(*pfnMethod)(ParamIn *), const char* pMethodName)
+void* GenerateMethod(void(*pfnMethod)(void* _pThis, va_list vlArgs), const char* pMethodName)
 {
     MthdRef fnExec = pfnMethod;
 
@@ -450,7 +450,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
         //通过父类指针调用子类方法时，需要保证各层父类中存在该方法的声明
         if (!pFindInst->pNext)
         {
-			toExecute(&(ParamIn) { pObjExact, vlArgs});
+			toExecute(pObjExact, vlArgs);
             CallCode = CALLSUCCESS;
             return true;
         }
@@ -468,7 +468,7 @@ bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vl
 
             if (bValidCall)
             {
-				toExecute(&(ParamIn) { pObjExact, vlArgs });
+				toExecute(pObjExact, vlArgs);
                 CallCode = CALLSUCCESS;
                 return true;
             }
@@ -515,7 +515,7 @@ bool RedirectCallSuper(void* _pChain, void* pObj, const char* pMethodName, ...)
     {
         va_list vlArgs;
         va_start(vlArgs, pMethodName);
-        toExecute(&(ParamIn) { pObjExact, vlArgs });
+        toExecute(pObjExact, vlArgs);
         va_end(vlArgs);
 
         CallCode = CALLSUCCESS;
@@ -557,10 +557,9 @@ void* ConvertToExactType(InstanceChain* pChain, void* pObj)
 /***************************************************/
 struct Object_Fld { CHAINDECLARE; };
 
-static void Equal(ParamIn* pParams)
+static void Equal(void* _pThis, va_list vlArgs)
 {
-    Object* pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    Object* pThis = _pThis;
 
     bool *pRet = va_arg(vlArgs, bool *);
     void *pToCompare = va_arg(vlArgs, void *);
@@ -568,30 +567,29 @@ static void Equal(ParamIn* pParams)
     *pRet = ConvertToExactType(pThis->pFld->__pChain, pThis) == pToCompare;
 }
 
-static void ToString(ParamIn* pParams)
+static void ToString(void* _pThis, va_list vlArgs)
 {
-    Object* pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    Object* pThis = _pThis;
 
     printf("%p", ConvertToExactType(pThis->pFld->__pChain, pThis));
 }
 
-static bool Call(Object *pSelf, const char *pMethodName, ...)
+static bool __CALL(Object)(Object *pSelf, const char *pMethodName, ...)
 {
     DOCALL(pSelf, pMethodName);
 }
 
-static void *Extend(Object *pSelf)
+static void *__EXTEND(Object)(Object *pSelf)
 {
     DOEXTEND(pSelf);
 }
 
-void Del_Object(Object *pInst)
+void __DEL(Object)(Object *pInst)
 {
     DestroyInstanceChain(pInst->pFld->__pChain);
 }
 
-Object* New_Object()
+Object* __NEW(Object)()
 {
 	Object* pNew = NULL;
 	{
@@ -616,8 +614,8 @@ Object* New_Object()
 			if (!__New) { DestroyMethodRing(__Methods); free(__Fld); return NULL; }
 
 			__New->pFld = __Fld;
-			__New->Extend = Extend;
-			__New->Call = Call;
+			__New->Extend = __EXTEND(Object);
+			__New->Call = __CALL(Object);
 		}
 
 		void* __Chain = NULL;
