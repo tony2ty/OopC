@@ -33,10 +33,9 @@ struct CtrlButtonSummer_Fld
 /////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn *pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-    CtrlButtonSummer *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    CtrlButtonSummer *pThis = _pThis;
 
     printf("ÏÔÊ¾Ç³À¶É«°´Å¥¡£\n");
 }

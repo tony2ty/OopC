@@ -34,20 +34,18 @@ struct IImage_Fld
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void DoPaint(ParamIn *pParams)
+static void DoPaint(void *_pThis, va_list vlArgs)
 {
-    IImage *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    IImage *pThis = _pThis;
 
     Matrix * pMat = va_arg(vlArgs, Matrix *);
 
 	//Todo: 
     pThis->pFld->pOS->Call(pThis->pFld->pOS, "DoPaint", pMat);
 }
-static void SetOprtSys(ParamIn *pParams)
+static void SetOprtSys(void *_pThis, va_list vlArgs)
 {
-	IImage *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+	IImage *pThis = _pThis;
 
     IOprtSys *pOS = va_arg(vlArgs, IOprtSys *);
 

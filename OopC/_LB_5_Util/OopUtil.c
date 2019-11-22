@@ -42,10 +42,9 @@ struct IniWrapper_Fld
 ////////////////////////////////////////////////////////////////////
 //
 
-static void Init(ParamIn* pParams)
+static void Init(void *_pThis, va_list vlArgs)
 {
-	IniWrapper* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	IniWrapper* pThis = _pThis;
 
 	const char* pIniFileName = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -64,10 +63,9 @@ static void Init(ParamIn* pParams)
     *pRet = pThis->pFld->pDict != NULL;
 }
 
-static void WriteIni(ParamIn* pParams)
+static void WriteIni(void *_pThis, va_list vlArgs)
 {
-	IniWrapper* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	IniWrapper* pThis = _pThis;
 
 	const char* pSection = va_arg(vlArgs, const char*);
 	const char* pKey = va_arg(vlArgs, const char*);
@@ -108,10 +106,9 @@ static void WriteIni(ParamIn* pParams)
     *pRet = false;
 }
 
-static void ReadIni(ParamIn* pParams)
+static void ReadIni(void *_pThis, va_list vlArgs)
 {
-	IniWrapper* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	IniWrapper* pThis = _pThis;
 
 	const char* pSection = va_arg(vlArgs, const char*);
 	const char* pKey = va_arg(vlArgs, const char*);
@@ -140,10 +137,9 @@ static void ReadIni(ParamIn* pParams)
     *pRet = true;
 }
 
-static void Save(ParamIn* pParams)
+static void Save(void *_pThis, va_list vlArgs)
 {
-	IniWrapper* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	IniWrapper* pThis = _pThis;
 
 	const char* pSaveAs = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);

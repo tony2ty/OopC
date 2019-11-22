@@ -33,10 +33,9 @@ struct ChartPie_Fld
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn* pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-	ChartPie* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	ChartPie* pThis = _pThis;
 
 	printf("ÏÔÊ¾±ı×´Í¼.\n");
 }

@@ -34,10 +34,9 @@ struct ImageJpg_Fld
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void ParseFile(ParamIn *pParams)
+OVERRIDE static void ParseFile(void *_pThis, va_list vlArgs)
 {
-	ImageJpg *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+	ImageJpg *pThis = _pThis;
 
     const char *pFileName = va_arg(vlArgs, const char *);
 

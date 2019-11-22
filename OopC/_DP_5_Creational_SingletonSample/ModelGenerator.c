@@ -39,10 +39,9 @@ struct ModelGenerator_Fld
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void GetModel(ParamIn *pParams)
+static void GetModel(void *_pThis, va_list vlArgs)
 {
-    ModelGenerator *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    ModelGenerator *pThis = _pThis;
 
     int *pIntRetAsModel = va_arg(vlArgs, int *);
 

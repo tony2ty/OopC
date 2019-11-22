@@ -33,10 +33,9 @@ struct CtrlComboBoxSpring_Fld
 //////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn *pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-    CtrlComboBoxSpring *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    CtrlComboBoxSpring *pThis = _pThis;
 
     printf("显示绿色边框组合框.\n");
 }

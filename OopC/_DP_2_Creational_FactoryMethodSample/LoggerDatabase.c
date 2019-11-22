@@ -33,10 +33,9 @@ struct LoggerDatabase_Fld
 ///////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void WriteLog(ParamIn* pParams)
+OVERRIDE static void WriteLog(void *_pThis, va_list vlArgs)
 {
-	LoggerDatabase* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	LoggerDatabase* pThis = _pThis;
 
 	printf("数据库日志记录。\n");
 }

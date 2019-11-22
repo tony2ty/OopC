@@ -36,10 +36,9 @@ struct Calculator_Fld
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-static void Input(ParamIn *pParams)
+static void Input(void *_pThis, va_list vlArgs)
 {
-    Calculator *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    Calculator *pThis = _pThis;
 
     double dblOperandL = va_arg(vlArgs, double);
     double dblOperandR = va_arg(vlArgs, double);
@@ -48,18 +47,16 @@ static void Input(ParamIn *pParams)
     pThis->pFld->dblOperandR = dblOperandR;
 }
 
-static void Add(ParamIn *pParams)
+static void Add(void* _pThis, va_list vlArgs)
 {
-    Calculator *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    Calculator *pThis = _pThis;
 
     pThis->pFld->dblResult = pThis->pFld->dblOperandL + pThis->pFld->dblOperandR;
 }
 
-static void Output(ParamIn *pParams)
+static void Output(void* _pThis, va_list vlArgs)
 {
-    Calculator *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    Calculator *pThis = _pThis;
 
     double *pResult = va_arg(vlArgs, double *);
 

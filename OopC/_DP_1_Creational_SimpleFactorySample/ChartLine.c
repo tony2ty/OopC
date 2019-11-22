@@ -33,10 +33,9 @@ struct ChartLine_Fld
 ///////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn *pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-	ChartLine* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	ChartLine* pThis = _pThis;
 
     printf("œ‘ æ’€œﬂÕº°£\n");
 }

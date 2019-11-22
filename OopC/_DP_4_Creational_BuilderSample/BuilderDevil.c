@@ -34,10 +34,9 @@ struct BuilderDevil_Fld
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void BuildType(ParamIn*pParams)
+OVERRIDE static void BuildType(void *_pThis, va_list vlArgs)
 {
-	BuilderDevil *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	BuilderDevil *pThis = _pThis;
 
 	bool* pRet = va_arg(vlArgs, bool*);
 
@@ -45,10 +44,9 @@ OVERRIDE static void BuildType(ParamIn*pParams)
 	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetType", pTmp, pRet);
 }
 
-OVERRIDE static void BuildGender(ParamIn*pParams)
+OVERRIDE static void BuildGender(void *_pThis, va_list vlArgs)
 {
-	BuilderDevil *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	BuilderDevil *pThis = _pThis;
 
 	bool* pRet = va_arg(vlArgs, bool*);
 
@@ -56,10 +54,9 @@ OVERRIDE static void BuildGender(ParamIn*pParams)
 	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetGender", pTmp, pRet);
 }
 
-OVERRIDE static void BuildFace(ParamIn*pParams)
+OVERRIDE static void BuildFace(void *_pThis, va_list vlArgs)
 {
-	BuilderDevil *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	BuilderDevil *pThis = _pThis;
 
 	bool* pRet = va_arg(vlArgs, bool*);
 
@@ -67,10 +64,9 @@ OVERRIDE static void BuildFace(ParamIn*pParams)
 	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetFace", pTmp, pRet);
 }
 
-OVERRIDE static void BuildCostume(ParamIn*pParams)
+OVERRIDE static void BuildCostume(void *_pThis, va_list vlArgs)
 {
-	BuilderDevil *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	BuilderDevil *pThis = _pThis;
 
 	bool* pRet = va_arg(vlArgs, bool*);
 
@@ -78,10 +74,9 @@ OVERRIDE static void BuildCostume(ParamIn*pParams)
 	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetCostume", pTmp, pRet);
 }
 
-OVERRIDE static void BuildHairStyle(ParamIn*pParams)
+OVERRIDE static void BuildHairStyle(void *_pThis, va_list vlArgs)
 {
-	BuilderDevil *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	BuilderDevil *pThis = _pThis;
 
 	bool* pRet = va_arg(vlArgs, bool*);
 
@@ -89,10 +84,9 @@ OVERRIDE static void BuildHairStyle(ParamIn*pParams)
 	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetHairStyle", pTmp, pRet);
 }
 
-OVERRIDE static void CreateActor(ParamIn*pParams)
+OVERRIDE static void CreateActor(void *_pThis, va_list vlArgs)
 {
-	BuilderDevil *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	BuilderDevil *pThis = _pThis;
 
 	Actor** ppRet = va_arg(vlArgs, Actor * *);
 

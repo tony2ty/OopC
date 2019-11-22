@@ -33,10 +33,9 @@ struct Calculator_Fld
 ////////////////////////////////////////////////////////////////////////////////////
 //
 
-static void Subtract(ParamIn* pParams)
+static void Subtract(void *_pThis, va_list vlArgs)
 {
-	Calculator* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Calculator* pThis = _pThis;
 
 	double dblOpL = va_arg(vlArgs, double);
 	double dblOpR = va_arg(vlArgs, double);
@@ -45,10 +44,9 @@ static void Subtract(ParamIn* pParams)
 	*pdblRet = dblOpL - dblOpR;
 }
 
-static void Multiply(ParamIn* pParams)
+static void Multiply(void *_pThis, va_list vlArgs)
 {
-	Calculator* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Calculator* pThis = _pThis;
 
 	double dblOpL = va_arg(vlArgs, double);
 	double dblOpR = va_arg(vlArgs, double);

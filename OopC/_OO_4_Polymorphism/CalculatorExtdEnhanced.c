@@ -33,10 +33,9 @@ struct CalculatorExtdEnhanced_Fld
 ///////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Add(ParamIn* pParams)
+OVERRIDE static void Add(void *_pThis, va_list vlArgs)
 {
-    CalculatorExtdEnhanced* pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    CalculatorExtdEnhanced* pThis = _pThis;
 
     double dblOpL = va_arg(vlArgs, double);
     double dblOpR = va_arg(vlArgs, double);
@@ -47,10 +46,9 @@ OVERRIDE static void Add(ParamIn* pParams)
 	*pdblRet = dblOpL + dblOpR;
 }
 
-OVERRIDE static void Subtract(ParamIn* pParams)
+OVERRIDE static void Subtract(void *_pThis, va_list vlArgs)
 {
-	CalculatorExtdEnhanced* pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+	CalculatorExtdEnhanced* pThis = _pThis;
 
     double dblOpL = va_arg(vlArgs, double);
     double dblOpR = va_arg(vlArgs, double);
@@ -61,10 +59,9 @@ OVERRIDE static void Subtract(ParamIn* pParams)
 	*pdblRet = dblOpL - dblOpR;
 }
 
-OVERRIDE static void Multiply(ParamIn* pParams)
+OVERRIDE static void Multiply(void *_pThis, va_list vlArgs)
 {
-	CalculatorExtdEnhanced* pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+	CalculatorExtdEnhanced* pThis = _pThis;
 
     double dblOpL = va_arg(vlArgs, double);
     double dblOpR = va_arg(vlArgs, double);
@@ -75,10 +72,9 @@ OVERRIDE static void Multiply(ParamIn* pParams)
 	*pdblRet = dblOpL * dblOpR;
 }
 
-OVERRIDE static void Divide(ParamIn* pParams)
+OVERRIDE static void Divide(void *_pThis, va_list vlArgs)
 {
-	CalculatorExtdEnhanced* pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+	CalculatorExtdEnhanced* pThis = _pThis;
 
     double dblOpL = va_arg(vlArgs, double);
     double dblOpR = va_arg(vlArgs, double);

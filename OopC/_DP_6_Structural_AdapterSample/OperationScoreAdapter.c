@@ -37,10 +37,9 @@ struct OperationScoreAdapter_Fld
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void DoSort(ParamIn *pParams)
+OVERRIDE static void DoSort(void *_pThis, va_list vlArgs)
 {
-    OperationScoreAdapter *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    OperationScoreAdapter *pThis = _pThis;
 
     int *pArr = va_arg(vlArgs, int *);
     size_t szLen = va_arg(vlArgs, size_t);
@@ -48,10 +47,9 @@ OVERRIDE static void DoSort(ParamIn *pParams)
 	//Todo: 
     pThis->pFld->pSorter->Call(pThis->pFld->pSorter, "DoSort", pArr, szLen);
 }
-OVERRIDE static void DoSearch(ParamIn *pParams)
+OVERRIDE static void DoSearch(void *_pThis, va_list vlArgs)
 {
-    OperationScoreAdapter *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    OperationScoreAdapter *pThis = _pThis;
 
     int *pArrToSearch = va_arg(vlArgs, int *);
     size_t szLen = va_arg(vlArgs, size_t);

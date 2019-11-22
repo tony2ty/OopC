@@ -33,10 +33,9 @@ struct CtrlTextFieldSpring_Fld
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn *pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-    CtrlTextFieldSpring *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    CtrlTextFieldSpring *pThis = _pThis;
 
     printf("显示绿色边框文本框。\n");
 }

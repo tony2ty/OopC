@@ -33,10 +33,9 @@ struct ChartHistogram_Fld
 ////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn *pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-	ChartHistogram* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	ChartHistogram* pThis = _pThis;
 
     printf("ÏÔÊ¾Öù×´Í¼.\n");
 }

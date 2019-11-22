@@ -41,10 +41,9 @@ static int Comparer(const void *pL, const void *pR)
 	return *(int *)pL - *(int *)pR;
 }
 
-static void DoSearch(ParamIn *pParams)
+static void DoSearch(void *_pThis, va_list vlArgs)
 {
-    BinarySearcher *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    BinarySearcher *pThis = _pThis;
 
     int *pArrToSearch = va_arg(vlArgs, int *);
     size_t szLen = va_arg(vlArgs, size_t);

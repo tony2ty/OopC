@@ -35,10 +35,9 @@ struct FactorySkinSpring_Fld
 ////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void CreateButton(ParamIn *pParams)
+OVERRIDE static void CreateButton(void *_pThis, va_list vlArgs)
 {
-    FactorySkinSpring *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    FactorySkinSpring *pThis = _pThis;
 
     ICtrlButton **ppButton = va_arg(vlArgs, ICtrlButton **);
 
@@ -46,10 +45,9 @@ OVERRIDE static void CreateButton(ParamIn *pParams)
     *ppButton = SWITCH(pButton, ICtrlButton);
 }
 
-OVERRIDE static void CreateTextField(ParamIn *pParams)
+OVERRIDE static void CreateTextField(void *_pThis, va_list vlArgs)
 {
-    FactorySkinSpring *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    FactorySkinSpring *pThis = _pThis;
 
     ICtrlTextField **ppTextField = va_arg(vlArgs, ICtrlTextField **);
 
@@ -57,10 +55,9 @@ OVERRIDE static void CreateTextField(ParamIn *pParams)
     *ppTextField = SWITCH(pTextField, ICtrlTextField);
 }
 
-OVERRIDE static void CreateComboBox(ParamIn *pParams)
+OVERRIDE static void CreateComboBox(void *_pThis, va_list vlArgs)
 {
-    FactorySkinSpring *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    FactorySkinSpring *pThis = _pThis;
 
     ICtrlComboBox **ppComboBox = va_arg(vlArgs, ICtrlComboBox **);
 

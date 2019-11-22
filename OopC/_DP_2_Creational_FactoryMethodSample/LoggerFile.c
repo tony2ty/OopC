@@ -33,10 +33,9 @@ struct LoggerFile_Fld
 //////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void WriteLog(ParamIn* pParams)
+OVERRIDE static void WriteLog(void *_pThis, va_list vlArgs)
 {
-	LoggerFile* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	LoggerFile* pThis = _pThis;
 
 	printf("文件日志记录.\n");
 }

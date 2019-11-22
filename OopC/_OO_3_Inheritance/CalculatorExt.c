@@ -32,10 +32,9 @@ struct CalculatorExt_Fld
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 
-static void Add(ParamIn* pParams)
+static void Add(void *_pThis, va_list vlArgs)
 {
-	CalculatorExt* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	CalculatorExt* pThis = _pThis;
 
 	double dblOpL = va_arg(vlArgs, double);
 	double dblOpR = va_arg(vlArgs, double);
@@ -46,10 +45,9 @@ static void Add(ParamIn* pParams)
 
 //static void Subtract(void* pParams);//Ö±½Ó¼Ì³Ð
 
-OVERRIDE static void Multiply(ParamIn* pParams)
+OVERRIDE static void Multiply(void *_pThis, va_list vlArgs)
 {
-	CalculatorExt* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	CalculatorExt* pThis = _pThis;
 
 	double dblOpL = va_arg(vlArgs, double);
 	double dblOpR = va_arg(vlArgs, double);
@@ -60,10 +58,9 @@ OVERRIDE static void Multiply(ParamIn* pParams)
     SUPER(pThis, "Multiply", dblOpL, dblOpR, pdblRet);
 }
 
-static void Divide(ParamIn* pParams)
+static void Divide(void *_pThis, va_list vlArgs)
 {
-	CalculatorExt* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	CalculatorExt* pThis = _pThis;
 
 	double dblOpL = va_arg(vlArgs, double);
 	double dblOpR = va_arg(vlArgs, double);

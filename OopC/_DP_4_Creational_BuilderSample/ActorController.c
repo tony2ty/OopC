@@ -32,10 +32,9 @@ struct ActorController_Fld
 ////////////////////////////////////////////////////////////////////////////
 //
 
-static void Construct(ParamIn*pParams)
+static void Construct(void *_pThis, va_list vlArgs)
 {
-	ActorController* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	ActorController* pThis = _pThis;
 
 	Actor** ppActor = va_arg(vlArgs, Actor * *);
 	IBuilderActor* pBuilder = va_arg(vlArgs, IBuilderActor*);

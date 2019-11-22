@@ -39,10 +39,9 @@ struct Actor_Fld
 ///////////////////////////////////////////////////////////////////////
 //
 
-static void SetType(ParamIn* pParams)
+static void SetType(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	const char* pType = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -62,10 +61,9 @@ static void SetType(ParamIn* pParams)
 	*pRet = true;
 }
 
-static void GetType(ParamIn* pParams)
+static void GetType(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	char** ppType = va_arg(vlArgs, char**);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -85,10 +83,9 @@ static void GetType(ParamIn* pParams)
 	*pRet = true;
 }
 
-static void SetGender(ParamIn* pParams)
+static void SetGender(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	const char* pGender = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -108,10 +105,9 @@ static void SetGender(ParamIn* pParams)
 	*pRet = true;
 }
 
-static void GetGender(ParamIn* pParams)
+static void GetGender(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	char** ppGender = va_arg(vlArgs, char**);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -131,10 +127,9 @@ static void GetGender(ParamIn* pParams)
 	*pRet = true;
 }
 
-static void SetFace(ParamIn*pParams)
+static void SetFace(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	const char* pFace = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -154,10 +149,9 @@ static void SetFace(ParamIn*pParams)
 	*pRet = true;
 }
 
-static void GetFace(ParamIn* pParams)
+static void GetFace(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	char** ppFace = va_arg(vlArgs, char**);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -177,10 +171,9 @@ static void GetFace(ParamIn* pParams)
 	*pRet = true;
 }
 
-static void SetCostume(ParamIn *pParams)
+static void SetCostume(void *_pThis, va_list vlArgs)
 {
-	Actor *pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor *pThis = _pThis;
 
 	const char* pCostume = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -200,10 +193,9 @@ static void SetCostume(ParamIn *pParams)
 	*pRet = true;
 }
 
-static void GetCostume(ParamIn* pParams)
+static void GetCostume(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list* vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	char** ppCostume = va_arg(vlArgs, char**);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -223,10 +215,9 @@ static void GetCostume(ParamIn* pParams)
 	*pRet = true;
 }
 
-static void SetHairStyle(ParamIn *pParams)
+static void SetHairStyle(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	const char* pHairStyle = va_arg(vlArgs, const char*);
 	bool* pRet = va_arg(vlArgs, bool*);
@@ -246,10 +237,9 @@ static void SetHairStyle(ParamIn *pParams)
 	*pRet = true;
 }
 
-static void GetHairStyle(ParamIn* pParams)
+static void GetHairStyle(void *_pThis, va_list vlArgs)
 {
-	Actor* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	Actor* pThis = _pThis;
 
 	char** ppHairStyle = va_arg(vlArgs, char**);
 	bool* pRet = va_arg(vlArgs, bool*);

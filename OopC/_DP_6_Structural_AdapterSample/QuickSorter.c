@@ -41,10 +41,9 @@ static int Comparer(const void *pL, const void *pR)
 	return *(int *)pL - *(int *)pR;
 }
 
-static void DoSort(ParamIn *pParams)
+static void DoSort(void *_pThis, va_list vlArgs)
 {
-    QuickSorter *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    QuickSorter *pThis = _pThis;
 
     int *pArr = va_arg(vlArgs, int *);
     size_t szLen = va_arg(vlArgs, size_t);

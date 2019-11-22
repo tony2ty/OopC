@@ -33,10 +33,9 @@ struct CtrlTextFieldSummer_Fld
 /////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void Display(ParamIn *pParams)
+OVERRIDE static void Display(void *_pThis, va_list vlArgs)
 {
-    CtrlTextFieldSummer *pThis = pParams->pThis;
-    va_list vlArgs = pParams->vlArgs;
+    CtrlTextFieldSummer *pThis = _pThis;
 
     printf("显示蓝色边框文本框。\n");
 }

@@ -33,10 +33,9 @@ struct LoggerFactoryFile_Fld
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void CreateLogger(ParamIn* pParams)
+OVERRIDE static void CreateLogger(void *_pThis, va_list vlArgs)
 {
-	LoggerFactoryFile* pThis = pParams->pThis;
-	va_list vlArgs = pParams->vlArgs;
+	LoggerFactoryFile* pThis = _pThis;
 
 	ILogger** ppRet = va_arg(vlArgs, ILogger * *);
 
