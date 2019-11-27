@@ -23,76 +23,48 @@
 
 #include "CalculatorExt.h"
 
-
-struct CalculatorExt_Fld
-{
-	CHAINDECLARE;
-};
-
-/////////////////////////////////////////////////////////////////////////////////////////
-//
-
-static void Add(void *_pThis, va_list vlArgs)
+static void Add(void *_pThis, va_list* pvlArgs)
 {
 	CalculatorExt* pThis = _pThis;
 
-	double dblOpL = va_arg(vlArgs, double);
-	double dblOpR = va_arg(vlArgs, double);
-	double* pdblRet = va_arg(vlArgs, double*);
+	double dblOpL = va_arg(*pvlArgs, double);
+	double dblOpR = va_arg(*pvlArgs, double);
+	double* pdblRet = va_arg(*pvlArgs, double*);
 
     *pdblRet = dblOpL + dblOpR;
 }
 
 //static void Subtract(void* pParams);//直接继承
 
-OVERRIDE static void Multiply(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Multiply(void *_pThis, va_list* pvlArgs)
 {
 	CalculatorExt* pThis = _pThis;
 
-	double dblOpL = va_arg(vlArgs, double);
-	double dblOpR = va_arg(vlArgs, double);
-	double* pdblRet = va_arg(vlArgs, double*);
+	double dblOpL = va_arg(*pvlArgs, double);
+	double dblOpR = va_arg(*pvlArgs, double);
+	double* pdblRet = va_arg(*pvlArgs, double*);
 
 	//当前方法OVERRIDE父类的方法，
     //通过SUPER调用父类的方法
-    SUPER(pThis, "Multiply", dblOpL, dblOpR, pdblRet);
+    __Spr(pThis, "Multiply", dblOpL, dblOpR, pdblRet);
 }
 
-static void Divide(void *_pThis, va_list vlArgs)
+static void Divide(void *_pThis, va_list* pvlArgs)
 {
 	CalculatorExt* pThis = _pThis;
 
-	double dblOpL = va_arg(vlArgs, double);
-	double dblOpR = va_arg(vlArgs, double);
-	double* pdblRet = va_arg(vlArgs, double*);
+	double dblOpL = va_arg(*pvlArgs, double);
+	double dblOpR = va_arg(*pvlArgs, double);
+	double* pdblRet = va_arg(*pvlArgs, double*);
 
 	*pdblRet = dblOpL / dblOpR;//除0.。。
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CalculatorExt)(CalculatorExt* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(CalculatorExt)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(CalculatorExt)(CalculatorExt* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(CalculatorExt)(CalculatorExt* pSelf)
-{
-	DODEL(pSelf, Calculator);
-}
-
-CalculatorExt* __NEW(CalculatorExt)()
-{
-	DONEW(pNew, CalculatorExt, Calculator, NULL,
-		METHOD(Add)
-		METHOD(Multiply)
-		METHOD(Divide));
-
-	return pNew;
+    return __New(__TYPE(CalculatorExt), 0, NULL, 3, 1,
+        __METHOD(Add),
+        __METHOD(Multiply),
+        __METHOD(Divide),
+        __INHERIT(Calculator));
 }

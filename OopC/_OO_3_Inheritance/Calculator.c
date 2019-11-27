@@ -23,61 +23,31 @@
 
 #include "Calculator.h"
 
-
-struct Calculator_Fld
-{
-	CHAINDECLARE;
-
-};
-
-////////////////////////////////////////////////////////////////////////////////////
-//
-
-static void Subtract(void *_pThis, va_list vlArgs)
+static void Subtract(void *_pThis, va_list* pvlArgs)
 {
 	Calculator* pThis = _pThis;
 
-	double dblOpL = va_arg(vlArgs, double);
-	double dblOpR = va_arg(vlArgs, double);
-	double* pdblRet = va_arg(vlArgs, double*);
+	double dblOpL = va_arg(*pvlArgs, double);
+	double dblOpR = va_arg(*pvlArgs, double);
+	double* pdblRet = va_arg(*pvlArgs, double*);
 
 	*pdblRet = dblOpL - dblOpR;
 }
 
-static void Multiply(void *_pThis, va_list vlArgs)
+static void Multiply(void *_pThis, va_list* pvlArgs)
 {
 	Calculator* pThis = _pThis;
 
-	double dblOpL = va_arg(vlArgs, double);
-	double dblOpR = va_arg(vlArgs, double);
-	double* pdblRet = va_arg(vlArgs, double*);
+	double dblOpL = va_arg(*pvlArgs, double);
+	double dblOpR = va_arg(*pvlArgs, double);
+	double* pdblRet = va_arg(*pvlArgs, double*);
 
 	*pdblRet = dblOpL * dblOpR;
 }
 
-////////////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(Calculator)(Calculator* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(Calculator)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(Calculator)(Calculator* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(Calculator)(Calculator* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-Calculator* __NEW(Calculator)()
-{
-	DONEW(pNew, Calculator, Object, NULL,
-		METHOD(Subtract)
-		METHOD(Multiply));
-
-	return pNew;
+    return __New(__TYPE(Calculator), 0, NULL, 2, 0,
+        __METHOD(Subtract),
+        __METHOD(Multiply));
 }

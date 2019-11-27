@@ -26,8 +26,9 @@
 
 #include "Calculator.h"
 
-CLASS(CalculatorExt, Calculator);
-METHODDECLARE(
+__CLASS CalculatorExt __EXTEND Calculator;
+__CONSTRUCTOR(CalculatorExt);
+__METHODDECLARE(
 	Add:    double dblOpL; double dblOpR; double* pdblRet;
 	Divide: double dblOpL; double dblOpR; double* pdblRet;)
 
