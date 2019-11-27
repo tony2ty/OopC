@@ -23,70 +23,48 @@
 
 #include "Calculator.h"
 
-
-struct Calculator_Fld
+typedef struct Fld Fld;
+struct Fld
 {
-    CHAINDECLARE;
-
     double dblOperandL;
     double dblOperandR;
     double dblResult;
 };
 
-///////////////////////////////////////////////////////////////////////////////
-//
+static void Input(void *_pThis, va_list* pvlArgs)
+{
+	Calculator *pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-static void Input(void *_pThis, va_list vlArgs)
+    double dblOperandL = va_arg(*pvlArgs, double);
+    double dblOperandR = va_arg(*pvlArgs, double);
+
+    pFld->dblOperandL = dblOperandL;
+    pFld->dblOperandR = dblOperandR;
+}
+
+static void Add(void* _pThis, va_list* pvlArgs)
 {
     Calculator *pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-    double dblOperandL = va_arg(vlArgs, double);
-    double dblOperandR = va_arg(vlArgs, double);
-
-    pThis->pFld->dblOperandL = dblOperandL;
-    pThis->pFld->dblOperandR = dblOperandR;
+    pFld->dblResult = pFld->dblOperandL + pFld->dblOperandR;
 }
 
-static void Add(void* _pThis, va_list vlArgs)
+static void Output(void* _pThis, va_list* pvlArgs)
 {
     Calculator *pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-    pThis->pFld->dblResult = pThis->pFld->dblOperandL + pThis->pFld->dblOperandR;
+    double *pResult = va_arg(*pvlArgs, double *);
+
+    *pResult = pFld->dblResult;
 }
 
-static void Output(void* _pThis, va_list vlArgs)
+__CONSTRUCTOR(Calculator)
 {
-    Calculator *pThis = _pThis;
-
-    double *pResult = va_arg(vlArgs, double *);
-
-    *pResult = pThis->pFld->dblResult;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(Calculator)(Calculator *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(Calculator)(Calculator *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(Calculator)(Calculator *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-Calculator *__NEW(Calculator)()
-{
-    DONEW(pNew, Calculator, Object, NULL,
-        METHOD(Input)
-        METHOD(Add)
-        METHOD(Output));
-
-    return pNew;
+	return __New(__TYPE(Calculator), sizeof(Fld), NULL, 3, 0,
+		   __METHOD(Input),
+		   __METHOD(Add),
+		   __METHOD(Output));
 }

@@ -26,8 +26,10 @@
 
 #include <OopBase.h>
 
-CLASS(Calculator, Object);
-METHODDECLARE(
+
+__CLASS Calculator;
+__CONSTRUCTOR(Calculator);
+__METHODDECLARE(
     Input:  double dblOperandL; double dblOperandR;
 	Add:    -;
 	Output: double *pResult;)

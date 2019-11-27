@@ -27,16 +27,14 @@
 
 int main(int argc, char** argv)
 {
-    RLSLOCALMEMBRA();
-
-    Calculator *pCalc = NEW(Calculator); TORLS(DEL(Calculator), pCalc);
+	Calculator* pCalc = __NEW(Calculator);
     pCalc->Call(pCalc, "Input", 10.0, 13.0);//!!! not 10 13, note the decimal point !!!
     pCalc->Call(pCalc, "Add");
     double dblRet = 0;
     pCalc->Call(pCalc, "Output", &dblRet);
     printf("\n10 + 13 = ? %f.\n", dblRet);
 
-    RLSLOCALMEMKET();
+	pCalc->Destroy(pCalc);
 
 	return 0;
 }
