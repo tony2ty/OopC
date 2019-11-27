@@ -67,7 +67,7 @@ static void FindMethodByName(struct __Template** ppInst, MethodRef** ppMthd, Inh
 {
 	for (size_t i = 0; i < pTree->szChildNum; i++)
 	{
-		for (size_t j = 0; j < pTree->szMethodNum; j++)
+		for (size_t j = 0; j < pTree->pChilds[i]->szMethodNum; j++)
 		{
 			if (!strcmp(pTree->pChilds[i]->pMethods[j]->pMethodName, pMethodName))
 			{
