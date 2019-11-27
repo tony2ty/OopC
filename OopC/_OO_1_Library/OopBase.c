@@ -1,661 +1,415 @@
-//MIT License
-//
-//Copyright(c) 2019 Goodman Tao
-//
-//Permission is hereby granted, free of charge, to any person obtaining a copy
-//of this software and associated documentation files(the "Software"), to deal
-//in the Software without restriction, including without limitation the rights
-//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//copies of the Software, and to permit persons to whom the Software is
-//furnished to do so, subject to the following conditions :
-//
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
-//
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//SOFTWARE.
-
 
 #define OOPBASE_API __declspec(dllexport)
 #include "OopBase.h"
 
 #include <string.h>
-#include <stdio.h>
+#include <stdlib.h>
 
 
-/**********************************************************/
-/*********** Simple api for memory releasing **************/
-/**********************************************************/
-void* MallocMarked(size_t szLen, void* pList)
-{
-	void* pBlk = malloc(szLen);
-	if (pBlk)
-	{
-		InsertReleaserRef(pList, GenerateReleaserRef(free, pBlk, false));
-	}
-	return pBlk;
-}
-
-void* CallocMarked(size_t szItemCount, size_t szItemLen, void *pList)
-{
-	void* pBlk = calloc(szItemCount, szItemLen);
-	if (pBlk)
-	{
-		InsertReleaserRef(pList, GenerateReleaserRef(free, pBlk, false));
-	}
-	return pBlk;
-}
-
-typedef void(*Releaser)(void*);
-
-typedef struct ReleaserRef ReleaserRef;
-struct ReleaserRef { ReleaserRef *pPrev; ReleaserRef *pNext; bool bMutable; void* pToRelease; Releaser fnRelease; };
-
-typedef struct ReleaserRefList ReleaserRefList;
-struct ReleaserRefList { ReleaserRef *pHead; ReleaserRef *pTail; };
-
-void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToRelease, bool bMutable)
-{
-    Releaser fnRelease = pfnRelease;
-
-    if (!fnRelease || !pToRelease) { return NULL; }
-
-    ReleaserRef* pRet = malloc(sizeof(ReleaserRef));
-    if (!pRet) { return NULL; }
-
-    pRet->pPrev = NULL;
-    pRet->pNext = NULL;
-    pRet->fnRelease = fnRelease;
-    pRet->pToRelease = pToRelease;
-    pRet->bMutable = bMutable;
-
-    return pRet;
-}
-
-void* GenerateReleaserRefList()
-{
-    ReleaserRefList *pRet = malloc(sizeof(ReleaserRefList));
-
-    if (!pRet) { return NULL; }
-
-    pRet->pHead = NULL;
-    pRet->pTail = NULL;
-
-    return pRet;
-}
-
-void   DestroyReleaserRefList(void *_pList)
-{
-    ReleaserRefList *pList = _pList;
-
-    if (!pList) { return; }
-
-    while (pList->pHead)
-    {
-        ReleaserRef *pTmp = pList->pHead->pNext;
-
-        if (pList->pHead->fnRelease)
-        {
-            if (pList->pHead->bMutable)
-            {
-                pList->pHead->fnRelease(*(void **)(pList->pHead->pToRelease));
-            }
-            else
-            {
-                pList->pHead->fnRelease(pList->pHead->pToRelease);
-            }
-        }
-        free(pList->pHead);
-
-        pList->pHead = pTmp;
-    }
-
-    free(pList);
-}
-
-void*   InsertReleaserRef(void *_pList, void *_pReleaserRef)
-{
-    ReleaserRefList *pList = _pList;
-    ReleaserRef *pReleaserRef = _pReleaserRef;
-
-    if (pList->pHead && pList->pTail)
-    {
-        pList->pTail->pNext = pReleaserRef;
-        pReleaserRef->pPrev = pList->pTail;
-        pReleaserRef->pNext = NULL;
-        pList->pTail = pReleaserRef;
-
-        return pList;
-    }
-
-    if (!pList->pHead && !pList->pTail)
-    {
-        pReleaserRef->pPrev = NULL;
-        pReleaserRef->pNext = NULL;
-        pList->pHead = pReleaserRef;
-        pList->pTail = pReleaserRef;
-
-        return pList;
-    }
-
-    return NULL;
-}
-
-
-/**********************************************************/
-/***************** Implementation of OOP ******************/
-/**********************************************************/
-/* 
- * 1.datastructure and some related api */
-typedef void(*MthdRef)(void *_pThis, va_list vlArgs);
-
-typedef struct Method Method;
-struct Method { Method* pPrev; Method* pNext; char* pMethodName; MthdRef fnExec; };
-
-typedef struct MethodRing MethodRing;
-struct MethodRing { Method* pHead; Method* pTail; };
-
-void* GenerateMethod(void(*pfnMethod)(void* _pThis, va_list vlArgs), const char* pMethodName)
-{
-    MthdRef fnExec = pfnMethod;
-
-    void* pMem = malloc(strlen(pMethodName) + 1);
-    Method* pRet = malloc(sizeof(Method));
-
-    if (!pMem || !pRet)
-    {
-        free(pRet);
-        free(pMem);
-
-        return NULL;
-    }
-
-    //field pPrev and pNext of pointer pRet malloced just now must be set to NULL for later judgement.
-    pRet->pPrev = NULL;
-    pRet->pNext = NULL;
-    pRet->fnExec = fnExec;
-    pRet->pMethodName = strcpy(pMem, pMethodName);
-
-    return pRet;
-}
-
-void* GenerateMethodRing()
-{
-    MethodRing* pRet = malloc(sizeof(MethodRing));
-
-    if (!pRet) { return NULL; }
-
-    //field pHead and pTail of pointer pRet malloced just now must be set to NULL for later judgement.
-    pRet->pHead = NULL;
-    pRet->pTail = NULL;
-
-    return pRet;
-}
-
-void   DestroyMethodRing(void* _pMethodRing)
-{
-    MethodRing* pMethodRing = _pMethodRing;
-
-    if (pMethodRing->pHead && pMethodRing->pTail)
-    {
-        pMethodRing->pTail->pNext = NULL;
-        while (pMethodRing->pHead)
-        {
-            Method *pTmp = pMethodRing->pHead->pNext;
-
-            free(pMethodRing->pHead->pMethodName);
-            free(pMethodRing->pHead);
-
-            pMethodRing->pHead = pTmp;
-        }
-    }
-
-    free(pMethodRing);
-}
-
-void*   InsertMethod(void* _pMethodRing, void* _pMethod)
-{
-    MethodRing* pMethodRing = _pMethodRing;
-    Method* pMethod = _pMethod;
-
-    if (pMethod == NULL)
-    {
-        DestroyMethodRing(pMethodRing);
-        return NULL;
-    }
-
-    if (pMethodRing->pHead && pMethodRing->pTail)
-    {
-        pMethod->pPrev = pMethodRing->pTail;
-        pMethod->pNext = pMethodRing->pHead;
-
-        pMethodRing->pHead->pPrev = pMethod;
-        pMethodRing->pTail->pNext = pMethod;
-
-        pMethodRing->pTail = pMethod;
-
-        return pMethodRing;
-    }
-
-    if (!pMethodRing->pHead && !pMethodRing->pTail)
-    {
-        pMethod->pNext = pMethod;
-        pMethod->pPrev = pMethod;
-
-        pMethodRing->pHead = pMethod;
-        pMethodRing->pTail = pMethod;
-
-        return pMethodRing;
-    }
-
-    return NULL;
-}
-
-
-typedef struct Instance Instance;
-struct Instance { Instance* pPrev; Instance* pNext; char* pClassName; void *pObj; void* pFld; ReleaserRef* pReleaserRef; MethodRing* pMethodRing; };
-
-typedef struct InstanceChain InstanceChain;
-struct InstanceChain { Instance* pHead; Instance* pTail; };
-
-void* GenerateInstance(void *pObj, void* pFld, const char* pClassName, void *_pReleaserRef, void* _pMethodRing)
-{
-    MethodRing *pMethodRing = _pMethodRing;
-    ReleaserRef *pReleaserRef = _pReleaserRef;
-
-    void* pMem = malloc(strlen(pClassName) + 1);
-    Instance* pRet = malloc(sizeof(Instance));
-
-    if (!pRet || !pMem)
-    {
-        free(pRet);
-        free(pMem);
-
-        return NULL;
-    }
-
-    //field pPrev and pNext of pointer pRet malloced just now must be set to NULL for later judgement.
-    pRet->pPrev = NULL;
-    pRet->pNext = NULL;
-    pRet->pObj = pObj;
-    pRet->pFld = pFld;
-    pRet->pClassName = strcpy(pMem, pClassName);
-    pRet->pReleaserRef = pReleaserRef;
-    pRet->pMethodRing = pMethodRing;
-
-    return pRet;
-}
-
-void* GenerateInstanceChain()
-{
-    InstanceChain* pRet = malloc(sizeof(InstanceChain));
-
-    if (!pRet) { return NULL; }
-
-    //field pHead and pTail of pointer pRet malloced just now must be set to NULL for later judgement.
-    pRet->pHead = NULL;
-    pRet->pTail = NULL;
-
-    return pRet;
-}
-
-void   DestroyInstanceChain(void* _pChain)
-{
-    InstanceChain *pChain = _pChain;
-
-    while (pChain->pHead)
-    {
-        Instance *pTmp = pChain->pHead->pNext;
-
-        if (pChain->pHead->pReleaserRef && pChain->pHead->pReleaserRef->fnRelease)
-        {
-            if (pChain->pHead->pReleaserRef->bMutable)
-            {
-                pChain->pHead->pReleaserRef->fnRelease(*(void **)(pChain->pHead->pReleaserRef->pToRelease));
-            }
-            else
-            {
-                pChain->pHead->pReleaserRef->fnRelease(pChain->pHead->pReleaserRef->pToRelease);
-            }
-
-            free(pChain->pHead->pReleaserRef);
-        }
-
-        free(pChain->pHead->pClassName);
-
-        free(pChain->pHead->pFld);
-
-        free(pChain->pHead->pObj);
-
-        DestroyMethodRing(pChain->pHead->pMethodRing);
-
-        free(pChain->pHead);
-
-        pChain->pHead = pTmp;
-    }
-
-    free(pChain);
-}
-
-void*   InsertInstance(void* _pChain, void* _pInstance)
-{
-    InstanceChain *pChain = _pChain;
-    Instance *pInstance = _pInstance;
-
-    if (pChain->pHead && pChain->pTail)
-    {
-        pInstance->pPrev = pChain->pTail;
-        pInstance->pNext = NULL;
-
-        pChain->pTail->pNext = pInstance;
-
-        pChain->pTail = pInstance;
-
-        return pChain;
-    }
-
-    if (!pChain->pHead && !pChain->pTail)
-    {
-        pInstance->pPrev = NULL;
-        pInstance->pNext = NULL;
-
-        pChain->pHead = pInstance;
-        pChain->pTail = pInstance;
-
-        return pChain;
-    }
-
-    return NULL;
-}
-
+/*****************************************************************/
+/************** Data Structure of Inheritance Tree ***************/
+/*****************************************************************/
 
 /*
- * 2.oop rules and some operations such as simple error handling */
-int CallCode = CALLSUCCESS;
+ * type of constructor of class */
+typedef void* (*New)();
 
-int GetCallCode()
+typedef void (*Clear)(void* pInst);
+
+typedef void (*Method)(void* _pThis, va_list* pvlArgs);
+typedef struct MethodRef MethodRef;
+struct MethodRef
 {
-    return CallCode;
-}
+	Method fnMthd;
+	char* pMethodName;
+};
 
 
-bool ContainMethod(MethodRing *pMethodRing, const char *pMethodName)
+typedef struct InheritTreeNode InheritTreeNode;
+struct InheritTreeNode
 {
-    if (!pMethodRing->pHead || !pMethodRing->pTail) { return false; }
+	InheritTreeNode* pParent;
+	size_t szChildNum;
+	InheritTreeNode** pChilds;// <== InheritTreeNode* pChilds[k];
 
-    Method *pIterator = pMethodRing->pHead;
-    do
-    {
-        if (!strcmp(pMethodName, pIterator->pMethodName)) { return true; }
-        pIterator = pIterator->pNext;
+	char* pClassName;
+	struct __Template* pInst;
+	Clear fnClear;
+	size_t szMethodNum;
+	MethodRef** pMethods;// <== MethodRef* pMethods[k];
+};
 
-    } while (pIterator != pMethodRing->pHead);
 
-    return false;
-}
+/*****************************************************************/
+/************************* Util Methods **************************/
+/*****************************************************************/
 
-Method* FindMethod(MethodRing* pMethodRing, const char* pMethodName)
+static InheritTreeNode* FindNodeByClass(InheritTreeNode* pTree, const char* pClassName)
 {
-    if (!pMethodRing->pHead || !pMethodRing->pTail) { return NULL; }
-
-    Method* pIterator = pMethodRing->pHead;
-    do
-    {
-        //这里找到的可能是一个抽象方法，
-        //也就是，方法换pRing中存在该方法，但是方法的指针为null，
-        //这也导致了ContainMethod和FindMethod两个函数不能合并为一个函数
-        if (!strcmp(pMethodName, pIterator->pMethodName)) { return pIterator; }
-        pIterator = pIterator->pNext;
-
-    } while (pIterator != pMethodRing->pHead);
-
-    return NULL;
-}
-
-Instance* FindInstance(InstanceChain* pChain, void* pObj)
-{
-    Instance* pIterator = pChain->pHead;
-    do
-    {
-        if (pIterator->pObj == pObj) { return pIterator; }
-        pIterator = pIterator->pNext;
-
-    } while (pIterator != NULL);
-
-    return NULL;
-}
-
-bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vlArgs)
-{
-    InstanceChain *pChain = _pChain;
-
-    MthdRef toExecute = NULL;
-	void* pObjExact = NULL;
-
-    Instance* pFindInst = FindInstance(pChain, pObj);
-    if (!pFindInst)
-    {
-		CallCode = INSTANCENOTFOUND;
-        return false;
-    }
-
-    for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
-    {
-        Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
-        toExecute = pFindMthd ? pFindMthd->fnExec : toExecute;
-        pObjExact = pFindMthd ? pIterator->pObj : pObjExact;
-    }
-
-    if (!toExecute)
-    {
-        for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
-        {
-            Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
-            if (pFindMthd)
-            {
-                toExecute = pFindMthd->fnExec;
-                pObjExact = pIterator->pObj;
-                break;
-            }
-        }
-    }
-
-    if (toExecute)
-    {
-        //通过父类指针调用子类方法时，需要保证各层父类中存在该方法的声明
-        if (!pFindInst->pNext)
-        {
-			toExecute(pObjExact, vlArgs);
-            CallCode = CALLSUCCESS;
-            return true;
-        }
-        else
-        {
-            bool bValidCall = false;
-            for (Instance *pIterator = pFindInst; pIterator; pIterator = pIterator->pPrev)
-            {
-                if (ContainMethod(pIterator->pMethodRing, pMethodName))
-                {
-                    bValidCall = true;
-                    break;
-                }
-            }
-
-            if (bValidCall)
-            {
-				toExecute(pObjExact, vlArgs);
-                CallCode = CALLSUCCESS;
-                return true;
-            }
-            else
-            {
-				CallCode = METHODUNDECLARED;
-                return false;
-            }
-        }
-    }
-    else
-    {
-		CallCode = METHODNOTFOUND;
-        return false;
-    }
-}
-
-bool RedirectCallSuper(void* _pChain, void* pObj, const char* pMethodName, ...)
-{
-    InstanceChain *pChain = _pChain;
-
-    MthdRef toExecute = NULL;
-    void *pObjExact = NULL;
-
-    Instance* pFindInst = FindInstance(pChain, pObj);
-    if (!pFindInst)
-    {
-        CallCode = INSTANCENOTFOUND;
-        return false;
-    }
-
-    for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
-    {
-        Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
-        if (pFindMthd)
-        {
-            toExecute = pFindMthd->fnExec;
-            pObjExact = pIterator->pObj;
-            break;
-        }
-    }
-
-    if (toExecute)
-    {
-        va_list vlArgs;
-        va_start(vlArgs, pMethodName);
-        toExecute(pObjExact, vlArgs);
-        va_end(vlArgs);
-
-        CallCode = CALLSUCCESS;
-        return true;
-    }
-    else
-    {
-        CallCode = METHODNOTFOUND;
-        return false;
-    }
-}
-
-void* ConvertByType(void* _pChain, void* pObj, const char* pBaseName)
-{
-    InstanceChain *pChain = _pChain;
-
-    for (Instance* pIterator = FindInstance(pChain, pObj); pIterator; pIterator = pIterator->pPrev)
-    {
-        if (!strcmp(pIterator->pClassName, pBaseName)) { return pIterator->pObj; }
-    }
-
-    return NULL;
-}
-
-void* ConvertToExactType(InstanceChain* pChain, void* pObj)
-{
-    Instance *pInstance = NULL;
-    for (Instance *pIterator = FindInstance(pChain, pObj); pIterator; pIterator = pIterator->pNext)
-    {
-        pInstance = pIterator;
-    }
-
-    return pInstance ? pInstance->pObj : NULL;
-}
-
-
-/***************************************************/
-/*********** Super super class: Object *************/
-/***************************************************/
-struct Object_Fld { CHAINDECLARE; };
-
-static void Equal(void* _pThis, va_list vlArgs)
-{
-    Object* pThis = _pThis;
-
-    bool *pRet = va_arg(vlArgs, bool *);
-    void *pToCompare = va_arg(vlArgs, void *);
-
-    *pRet = ConvertToExactType(pThis->pFld->__pChain, pThis) == pToCompare;
-}
-
-static void ToString(void* _pThis, va_list vlArgs)
-{
-    Object* pThis = _pThis;
-
-    printf("%p", ConvertToExactType(pThis->pFld->__pChain, pThis));
-}
-
-static bool __CALL(Object)(Object *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(Object)(Object *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(Object)(Object *pInst)
-{
-    DestroyInstanceChain(pInst->pFld->__pChain);
-}
-
-Object* __NEW(Object)()
-{
-	Object* pNew = NULL;
+	for (size_t i = 0; i < pTree->szChildNum; i++)
 	{
-		void* __Methods = NULL;
+		if (!strcmp(pTree->pChilds[i]->pClassName, pClassName))
 		{
-			__Methods = GenerateMethodRing();
-			if (!__Methods) { return NULL; }
-
-			if (!InsertMethod(__Methods, GenerateMethod(Equal, "Equal"))) { return NULL; }
-			if (!InsertMethod(__Methods, GenerateMethod(ToString, "ToString"))) { return NULL; }
+			return pTree->pChilds[i];
 		}
-
-		Object_Fld* __Fld = NULL;
-		{
-			__Fld = malloc(sizeof(Object_Fld));
-			if (!__Fld) { DestroyMethodRing(__Methods); return NULL; }
-		}
-
-		Object* __New = NULL;
-		{
-			__New = malloc(sizeof(Object));
-			if (!__New) { DestroyMethodRing(__Methods); free(__Fld); return NULL; }
-
-			__New->pFld = __Fld;
-			__New->Extend = __EXTEND(Object);
-			__New->Call = __CALL(Object);
-		}
-
-		void* __Chain = NULL;
-		{
-			__Chain = GenerateInstanceChain();
-			if (!__Chain) { DestroyMethodRing(__Methods); free(__Fld); free(__New); return NULL; }
-
-			__Fld->__pChain = __Chain;
-		}
-
-		void* __Instance = NULL;
-		{
-			__Instance = GenerateInstance(__New, __Fld, "Object", NULL, __Methods);
-			if (!__Instance) { DestroyMethodRing(__Methods); free(__New); free(__Fld); DestroyInstanceChain(__Chain); return NULL; }
-
-			InsertInstance(__Chain, __Instance);
-		}
-
-		pNew = __New;
 	}
 
-	return pNew;
+	for (size_t i = 0; i < pTree->szChildNum; i++)
+	{
+		InheritTreeNode* pTmp = FindNodeByClass(pTree->pChilds[i], pClassName);
+		if (pTmp) { return pTmp; }
+	}
+
+	return NULL;
+}
+
+static void FindMethodByName(struct __Template** ppInst, MethodRef** ppMthd, InheritTreeNode* pTree, const char* pMethodName)
+{
+	for (size_t i = 0; i < pTree->szChildNum; i++)
+	{
+		for (size_t j = 0; j < pTree->szMethodNum; j++)
+		{
+			if (!strcmp(pTree->pChilds[i]->pMethods[j]->pMethodName, pMethodName))
+			{
+				*ppInst = pTree->pChilds[i]->pInst;
+				*ppMthd = pTree->pChilds[i]->pMethods[j];
+				return;
+			}
+		}
+	}
+
+	for (size_t i = 0; i < pTree->szChildNum; i++)
+	{
+		FindMethodByName(ppInst, ppMthd, pTree->pChilds[i], pMethodName);
+		if (*ppInst && *ppMthd) { return; }
+	}
+}
+
+static void FindMethodByName2(struct __Template** ppInst, MethodRef** ppMthd, InheritTreeNode* pTree, const char* pMethodName)
+{
+	for (size_t i = 0; i < pTree->szMethodNum; i++)
+	{
+		if (!strcmp(pTree->pMethods[i]->pMethodName, pMethodName))
+		{
+			*ppInst = pTree->pInst;
+			*ppMthd = pTree->pMethods[i];
+			break;
+		}
+	}
+
+	if (pTree->pParent)
+	{
+		FindMethodByName2(ppInst, ppMthd, pTree->pParent, pMethodName);
+	}
+}
+
+static struct __Template* AsRoot(struct __Template* pInst)
+{
+	InheritTreeNode* pTree = pInst->Ext;
+	return pTree->pParent ? AsRoot(pTree->pParent->pInst) : pTree->pInst;
+}
+
+
+/*****************************************************************/
+/*************************** Call ********************************/
+/*****************************************************************/
+
+static bool DispatchCall(bool bSprOnly, struct __Template* pInst, const char* pMethodName, va_list* pvlArgs)
+{
+	InheritTreeNode* pTree = pInst->Ext;
+
+	struct __Template* pInstFound = NULL;
+	MethodRef* pMthdFound = NULL;
+	FindMethodByName(&pInstFound, &pMthdFound, pTree, pMethodName);
+
+	if (bSprOnly)
+	{
+		if (!pInstFound || !pMthdFound)
+		{
+			return false;
+		}
+		else
+		{
+			pMthdFound->fnMthd(pInstFound, pvlArgs);
+			return true;
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i < pTree->szMethodNum; i++)
+		{
+			if (!strcmp(pTree->pMethods[i]->pMethodName, pMethodName))
+			{
+				pInstFound = pTree->pInst;
+				pMthdFound = pTree->pMethods[i];
+				break;
+			}
+		}
+
+		if (!pInstFound || !pMthdFound)
+		{
+			return false;
+		}
+		else
+		{
+			if (pTree->pParent)
+			{
+				FindMethodByName2(&pInstFound, &pMthdFound, pTree->pParent, pMethodName);
+			}
+			pMthdFound->fnMthd(pInstFound, pvlArgs);
+			return true;
+		}
+	}
+}
+
+static bool Call(void* pSelf, const char* pMethodName, ...)
+{
+	va_list vlArgs;
+	va_start(vlArgs, pMethodName);
+	bool bRet = DispatchCall(false, pSelf, pMethodName, &vlArgs);
+	va_end(vlArgs);
+	return bRet;
+}
+
+bool __Spr(void* pSelf, const char* pMethodName, ...)
+{
+	va_list vlArgs;
+	va_start(vlArgs, pMethodName);
+	bool bRet = DispatchCall(true, pSelf, pMethodName, &vlArgs);
+	va_end(vlArgs);
+	return bRet;
+}
+
+
+/*****************************************************************/
+/*************************** Destroy *****************************/
+/*****************************************************************/
+
+static void DestroyTree(InheritTreeNode* pTree)
+{
+	for (size_t i = 0; i < pTree->szChildNum; i++)
+	{
+		DestroyTree(pTree->pChilds[i]);
+	}
+
+	free(pTree->pChilds);
+	free(pTree->pClassName);
+
+	if (pTree->fnClear) { pTree->fnClear(pTree->pInst); }
+	free(pTree->pInst->Fld);
+	free(pTree->pInst);
+
+	for (size_t i = 0; i < pTree->szMethodNum; i++)
+	{
+		free(pTree->pMethods[i]->pMethodName);
+		free(pTree->pMethods[i]);
+	}
+	free(pTree->pMethods);
+	free(pTree);
+}
+
+static void Destroy(void* pInst)
+{
+	DestroyTree(AsRoot(pInst)->Ext);
+}
+
+
+/*****************************************************************/
+/**************************** Construct **************************/
+/*****************************************************************/
+
+static void* ConstructMethods(size_t szMthdNum, MethodRef** pMethods, va_list* pvlArgs)
+{
+	if (szMthdNum)
+	{
+		for (size_t i = 0; i < szMthdNum; i++)
+		{
+			pMethods[i] = malloc(sizeof(MethodRef));
+			//failed to alloc mem
+			if (!pMethods[i]) { for (int j = i - 1; j >= 0; j--) free(pMethods[j]); return NULL; }
+		}
+
+		char** pNames = malloc(sizeof(char*) * szMthdNum);
+		//failed to alloc mem
+		if (!pNames) { for (size_t i = 0; i < szMthdNum; i++) free(pMethods[i]); return NULL; }
+		for (size_t i = 0; i < szMthdNum; i++)
+		{
+			pNames[i] = va_arg(*pvlArgs, char*);
+			pMethods[i]->fnMthd = va_arg(*pvlArgs, Method);
+		}
+
+		for (size_t i = 0; i < szMthdNum - 1; i++)
+		{
+			for (size_t j = i + 1; j < szMthdNum; j++)
+			{
+				//same methods
+				if (!strcmp(pNames[i], pNames[j]))
+				{
+					for (size_t k = 0; k < szMthdNum; k++)
+					{
+						free(pMethods[i]);
+					}
+					free(pNames);
+					return NULL;
+				}
+			}
+		}
+
+		for (size_t i = 0; i < szMthdNum; i++)
+		{
+			size_t szTmp = strlen(pNames[i]) + 1;
+			pMethods[i]->pMethodName = malloc(szTmp);
+			//failed to alloc mem
+			if (!pMethods[i]->pMethodName) { for (int j = i - 1; j >= 0; j--) free(pMethods[j]->pMethodName);  free(pNames); for (size_t k = 0; k < szMthdNum; k++) free(pMethods[k]); return NULL; }
+
+			memcpy(pMethods[i]->pMethodName, pNames[i], szTmp);
+		}
+
+		free(pNames);
+
+		return pMethods;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+static void* ConstructBase(size_t szBaseNum, InheritTreeNode** pChilds, va_list* pvlArgs)
+{
+	if (szBaseNum)
+	{
+		New* pfnNew = malloc(sizeof(New) * szBaseNum);
+		//failed to alloc mem
+		if (!pfnNew) { return NULL; }
+		for (size_t i = 0; i < szBaseNum; i++)
+		{
+			pfnNew[i] = va_arg(*pvlArgs, New);
+		}
+
+		for (size_t i = 0; i < szBaseNum - 1; i++)
+		{
+			for (size_t j = i + 1; j < szBaseNum; j++)
+			{
+				//same superclass
+				if (pfnNew[i] == pfnNew[j]) { free(pfnNew); return NULL; }
+			}
+		}
+
+		for (size_t i = 0; i < szBaseNum; i++)
+		{
+			struct __Template* pTmp = pfnNew[i]();
+			//failed to create super
+			if (!pTmp) { for (int j = i - 1; j >= 0; j--) pChilds[j]->pInst->Destroy(pChilds[j]->pInst); return NULL; }
+			pChilds[i] = pTmp->Ext;
+		}
+
+		free(pfnNew);
+
+		return pChilds;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+void* __New(const char* pClassName, size_t szFld, void(*fnClear)(void*), size_t szMthdNum, size_t szBaseNum, ...)
+{
+	if (!pClassName || !*pClassName)
+	{
+		//null class name
+		return NULL;
+	}
+
+	InheritTreeNode* pTree = NULL;
+	{
+		pTree = malloc(sizeof(InheritTreeNode));
+		//failed to alloc mem
+		if (!pTree) { return NULL; }
+	}
+
+	pTree->pParent = NULL;
+
+	pTree->pChilds = NULL;
+	pTree->szChildNum = 0;
+	{
+		if (szBaseNum)
+		{
+			pTree->pChilds = malloc(sizeof(InheritTreeNode*) * szBaseNum);
+			//failed to alloc mem
+			if (!pTree->pChilds) { free(pTree); return NULL; }
+			pTree->szChildNum = szBaseNum;
+		}
+	}
+
+	//pTree->pClassName = NULL;
+	{
+		size_t szLen = strlen(pClassName) + 1;
+		pTree->pClassName = malloc(szLen);
+		//failed to alloc mem
+		if (!pTree->pClassName) { free(pTree->pChilds); free(pTree); return NULL; }
+		memcpy(pTree->pClassName, pClassName, szLen);
+	}
+
+	//pTree->pInst = NULL;
+	{
+		pTree->pInst = malloc(sizeof(struct __Template));
+		//failed to alloc mem
+		if (!pTree->pInst) { free(pTree->pClassName); free(pTree->pChilds); free(pTree); return NULL; }
+
+		pTree->pInst->Fld = NULL;
+		{
+			if (szFld)
+			{
+				pTree->pInst->Fld = calloc(szFld, 1);
+				//failed to alloc mem
+				if (!pTree->pInst->Fld) { free(pTree->pInst); free(pTree->pClassName); free(pTree->pChilds); free(pTree); return NULL; }
+			}
+		}
+		pTree->pInst->Ext = pTree;
+		pTree->pInst->Call = Call;
+		pTree->pInst->Destroy = Destroy;
+	}
+
+	pTree->fnClear = fnClear;
+
+	pTree->pMethods = NULL;
+	pTree->szMethodNum = 0;
+	{
+		if (szMthdNum)
+		{
+			pTree->pMethods = malloc(sizeof(MethodRef*) * szMthdNum);
+			//failed to alloc mem
+			if (!pTree->pMethods) { free(pTree->pInst->Fld); free(pTree->pInst); free(pTree->pClassName); free(pTree->pChilds); free(pTree); return NULL; }
+			pTree->szMethodNum = szMthdNum;
+		}
+	}
+
+	va_list vlArgs;
+	va_start(vlArgs, szBaseNum);
+	void* pTmp = NULL;
+	pTmp = ConstructMethods(szMthdNum, pTree->pMethods, &vlArgs);
+	if (!pTmp && szMthdNum) { free(pTree->pMethods); free(pTree->pInst->Fld); free(pTree->pInst); free(pTree->pClassName); free(pTree->pChilds); free(pTree); va_end(vlArgs); return NULL; }
+	pTmp = ConstructBase(szBaseNum, pTree->pChilds, &vlArgs);
+	if (!pTmp && szBaseNum) { free(pTree->pMethods); free(pTree->pInst->Fld); free(pTree->pInst); free(pTree->pClassName); free(pTree->pChilds); free(pTree); va_end(vlArgs); return NULL; }
+	va_end(vlArgs);
+
+	for (size_t i = 0; i < szBaseNum; i++)
+	{
+		pTree->pChilds[i]->pParent = pTree;
+	}
+
+	return pTree->pInst;
+}
+
+
+/*****************************************************************/
+/************************** Conversion ***************************/
+/*****************************************************************/
+
+void* __Cvt(void* pSelf, const char* pClassName)
+{
+	InheritTreeNode* pTree = AsRoot(pSelf)->Ext;
+	return  !strcmp(pTree->pClassName, pClassName) ? pTree->pInst : FindNodeByClass(pTree, pClassName)->pInst;
 }
