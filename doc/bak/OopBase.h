@@ -24,148 +24,238 @@
 #ifndef OOPBASE_H__
 #define OOPBASE_H__
 
-#ifdef OOPLIB_API
+#ifdef OOPBASE_API
 #else
-	#define OOPLIB_API __declspec(dllimport)
-#endif // !OOPLIB_API
+#define OOPBASE_API __declspec(dllimport)
+#endif // OOPBASE_API
 
 
 #include <stdbool.h>
 #include <stdarg.h>
-#include <malloc.h>
-
-////OopBase//////////////////////////////////////////////////////////////////////////////
-//
-
-//------面向对象功能API-------------------------------------------------------------------------------------------------------------//
-
-#define CREATE(type) Create_ ## type
-
-#define INVOKE(type) Invoke_ ## type
-
-#define EXTEND(type) Extend_ ## type
-
-#define DELETE(type) Delete_ ## type
-
-#define DOINVOKE(pInst, pFuncName, pParams)/*调用pInst的名为pFuncName的方法，参数为pParams。不要复合调用，DOINVOKE((...some expr...), ..., ...)*/ \
-                return Invoke(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFunc(pInst->pChain, pInst, pFuncName), pParams })
-
-#define DOEXTEND(pInst) \
-                return pInst->pChain
-
-#define DODELETE(pInst, theclass, superclass) \
-                superclass *pSuper = SWITCH(pInst, theclass, superclass); DELETE(superclass)(pSuper)
-
-#define DOCREATE(pInst, theclass, superclass, pRlsRef, ...)/*创建实例，但并不初始化实例的数据域*/ \
-                theclass *pInst = malloc(sizeof(theclass));                 \
-                if (!pInst) { return NULL; }                                \
-                void *pMethods = GenerateMethodRing();                      \
-                if (!pMethods) { return NULL; };                            \
-                __VA_ARGS__                                                 \
-                pInst->pChain = InsertInstance(                             \
-                    EXTEND(superclass)(CREATE(superclass)()),               \
-                    GenerateInstance(pInst, #theclass, pRlsRef, pMethods))  \
-
-#define CLASSDEF(theclass, superclass, ...)/*类定义宏，定义时，给定构造参数，则类没有默认无参构造函数声明，反之，则有*/ \
-	            typedef struct theclass theclass;                                            \
-	            theclass* CREATE(theclass)(__VA_ARGS__);                                     \
-	            bool      INVOKE(theclass)(theclass* pInst, char* pFuncName, void* pParams); \
-	            void*     EXTEND(theclass)(theclass* pInst);                                 \
-	            void      DELETE(theclass)(theclass* pInst)                                  \
-
-//-----实现面向对象的一些必要的宏定义--------------------------------------------------------------------------------------------------------------//
-
-#define      ABSTRACT/*抽象方法注释符号*/
-
-#define      CHAINDEF/*标准实例链定义*/ \
-                     void *pChain
-
-#define        METHOD(name)/*添加方法*/ \
-                     InsertMethod(pMethods, 1, GenerateMethod(name, #name));
-
-#define       AMETHOD(name)/*添加抽象方法，A前缀表示Abstract*/ \
-                     InsertMethod(pMethods, 1, GenerateMethod(NULL, #name));
-
-#define        SWITCH(pInst, theclass, superclass)/*将实例转换至指定父类型。不要复合调用，SWITCH((...some expr...), ..., ...)*/ \
-                     ConvertByType(EXTEND(theclass)(pInst), pInst, #superclass)
-
-#define DOINVOKESUPER(pInst, pFuncName, ...)/*调用pInst的父类pFuncName方法。不要复合调用，DOINVOKESUPER((...some expr...), ..., ...)*/ \
-                     InvokeSuper(pInst->pChain, pInst, pFuncName, &(ParamIn){ ConvertByFuncInherited(pInst->pChain, pInst, pFuncName), __VA_ARGS__ })
-
-//成员方法的空参数结构体
-typedef struct { void* pNull; } ParamNull;
-//成员方法的入参
-typedef struct { void* pInst; void* pIn; } ParamIn;
-
-//-----错误信息--------------------------------------------------------------------------------------------------------------//
-
-//调用函数执行失败时，获取失败的信息
-OOPLIB_API char *GetErrorInfo(char* pMemIn);
-
-//-----内存释放--------------------------------------------------------------------------------------------------------------//
-
-#define RLSLOCALMEMBRA()/*局部动态内存释放环境，开始宏。Release local memory bra*/ \
-                      void *pLocalMemRefList = GenerateReleaserRefList()
-
-#define RLSLOCALMEMKET()/*局部动态内存释放环境，结束宏。Release local memory ket*/ \
-                      CallReleaser(pLocalMemRefList)
-
-#define          TORLS(fnRelease, pToClear)/*局部动态内存释放标记宏。To Release*/ \
-                      InsertReleaserRef(pLocalMemRefList, GenerateReleaserRef(fnRelease, pToClear))
-
-OOPLIB_API void* GenerateReleaserRef(void* pfnRelease, void* pToClear);
-OOPLIB_API void* GenerateReleaserRefList();
-OOPLIB_API void*   InsertReleaserRef(void *pVdList, void *pVdRlsRef);
-OOPLIB_API void      CallReleaser(void *pVdList);
+#include <stdlib.h>
 
 
-//-----实例链，方法--------------------------------------------------------------------------------------------------------------//
+/******************************************************/
+/******** API for Object-Oriented Programming *********/
+/******************************************************/
+#define      ABSTRACT                                                                              \
 
-OOPLIB_API void* GenerateMethod(void(*pAddr)(void *), char* pName);
-OOPLIB_API void* GenerateMethodRing();
-OOPLIB_API void*   InsertMethod(void *pVdMethods, int nMethodNum, ...);
+#define      OVERRIDE                                                                              \
 
-//-----实例链，实例--------------------------------------------------------------------------------------------------------------//
+#define METHODDECLARE(declaration)                                                                 \
 
-OOPLIB_API void* GenerateInstance(void* pFields, char* pName, void *pRlsRef, void* pVdMethods);
-OOPLIB_API void* GenerateInstanceChain();
-OOPLIB_API void*   InsertInstance(void* pVdChain, void* pVdInstance);
+#define         CLASS(theclass, superclass)                                                        \
+					 typedef struct theclass ## _Fld theclass ## _Fld;                             \
+					 typedef struct theclass theclass;                                             \
+					 struct theclass                                                               \
+					 {                                                                             \
+						 theclass ## _Fld *pFld;                                                   \
+						 void *(* Extend)(theclass *pSelf);                                        \
+						 bool  (* Call  )(theclass *pSelf, const char *pMethodName, ...);          \
+					 };                                                                            \
+					 theclass *New_ ## theclass();                                                 \
+					 void      Del_ ## theclass(theclass *pSelf)                                   \
 
-//-----支持面向对象的功能--------------------------------------------------------------------------------------------------------------//
+#define      CLASSEXP(exportflag, theclass, superclass)                                            \
+					 typedef struct theclass ## _Fld theclass ## _Fld;                             \
+					 typedef struct theclass theclass;                                             \
+					 struct theclass                                                               \
+					 {                                                                             \
+						 theclass ## _Fld *pFld;                                                   \
+						 void *(* Extend)(theclass *pSelf);                                        \
+						 bool  (* Call  )(theclass *pSelf, const char *pMethodName, ...);          \
+					 };                                                                            \
+					 exportflag theclass *New_ ## theclass();                                      \
+					 exportflag void      Del_ ## theclass(theclass *pSelf)                        \
 
-//该函数的目的在于通过实例指针pInst调用名为pFuncName的函数，参数为pParams。
-//而指定名称的函数可能是pInst实例从父类中继承得到的，
-//因此需要实例链，用以查找函数，
-//在实例链中查找的时候，优先向下查找，然后向上查找
-OOPLIB_API bool  Invoke                (void* pVdChain, void* pInst, char* pFuncName, void* pParams);
+#define           NEW(theclass)                                                                    \
+					 New_ ## theclass()                                                            \
 
-//该函数的目的在于通过实例指针pInst调用名为pFuncName的函数，参数为pParams。
-//实例链pChain用于查找函数，
-//查找时，只会向上查找
-OOPLIB_API bool  InvokeSuper           (void* pVdChain, void* pInst, char* pFuncName, void* pParams);
+#define           DEL(theclass)                                                                    \
+					 Del_ ## theclass                                                              \
 
-//该函数从实例链pChain中查找给定的实例指针pInst，然后向上查找，直到找到给定类型的实例为止
-OOPLIB_API void* ConvertByType         (void* pVdChain, void* pInst, char* pBaseType);
+#define         SUPER(pthis, methodname, ...)                                                      \
+                     RedirectCallSuper(pthis->pFld->__pChain, pthis, methodname, __VA_ARGS__)      \
 
-//根据函数名称，确定实例链中哪个实例将会被调用，优先向下查找，然后向上查找
-OOPLIB_API void* ConvertByFunc         (void* pVdChain, void* pInst, char* pFuncName);
+#define        SWITCH(pObj, superclass)                                                            \
+					 ConvertByType(pObj->Extend(pObj), pObj, #superclass)                          \
 
-//根据函数名称，确定实例链中哪个实例将会被调用，仅向上查找
-OOPLIB_API void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFuncName);
 
-////Object//////////////////////////////////////////////////////////////////////////////
-//
+/******************************************************/
+/******* Neccessary and required API for Coding *******/
+/******************************************************/
+#define  CHAINDECLARE                                                                                                                                                 \
+					 void *__pChain                                                                                                                                   \
 
-typedef struct Object Object;
+#define         __NEW(theclass)                                                                                                                                       \
+                     New_ ## theclass                                                                                                                                 \
 
-OOPLIB_API Object* CREATE(Object)();
-OOPLIB_API bool    INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams);
-OOPLIB_API void*   EXTEND(Object)(Object* pInst);
-OOPLIB_API void    DELETE(Object)(Object* pInst);
+#define         __DEL(theclass)                                                                                                                                       \
+                     Del_ ## theclass                                                                                                                                 \
 
-typedef struct { bool* pRet; void* pToCmpr; } Object_Equal;
-typedef ParamNull Object_ToString;
+#define      __EXTEND(theclass)                                                                                                                                       \
+                     __Extend                                                                                                                                         \
+
+#define        __CALL(theclass)                                                                                                                                       \
+                     __Call                                                                                                                                           \
+
+#define       __CLEAR(theclass)                                                                                                                                       \
+                     __Clear                                                                                                                                          \
+
+#define        METHOD(name)                                                                                                                                           \
+					 if (!InsertMethod(__Methods, GenerateMethod(name, #name))) { return NULL; }                                                                      \
+
+#define       AMETHOD(name)                                                                                                                                           \
+					 if (!InsertMethod(__Methods, GenerateMethod(NULL, #name))) { return NULL; }                                                                      \
+
+#define        DOCALL(pSelf, pMethodName)                                                                                                                             \
+					 va_list __vlArgs;                                                                                                                                \
+					 va_start(__vlArgs, pMethodName);                                                                                                                 \
+					 bool __Ret = RedirectCall(pSelf->pFld->__pChain, pSelf, pMethodName, __vlArgs);                                                                  \
+					 va_end(__vlArgs);                                                                                                                                \
+					 return __Ret                                                                                                                                     \
+
+#define      DOEXTEND(pSelf)                                                                                                                                          \
+					 return pSelf->pFld->__pChain                                                                                                                     \
+
+#define         DODEL(pSelf, superclass)                                                                                                                              \
+					 superclass *__Super = ConvertByType(pSelf->pFld->__pChain, pSelf, #superclass);                                                                  \
+					 Del_ ## superclass(__Super)                                                                                                                      \
+
+#define         DONEW(pNew, theclass, superclass, fnRelease, ...)                                                                                                     \
+					 theclass* pNew = NULL;                                                                                                                           \
+					 {                                                                                                                                                \
+						 void* __Methods = NULL;                                                                                                                      \
+						 {                                                                                                                                            \
+							 __Methods = GenerateMethodRing();                                                                                                        \
+							 if (!__Methods) { return NULL; }                                                                                                         \
+					                                                                                                                                                  \
+							 __VA_ARGS__                                                                                                                              \
+						 }                                                                                                                                            \
+					                                                                                                                                                  \
+						 theclass ## _Fld* __Fld = NULL;                                                                                                              \
+						 {                                                                                                                                            \
+							 __Fld = malloc(sizeof(theclass ## _Fld));                                                                                                \
+							 if (!__Fld) { DestroyMethodRing(__Methods); return NULL; }                                                                               \
+						 }                                                                                                                                            \
+					                                                                                                                                                  \
+						 theclass* __New = NULL;                                                                                                                      \
+						 {                                                                                                                                            \
+							 __New = malloc(sizeof(theclass));                                                                                                        \
+							 if (!__New) { DestroyMethodRing(__Methods); free(__Fld); return NULL; }                                                                  \
+					                                                                                                                                                  \
+							 __New->pFld = __Fld;                                                                                                                     \
+							 __New->Extend = __EXTEND(theclass);                                                                                                      \
+							 __New->Call = __CALL(theclass);                                                                                                          \
+						 }                                                                                                                                            \
+					                                                                                                                                                  \
+						 superclass* __Super = NULL;                                                                                                                  \
+						 {                                                                                                                                            \
+							 __Super = NEW(superclass);                                                                                                               \
+							 if (!__Super) { DestroyMethodRing(__Methods); free(__Fld); free(__New); return NULL; }                                                   \
+					                                                                                                                                                  \
+							 __Fld->__pChain = __Super->Extend(__Super);                                                                                              \
+						 }                                                                                                                                            \
+					                                                                                                                                                  \
+                         void *__ReleaserRef = NULL;                                                                                                                  \
+                         {                                                                                                                                            \
+                             __ReleaserRef = GenerateReleaserRef(fnRelease, __New, false);                                                                            \
+                             if (fnRelease && !__ReleaserRef) { DestroyMethodRing(__Methods); free(__New); free(__Fld); DEL(superclass)(__Super); return NULL; }      \
+                         }                                                                                                                                            \
+					                                                                                                                                                  \
+						 void* __Instance = NULL;                                                                                                                     \
+						 {                                                                                                                                            \
+							 __Instance = GenerateInstance(__New, __Fld, #theclass, __ReleaserRef, __Methods);                                                        \
+							 if (!__Instance) { DestroyMethodRing(__Methods); free(__New); free(__Fld); DEL(superclass)(__Super); free(__ReleaserRef); return NULL; } \
+					                                                                                                                                                  \
+							 InsertInstance(__Super->Extend(__Super), __Instance);                                                                                    \
+ 						 }                                                                                                                                            \
+					                                                                                                                                                  \
+						 pNew = __New;                                                                                                                                \
+					 }                                                                                                                                                \
+/*
+ * Status Code: success */
+#define      CALLSUCCESS  0
+/*
+ * Status Code: not an instance of given type, or say, inst not found in chain */
+#define INSTANCENOTFOUND  1
+/*
+ * Status Code: The declared type has no such method. */
+#define METHODUNDECLARED  2
+/*
+ * Status Code: no such method found. */
+#define   METHODNOTFOUND  3
+
+int GetCallCode();
+
+
+/********************************************************/
+/******************** Memory Util ***********************/
+/********************************************************/
+/*
+ * for releasing local memory.
+ * this macro always asserts that mem will be allocated successfully,
+ * while in some extreme condition failure of mem allocation will cause error. */
+#define   RLSLOCALMEMBRA()                                                                                      \
+                        void *__LocalMemRefList = GenerateReleaserRefList()                                     \
+
+#define   RLSLOCALMEMKET()                                                                                      \
+                        DestroyReleaserRefList(__LocalMemRefList)                                               \
+
+#define        RLSMARKER                                                                                        \
+						__LocalMemRefList                                                                       \
+/*
+ * used to mark mem dynamically allocated which is intended to free at the end of current code block.
+ * this macro always asserts that mem will be allocated successfully when calling GenerateReleaserRef(),
+ * while in some extreme condition failure of mem allocation will cause error. */
+#define            TORLS(fnRelease, pToRelease)                                                                 \
+                        InsertReleaserRef(__LocalMemRefList, GenerateReleaserRef(fnRelease, pToRelease, false)) \
+
+#define     TORLSMUTABLE(fnRelease, pToRelease)                                                                 \
+                        InsertReleaserRef(__LocalMemRefList, GenerateReleaserRef(fnRelease, &pToRelease, true)) \
+/*
+ * To malloc memory safely by passing into releaseMarker.
+ * If the releaseMarker left NULL, you must remember to release the mem block mannually. */
+#define           MALLOC(szLen, releaseMarker)                                                                  \
+						MallocMarked(szLen, releaseMarker)                                                      \
+/*
+ * To calloc memory safely by passing into releaseMarker.
+ * If the releaseMarker left NULL, you must remember to release the mem block mannually. */
+#define           CALLOC(szItemCount, szItemLen, releaseMarker)                                                 \
+						CallocMarked(szItemCount, szItemLen, releaseMarker)                                     \
+
+OOPBASE_API void* MallocMarked(size_t szLen, void* pList);
+OOPBASE_API void* CallocMarked(size_t szItemCount, size_t szItemLen, void* pList);
+
+
+/********************************************************/
+/* APIs Supporting as infrastructure for OO programming */
+/********************************************************/
+OOPBASE_API void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToRelease, bool bMutable);
+OOPBASE_API void* GenerateReleaserRefList();
+OOPBASE_API void   DestroyReleaserRefList(void *pList);
+OOPBASE_API void*   InsertReleaserRef(void *pList, void *pReleaserRef);
+
+OOPBASE_API void* GenerateMethod(void(*pfnMethod)(void* _pThis, va_list vlArgs), const char* pMethodName);
+OOPBASE_API void* GenerateMethodRing();
+OOPBASE_API void   DestroyMethodRing(void *pMethodRing);
+OOPBASE_API void*   InsertMethod(void *pMethodRing, void *pMethod);
+
+OOPBASE_API void* GenerateInstance(void *pObj, void* pFld, const char* pClassName, void *pReleaserRef, void* pMethodRing);
+OOPBASE_API void* GenerateInstanceChain();
+OOPBASE_API void*   InsertInstance(void* pChain, void* pInstance);
+
+OOPBASE_API bool  RedirectCall(void* pChain, void* pObj, const char* pMethodName, va_list vlArgs);
+OOPBASE_API bool  RedirectCallSuper(void* pChain, void* pObj, const char* pMethodName, ...);
+OOPBASE_API void* ConvertByType(void* pChain, void* pObj, const char* pBaseName);
+
+
+/********************************************************/
+/************** Super super class : Object **************/
+/********************************************************/
+CLASSEXP(OOPBASE_API, Object, NULL);
+METHODDECLARE(
+	Equal:    bool* pRet; void* pToCompare;
+	ToString: -;)
 
 #endif // !OOPBASE_H__
-
-

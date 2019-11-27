@@ -21,74 +21,60 @@
 //SOFTWARE.
 
 
-#define OOPLIB_API __declspec(dllexport)
+#define OOPBASE_API __declspec(dllexport)
 #include "OopBase.h"
 
 #include <string.h>
 #include <stdio.h>
 
-////OopBase//////////////////////////////////////////////////////////////////////////////
-//
 
-//---错误信息-----------------------------------------------------------------------------------//
-
-char *pErrorBuffer = NULL;
-
-char * GetErrorInfo(char * pMemIn)
+/**********************************************************/
+/*********** Simple api for memory releasing **************/
+/**********************************************************/
+void* MallocMarked(size_t szLen, void* pList)
 {
-    if (!pErrorBuffer) { return pMemIn; }
-
-    int nLen = strlen(pErrorBuffer) + 1;
-    return memcpy(realloc(pMemIn, nLen), pErrorBuffer, nLen);
+	void* pBlk = malloc(szLen);
+	if (pBlk)
+	{
+		InsertReleaserRef(pList, GenerateReleaserRef(free, pBlk, false));
+	}
+	return pBlk;
 }
 
-void SetErrorInfo(char *pErrorInfo)
+void* CallocMarked(size_t szItemCount, size_t szItemLen, void *pList)
 {
-    if (!pErrorInfo || !*pErrorInfo) { return; }
-    
-    int nLen = strlen(pErrorInfo) + 1;
-    pErrorBuffer = memcpy(realloc(pErrorBuffer, nLen), pErrorInfo, nLen);
+	void* pBlk = calloc(szItemCount, szItemLen);
+	if (pBlk)
+	{
+		InsertReleaserRef(pList, GenerateReleaserRef(free, pBlk, false));
+	}
+	return pBlk;
 }
 
-///////////////////////////////////////////////////////////////////////////////////
-//
+typedef void(*Releaser)(void*);
 
-//---内存释放-----------------------------------------------------------------------------------//
-
-typedef void(* Releaser)(void*);
 typedef struct ReleaserRef ReleaserRef;
+struct ReleaserRef { ReleaserRef *pPrev; ReleaserRef *pNext; bool bMutable; void* pToRelease; Releaser fnRelease; };
+
 typedef struct ReleaserRefList ReleaserRefList;
+struct ReleaserRefList { ReleaserRef *pHead; ReleaserRef *pTail; };
 
-struct ReleaserRef
-{
-    ReleaserRef *pPrev;
-    ReleaserRef *pNext;
-
-	void* pToClear;
-    Releaser fnRelease;
-};
-
-struct ReleaserRefList
-{
-    ReleaserRef *pHead;
-    ReleaserRef *pTail;
-};
-
-void* GenerateReleaserRef(void* pfnRelease, void* pToClear)
+void* GenerateReleaserRef(void(*pfnRelease)(void *), void* pToRelease, bool bMutable)
 {
     Releaser fnRelease = pfnRelease;
 
-    if (!fnRelease || !pToClear) { return NULL; }
+    if (!fnRelease || !pToRelease) { return NULL; }
 
     ReleaserRef* pRet = malloc(sizeof(ReleaserRef));
-	if (!pRet) { return NULL; }
+    if (!pRet) { return NULL; }
 
     pRet->pPrev = NULL;
     pRet->pNext = NULL;
-	pRet->fnRelease = fnRelease;
-	pRet->pToClear = pToClear;
+    pRet->fnRelease = fnRelease;
+    pRet->pToRelease = pToRelease;
+    pRet->bMutable = bMutable;
 
-	return pRet;
+    return pRet;
 }
 
 void* GenerateReleaserRefList()
@@ -103,29 +89,56 @@ void* GenerateReleaserRefList()
     return pRet;
 }
 
-void* InsertReleaserRef(void *pVdList, void *pVdRlsRef)
+void   DestroyReleaserRefList(void *_pList)
 {
-    ReleaserRefList *pList = pVdList;
-    ReleaserRef *pRlsRef = pVdRlsRef;
+    ReleaserRefList *pList = _pList;
 
-    if (!pList || !pRlsRef || !pRlsRef->fnRelease) { return pList; }
+    if (!pList) { return; }
+
+    while (pList->pHead)
+    {
+        ReleaserRef *pTmp = pList->pHead->pNext;
+
+        if (pList->pHead->fnRelease)
+        {
+            if (pList->pHead->bMutable)
+            {
+                pList->pHead->fnRelease(*(void **)(pList->pHead->pToRelease));
+            }
+            else
+            {
+                pList->pHead->fnRelease(pList->pHead->pToRelease);
+            }
+        }
+        free(pList->pHead);
+
+        pList->pHead = pTmp;
+    }
+
+    free(pList);
+}
+
+void*   InsertReleaserRef(void *_pList, void *_pReleaserRef)
+{
+    ReleaserRefList *pList = _pList;
+    ReleaserRef *pReleaserRef = _pReleaserRef;
 
     if (pList->pHead && pList->pTail)
     {
-        pList->pTail->pNext = pRlsRef;
-        pRlsRef->pPrev = pList->pTail;
-        pRlsRef->pNext = NULL;
-        pList->pTail = pRlsRef;
+        pList->pTail->pNext = pReleaserRef;
+        pReleaserRef->pPrev = pList->pTail;
+        pReleaserRef->pNext = NULL;
+        pList->pTail = pReleaserRef;
 
         return pList;
     }
 
     if (!pList->pHead && !pList->pTail)
     {
-        pRlsRef->pPrev = NULL;
-        pRlsRef->pNext = NULL;
-        pList->pHead = pRlsRef;
-        pList->pTail = pRlsRef;
+        pReleaserRef->pPrev = NULL;
+        pReleaserRef->pNext = NULL;
+        pList->pHead = pReleaserRef;
+        pList->pTail = pReleaserRef;
 
         return pList;
     }
@@ -133,347 +146,332 @@ void* InsertReleaserRef(void *pVdList, void *pVdRlsRef)
     return NULL;
 }
 
-void CallReleaser(void *pVdList)
-{
-    ReleaserRefList *pList = pVdList;
 
-    if (!pList) { return; }
+/**********************************************************/
+/***************** Implementation of OOP ******************/
+/**********************************************************/
+/* 
+ * 1.datastructure and some related api */
+typedef void(*MthdRef)(void *_pThis, va_list vlArgs);
 
-    for (ReleaserRef *pIterator = pList->pHead; pIterator; pIterator = pIterator->pNext)
-    {
-        if (pIterator->fnRelease)
-        {
-            (pIterator->fnRelease)(pIterator->pToClear);
-        }
-    }
-
-    while (pList->pHead)
-    {
-        ReleaserRef *pTmp = pList->pHead;
-        pList->pHead = pList->pHead->pNext;
-        free(pTmp);
-    }
-
-    free(pList);
-}
-
-///////////////////////////////////////////////////////////////////////////////////
-//
-
-//---实例链，方法-----------------------------------------------------------------------------------//
-
-//成员方法标准类型
-typedef void(*Transit)(void*);
 typedef struct Method Method;
+struct Method { Method* pPrev; Method* pNext; char* pMethodName; MthdRef fnExec; };
+
 typedef struct MethodRing MethodRing;
+struct MethodRing { Method* pHead; Method* pTail; };
 
-struct Method
+void* GenerateMethod(void(*pfnMethod)(void* _pThis, va_list vlArgs), const char* pMethodName)
 {
-	Method* pPrev;
-	Method* pNext;
+    MthdRef fnExec = pfnMethod;
 
-	char* pName;
-	Transit fnExec;
-};
+    void* pMem = malloc(strlen(pMethodName) + 1);
+    Method* pRet = malloc(sizeof(Method));
 
-struct MethodRing
-{
-	Method* pHead;
-	Method* pTail;
-};
+    if (!pMem || !pRet)
+    {
+        free(pRet);
+        free(pMem);
 
-void* GenerateMethod(Transit fnExec, char* pName)
-{
-    //fnExec可能为null，在这种场景下可能会出现
-    //一个类添加了名为pName的方法，
-    //但是没有给出具体实现，
-    //而是让子类实现，
-    //相当于名为pName的方法为抽象方法
+        return NULL;
+    }
 
-	if (!pName || !*pName) { return NULL; }
+    //field pPrev and pNext of pointer pRet malloced just now must be set to NULL for later judgement.
+    pRet->pPrev = NULL;
+    pRet->pNext = NULL;
+    pRet->fnExec = fnExec;
+    pRet->pMethodName = strcpy(pMem, pMethodName);
 
-	void* pMem = malloc(strlen(pName) + 1);
-	Method* pRet = malloc(sizeof(Method));
-
-	if (!pMem || !pRet)
-	{
-		free(pRet);
-		free(pMem);
-
-		return NULL;
-	}
-
-	pRet->pPrev = NULL; //新产生的 方法结构体 必须将该字段设为null，判断需要用到
-	pRet->pNext = NULL; //新产生的 方法结构体 必须将该字段设为null，判断需要用到
-	pRet->fnExec = fnExec;
-	pRet->pName = strcpy(pMem, pName);
-
-	return pRet;
+    return pRet;
 }
 
 void* GenerateMethodRing()
 {
-	MethodRing* pRet = malloc(sizeof(MethodRing));
+    MethodRing* pRet = malloc(sizeof(MethodRing));
 
     if (!pRet) { return NULL; }
 
-	pRet->pHead = NULL; //新产生的 方法环结构体 必须将该字段设为null，判断需要用到
-	pRet->pTail = NULL; //新产生的 方法环结构体 必须将该字段设为null，判断需要用到
+    //field pHead and pTail of pointer pRet malloced just now must be set to NULL for later judgement.
+    pRet->pHead = NULL;
+    pRet->pTail = NULL;
 
-	return pRet;
+    return pRet;
 }
 
-void * InsertMethod(void * pVdMethods, int nMethodNum, ...)
+void   DestroyMethodRing(void* _pMethodRing)
 {
-    MethodRing *pMethods = pVdMethods;
+    MethodRing* pMethodRing = _pMethodRing;
 
-    if (!pMethods) { return NULL; }
-    if (nMethodNum <= 0) { return pMethods; }
-
-    va_list methods;
-    va_start(methods, nMethodNum);
-
-    //pMethods->pHead && !pMethods->pTail || !pMethods->pHead && pMethods->pTail == true 属于异常情况
-
-    if (!pMethods->pHead && !pMethods->pTail)
+    if (pMethodRing->pHead && pMethodRing->pTail)
     {
-        Method *pMethod = va_arg(methods, Method *);
+        pMethodRing->pTail->pNext = NULL;
+        while (pMethodRing->pHead)
+        {
+            Method *pTmp = pMethodRing->pHead->pNext;
+
+            free(pMethodRing->pHead->pMethodName);
+            free(pMethodRing->pHead);
+
+            pMethodRing->pHead = pTmp;
+        }
+    }
+
+    free(pMethodRing);
+}
+
+void*   InsertMethod(void* _pMethodRing, void* _pMethod)
+{
+    MethodRing* pMethodRing = _pMethodRing;
+    Method* pMethod = _pMethod;
+
+    if (pMethod == NULL)
+    {
+        DestroyMethodRing(pMethodRing);
+        return NULL;
+    }
+
+    if (pMethodRing->pHead && pMethodRing->pTail)
+    {
+        pMethod->pPrev = pMethodRing->pTail;
+        pMethod->pNext = pMethodRing->pHead;
+
+        pMethodRing->pHead->pPrev = pMethod;
+        pMethodRing->pTail->pNext = pMethod;
+
+        pMethodRing->pTail = pMethod;
+
+        return pMethodRing;
+    }
+
+    if (!pMethodRing->pHead && !pMethodRing->pTail)
+    {
         pMethod->pNext = pMethod;
         pMethod->pPrev = pMethod;
 
-        pMethods->pHead = pMethod;
-        pMethods->pTail = pMethod;
+        pMethodRing->pHead = pMethod;
+        pMethodRing->pTail = pMethod;
 
-        nMethodNum--;
+        return pMethodRing;
     }
 
-    for (int i = 0; i < nMethodNum; i++)
-    {
-        Method *pMethod = va_arg(methods, Method *);
-
-        pMethod->pPrev = pMethods->pTail;
-        pMethod->pNext = pMethods->pHead;
-
-        pMethods->pHead->pPrev = pMethod;
-        pMethods->pTail->pNext = pMethod;
-
-        pMethods->pTail = pMethod;
-    }
-
-    va_end(methods);
-
-    return pMethods;
+    return NULL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-//---实例链，实例-----------------------------------------------------------------------------------//
 
 typedef struct Instance Instance;
+struct Instance { Instance* pPrev; Instance* pNext; char* pClassName; void *pObj; void* pFld; ReleaserRef* pReleaserRef; MethodRing* pMethodRing; };
+
 typedef struct InstanceChain InstanceChain;
+struct InstanceChain { Instance* pHead; Instance* pTail; };
 
-struct Instance
+void* GenerateInstance(void *pObj, void* pFld, const char* pClassName, void *_pReleaserRef, void* _pMethodRing)
 {
-	Instance* pPrev;
-	Instance* pNext;
+    MethodRing *pMethodRing = _pMethodRing;
+    ReleaserRef *pReleaserRef = _pReleaserRef;
 
-	char* pName;
-	void* pFields;
-    ReleaserRef* pRlsRef;
-	MethodRing* pMethods;
-};
+    void* pMem = malloc(strlen(pClassName) + 1);
+    Instance* pRet = malloc(sizeof(Instance));
 
-struct InstanceChain
-{
-	Instance* pHead;
-	Instance* pTail;
-};
+    if (!pRet || !pMem)
+    {
+        free(pRet);
+        free(pMem);
 
-void* GenerateInstance(void* pFields, char* pName, void *pVdRlsRef, void* pVdMethods)
-{
-    MethodRing *pMethods = pVdMethods;
-    ReleaserRef *pRlsRef = pVdRlsRef;
+        return NULL;
+    }
 
-    //即使类没有成员方法，
-    //方法环也只能说是0元素，
-    //而不能为null，
-    //也就是pMethods不能为null
+    //field pPrev and pNext of pointer pRet malloced just now must be set to NULL for later judgement.
+    pRet->pPrev = NULL;
+    pRet->pNext = NULL;
+    pRet->pObj = pObj;
+    pRet->pFld = pFld;
+    pRet->pClassName = strcpy(pMem, pClassName);
+    pRet->pReleaserRef = pReleaserRef;
+    pRet->pMethodRing = pMethodRing;
 
-    if (!pFields || !pName || !*pName || !pMethods) { return NULL; }
-
-	void* pMem = malloc(strlen(pName) + 1);
-	Instance* pRet = malloc(sizeof(Instance));
-
-	if (!pRet || !pMem)
-	{
-		free(pRet);
-		free(pMem);
-
-		return NULL;
-	}
-
-	pRet->pPrev = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
-	pRet->pNext = NULL; //新产生的 实例结构体 必须将该字段设为null，判断需要用到
-	pRet->pFields = pFields;
-	pRet->pName = strcpy(pMem, pName);
-	pRet->pRlsRef = pRlsRef;
-	pRet->pMethods = pMethods;
-
-	return pRet;
+    return pRet;
 }
 
 void* GenerateInstanceChain()
 {
-	InstanceChain* pRet = malloc(sizeof(InstanceChain));
+    InstanceChain* pRet = malloc(sizeof(InstanceChain));
 
     if (!pRet) { return NULL; }
 
-	pRet->pHead = NULL; //新产生的 实例链结构体 必须将该字段设为null，判断需要用到
-	pRet->pTail = NULL; //新产生的 实例链结构体 必须将该字段设为null，判断需要用到
+    //field pHead and pTail of pointer pRet malloced just now must be set to NULL for later judgement.
+    pRet->pHead = NULL;
+    pRet->pTail = NULL;
 
-	return pRet;
+    return pRet;
 }
 
-void* InsertInstance(void* pVdChain, void* pVdInstance)
+void   DestroyInstanceChain(void* _pChain)
 {
-    InstanceChain *pChain = pVdChain;
-    Instance *pInstance = pVdInstance;
+    InstanceChain *pChain = _pChain;
 
-    if (pChain && !pInstance) { return pChain; }
-    if (!pChain) { return NULL; }
+    while (pChain->pHead)
+    {
+        Instance *pTmp = pChain->pHead->pNext;
 
-    //pChain->pHead && !pChain->pTail || !pChain->pHead && pChain->pTail == true 属于异常情况
+        if (pChain->pHead->pReleaserRef && pChain->pHead->pReleaserRef->fnRelease)
+        {
+            if (pChain->pHead->pReleaserRef->bMutable)
+            {
+                pChain->pHead->pReleaserRef->fnRelease(*(void **)(pChain->pHead->pReleaserRef->pToRelease));
+            }
+            else
+            {
+                pChain->pHead->pReleaserRef->fnRelease(pChain->pHead->pReleaserRef->pToRelease);
+            }
 
-	if (pChain->pHead && pChain->pTail)
-	{
-		pInstance->pPrev = pChain->pTail;
-		pInstance->pNext = NULL;
+            free(pChain->pHead->pReleaserRef);
+        }
 
-		pChain->pTail->pNext = pInstance;
+        free(pChain->pHead->pClassName);
 
-		pChain->pTail = pInstance;
+        free(pChain->pHead->pFld);
 
-		return pChain;
-	}
+        free(pChain->pHead->pObj);
 
-	if (!pChain->pHead && !pChain->pTail)
-	{
-		pInstance->pPrev = NULL;
-		pInstance->pNext = NULL;
+        DestroyMethodRing(pChain->pHead->pMethodRing);
 
-		pChain->pHead = pInstance;
-		pChain->pTail = pInstance;
+        free(pChain->pHead);
 
-		return pChain;
-	}
+        pChain->pHead = pTmp;
+    }
 
-	return NULL;
+    free(pChain);
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-//---实现面向对象，辅助函数-----------------------------------------------------------------------------------//
-
-bool ContainMethod(MethodRing *pRing, char *pName)
+void*   InsertInstance(void* _pChain, void* _pInstance)
 {
-    if (!pRing || !pRing->pHead || !pRing->pTail || !pName || !*pName) { return false; }
+    InstanceChain *pChain = _pChain;
+    Instance *pInstance = _pInstance;
 
-    Method *pIterator = pRing->pHead;
+    if (pChain->pHead && pChain->pTail)
+    {
+        pInstance->pPrev = pChain->pTail;
+        pInstance->pNext = NULL;
+
+        pChain->pTail->pNext = pInstance;
+
+        pChain->pTail = pInstance;
+
+        return pChain;
+    }
+
+    if (!pChain->pHead && !pChain->pTail)
+    {
+        pInstance->pPrev = NULL;
+        pInstance->pNext = NULL;
+
+        pChain->pHead = pInstance;
+        pChain->pTail = pInstance;
+
+        return pChain;
+    }
+
+    return NULL;
+}
+
+
+/*
+ * 2.oop rules and some operations such as simple error handling */
+int CallCode = CALLSUCCESS;
+
+int GetCallCode()
+{
+    return CallCode;
+}
+
+
+bool ContainMethod(MethodRing *pMethodRing, const char *pMethodName)
+{
+    if (!pMethodRing->pHead || !pMethodRing->pTail) { return false; }
+
+    Method *pIterator = pMethodRing->pHead;
     do
     {
-        if (!strcmp(pName, pIterator->pName)) { return true; }
+        if (!strcmp(pMethodName, pIterator->pMethodName)) { return true; }
         pIterator = pIterator->pNext;
 
-    } while (pIterator != pRing->pHead);
+    } while (pIterator != pMethodRing->pHead);
 
     return false;
 }
 
-Method* FindMethod(MethodRing* pRing, char* pName)
+Method* FindMethod(MethodRing* pMethodRing, const char* pMethodName)
 {
-    if (!pRing || !pRing->pHead || !pRing->pTail || !pName || !*pName) { return NULL; }
+    if (!pMethodRing->pHead || !pMethodRing->pTail) { return NULL; }
 
-	Method* pIterator = pRing->pHead;
-	do
-	{
+    Method* pIterator = pMethodRing->pHead;
+    do
+    {
         //这里找到的可能是一个抽象方法，
         //也就是，方法换pRing中存在该方法，但是方法的指针为null，
         //这也导致了ContainMethod和FindMethod两个函数不能合并为一个函数
-        if (!strcmp(pName, pIterator->pName)) { return pIterator; }
-		pIterator = pIterator->pNext;
+        if (!strcmp(pMethodName, pIterator->pMethodName)) { return pIterator; }
+        pIterator = pIterator->pNext;
 
-	} while (pIterator != pRing->pHead);
+    } while (pIterator != pMethodRing->pHead);
 
-	return NULL;
+    return NULL;
 }
 
-Instance* FindInstance(InstanceChain* pChain, void* pInst)
+Instance* FindInstance(InstanceChain* pChain, void* pObj)
 {
-    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst) { return NULL; }
-
-	Instance* pIterator = pChain->pHead;
-	do
-	{
-        if (pIterator->pFields == pInst) { return pIterator; }
-		pIterator = pIterator->pNext;
-
-	} while (pIterator != NULL);
-
-	return NULL;
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-//---实现面向对象-----------------------------------------------------------------------------------//
-
-bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
-{
-    InstanceChain *pChain = pVdChain;
-
-    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
+    Instance* pIterator = pChain->pHead;
+    do
     {
-        SetErrorInfo("Null pChain or pInst or pFuncName.");
+        if (pIterator->pObj == pObj) { return pIterator; }
+        pIterator = pIterator->pNext;
+
+    } while (pIterator != NULL);
+
+    return NULL;
+}
+
+bool RedirectCall(void* _pChain, void* pObj, const char* pMethodName, va_list vlArgs)
+{
+    InstanceChain *pChain = _pChain;
+
+    MthdRef toExecute = NULL;
+	void* pObjExact = NULL;
+
+    Instance* pFindInst = FindInstance(pChain, pObj);
+    if (!pFindInst)
+    {
+		CallCode = INSTANCENOTFOUND;
         return false;
     }
 
-	Transit toExecute = NULL;
-
-	Instance* pFindInst = FindInstance(pChain, pInst);
-    if (!pFindInst) //没有找到，说明给定的实例pInst不是相应的类的实例
+    for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
     {
-        SetErrorInfo("Given object is not an instance of given type.");
-        return false;
-    }
-
-	for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
-	{
-        Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
+        Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
         toExecute = pFindMthd ? pFindMthd->fnExec : toExecute;
-	}
+        pObjExact = pFindMthd ? pIterator->pObj : pObjExact;
+    }
 
-	if (!toExecute)
-	{
-		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
-		{
-            Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
-			if (pFindMthd)
-			{
-				toExecute = pFindMthd->fnExec;
-				break;
-			}
-		}
-	}
+    if (!toExecute)
+    {
+        for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
+        {
+            Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
+            if (pFindMthd)
+            {
+                toExecute = pFindMthd->fnExec;
+                pObjExact = pIterator->pObj;
+                break;
+            }
+        }
+    }
 
     if (toExecute)
     {
         //通过父类指针调用子类方法时，需要保证各层父类中存在该方法的声明
         if (!pFindInst->pNext)
         {
-            toExecute(pParams);
-
+			toExecute(pObjExact, vlArgs);
+            CallCode = CALLSUCCESS;
             return true;
         }
         else
@@ -481,7 +479,7 @@ bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
             bool bValidCall = false;
             for (Instance *pIterator = pFindInst; pIterator; pIterator = pIterator->pPrev)
             {
-                if (ContainMethod(pIterator->pMethods, pFuncName))
+                if (ContainMethod(pIterator->pMethodRing, pMethodName))
                 {
                     bValidCall = true;
                     break;
@@ -490,256 +488,174 @@ bool Invoke(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
 
             if (bValidCall)
             {
-                toExecute(pParams);
-
+				toExecute(pObjExact, vlArgs);
+                CallCode = CALLSUCCESS;
                 return true;
             }
             else
             {
-                SetErrorInfo("Invalid call because the declaration type of instance has no given method.");
+				CallCode = METHODUNDECLARED;
                 return false;
             }
         }
     }
     else
     {
-        SetErrorInfo("Given instance has not given func.");
+		CallCode = METHODNOTFOUND;
         return false;
     }
 }
 
-bool InvokeSuper(void* pVdChain, void* pInst, char* pFuncName, void* pParams)
+bool RedirectCallSuper(void* _pChain, void* pObj, const char* pMethodName, ...)
 {
-    InstanceChain *pChain = pVdChain;
+    InstanceChain *pChain = _pChain;
 
-	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName)
+    MthdRef toExecute = NULL;
+    void *pObjExact = NULL;
+
+    Instance* pFindInst = FindInstance(pChain, pObj);
+    if (!pFindInst)
     {
-        SetErrorInfo("Null pChain or pInst or pFuncName.");
+        CallCode = INSTANCENOTFOUND;
         return false;
     }
 
-	Transit toExecute = NULL;
-
-	Instance* pFindInst = FindInstance(pChain, pInst);
-	if (!pFindInst)
+    for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
     {
-        SetErrorInfo("Given object is not an instance of given type.");
-        return false;
+        Method* pFindMthd = FindMethod(pIterator->pMethodRing, pMethodName);
+        if (pFindMthd)
+        {
+            toExecute = pFindMthd->fnExec;
+            pObjExact = pIterator->pObj;
+            break;
+        }
     }
 
-	for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
-	{
-		Method* pFindMthd = FindMethod(pIterator->pMethods, pFuncName);
-		if (pFindMthd)
-		{
-			toExecute = pFindMthd->fnExec;
-			break;
-		}
-	}
+    if (toExecute)
+    {
+        va_list vlArgs;
+        va_start(vlArgs, pMethodName);
+        toExecute(pObjExact, vlArgs);
+        va_end(vlArgs);
 
-	if (toExecute)
-	{
-		toExecute(pParams);
-
+        CallCode = CALLSUCCESS;
         return true;
     }
     else
     {
-        SetErrorInfo("Given instance has not given func.");
+        CallCode = METHODNOTFOUND;
         return false;
     }
 }
 
-void* ConvertByType(void* pVdChain, void* pInst, char* pBaseType)
+void* ConvertByType(void* _pChain, void* pObj, const char* pBaseName)
 {
-    InstanceChain *pChain = pVdChain;
+    InstanceChain *pChain = _pChain;
 
-    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pBaseType || !*pBaseType) { return NULL; }
-
-	for (Instance* pIterator = FindInstance(pChain, pInst); pIterator; pIterator = pIterator->pPrev)
-	{
-        if (!strcmp(pIterator->pName, pBaseType)) { return pIterator->pFields; }
-	}
-
-	return NULL;
-}
-
-void* ConvertByFunc(void* pVdChain, void* pInst, char* pFuncName)
-{
-    InstanceChain *pChain = pVdChain;
-
-    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
-
-	Instance* pTmpInst = NULL;
-	Instance* pFindInst = FindInstance(pChain, pInst);
-
-    if (!pFindInst) { return NULL; }
-
-	for (Instance* pIterator = pFindInst; pIterator; pIterator = pIterator->pNext)
-	{
-        pTmpInst = FindMethod(pIterator->pMethods, pFuncName) ? pIterator : pTmpInst;
-	}
-
-	if (!pTmpInst)
-	{
-		for (Instance* pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
-		{
-			if (FindMethod(pIterator->pMethods, pFuncName))
-			{
-                pTmpInst = pIterator;
-				break;
-			}
-		}
-	}
-
-    return pTmpInst ? pTmpInst->pFields : NULL;
-}
-
-void* ConvertByFuncInherited(void* pVdChain, void* pInst, char* pFuncName)
-{
-    InstanceChain *pChain = pVdChain;
-
-	if (!pChain || !pChain->pHead || !pChain->pTail || !pInst || !pFuncName || !*pFuncName) { return NULL; }
-
-	Instance* pFindInst = FindInstance(pChain, pInst);
-	if (!pFindInst) { return NULL; }
-
-	for (Instance *pIterator = pFindInst->pPrev; pIterator; pIterator = pIterator->pPrev)
-	{
-		if (FindMethod(pIterator->pMethods, pFuncName))
-		{
-			return pIterator->pFields;
-		}
-	}
-
-	return NULL;
-}
-
-void* ConvertToExactType(InstanceChain* pChain, void* pInst)
-{
-    if (!pChain || !pChain->pHead || !pChain->pTail || !pInst) { return NULL; }
-
-    Instance *pTmpInst = NULL;
-    for (Instance *pIterator = FindInstance(pChain, pInst); pIterator; pIterator = pIterator->pNext)
+    for (Instance* pIterator = FindInstance(pChain, pObj); pIterator; pIterator = pIterator->pPrev)
     {
-        pTmpInst = pIterator;
+        if (!strcmp(pIterator->pClassName, pBaseName)) { return pIterator->pObj; }
     }
 
-    return pTmpInst ? pTmpInst->pFields : NULL;
+    return NULL;
 }
 
-void Delete(InstanceChain* pChain)
+void* ConvertToExactType(InstanceChain* pChain, void* pObj)
 {
-	//迭代释放每个实例
-	Instance* pItrInst = pChain->pHead;
-	do
+    Instance *pInstance = NULL;
+    for (Instance *pIterator = FindInstance(pChain, pObj); pIterator; pIterator = pIterator->pNext)
+    {
+        pInstance = pIterator;
+    }
+
+    return pInstance ? pInstance->pObj : NULL;
+}
+
+
+/***************************************************/
+/*********** Super super class: Object *************/
+/***************************************************/
+struct Object_Fld { CHAINDECLARE; };
+
+static void Equal(void* _pThis, va_list vlArgs)
+{
+    Object* pThis = _pThis;
+
+    bool *pRet = va_arg(vlArgs, bool *);
+    void *pToCompare = va_arg(vlArgs, void *);
+
+    *pRet = ConvertToExactType(pThis->pFld->__pChain, pThis) == pToCompare;
+}
+
+static void ToString(void* _pThis, va_list vlArgs)
+{
+    Object* pThis = _pThis;
+
+    printf("%p", ConvertToExactType(pThis->pFld->__pChain, pThis));
+}
+
+static bool __CALL(Object)(Object *pSelf, const char *pMethodName, ...)
+{
+    DOCALL(pSelf, pMethodName);
+}
+
+static void *__EXTEND(Object)(Object *pSelf)
+{
+    DOEXTEND(pSelf);
+}
+
+void __DEL(Object)(Object *pInst)
+{
+    DestroyInstanceChain(pInst->pFld->__pChain);
+}
+
+Object* __NEW(Object)()
+{
+	Object* pNew = NULL;
 	{
-		//释放类实例的附加存储
-        if (pItrInst->pRlsRef && pItrInst->pRlsRef->fnRelease)
-        {
-            pItrInst->pRlsRef->fnRelease(pItrInst->pRlsRef->pToClear);
-            free(pItrInst->pRlsRef);
-        }
-		//释放实例数据域
-		free(pItrInst->pFields);
-		//释放类名
-		free(pItrInst->pName);
-		//释放方法环：释放方法名
-        if (pItrInst->pMethods->pHead && pItrInst->pMethods->pTail)
-        {
-            Method* pItrMthd = pItrInst->pMethods->pHead;
-            do
-            {
-                free(pItrMthd->pName);
-                pItrMthd = pItrMthd->pNext;
+		void* __Methods = NULL;
+		{
+			__Methods = GenerateMethodRing();
+			if (!__Methods) { return NULL; }
 
-            } while (pItrMthd != pItrInst->pMethods->pHead);
-            //释放方法环：释放方法结构体
-            pItrMthd = pItrInst->pMethods->pHead;
-            do
-            {
-                void* pVd = pItrMthd->pNext;
-                free(pItrMthd);
-                pItrMthd = pVd;
+			if (!InsertMethod(__Methods, GenerateMethod(Equal, "Equal"))) { return NULL; }
+			if (!InsertMethod(__Methods, GenerateMethod(ToString, "ToString"))) { return NULL; }
+		}
 
-            } while (pItrMthd != pItrInst->pMethods->pHead);
-        }
-		//释放方法环：释放环头
-		free(pItrInst->pMethods);
+		Object_Fld* __Fld = NULL;
+		{
+			__Fld = malloc(sizeof(Object_Fld));
+			if (!__Fld) { DestroyMethodRing(__Methods); return NULL; }
+		}
 
-		pItrInst = pItrInst->pNext;
+		Object* __New = NULL;
+		{
+			__New = malloc(sizeof(Object));
+			if (!__New) { DestroyMethodRing(__Methods); free(__Fld); return NULL; }
 
-	} while (pItrInst != NULL);
+			__New->pFld = __Fld;
+			__New->Extend = __EXTEND(Object);
+			__New->Call = __CALL(Object);
+		}
 
-	//释放链
-	pItrInst = pChain->pHead;
-	do
-	{
-		void* pVd = pItrInst->pNext;
-		free(pItrInst);
-		pItrInst = pVd;
+		void* __Chain = NULL;
+		{
+			__Chain = GenerateInstanceChain();
+			if (!__Chain) { DestroyMethodRing(__Methods); free(__Fld); free(__New); return NULL; }
 
-	} while (pItrInst != NULL);
+			__Fld->__pChain = __Chain;
+		}
 
-	free(pChain);
-}
+		void* __Instance = NULL;
+		{
+			__Instance = GenerateInstance(__New, __Fld, "Object", NULL, __Methods);
+			if (!__Instance) { DestroyMethodRing(__Methods); free(__New); free(__Fld); DestroyInstanceChain(__Chain); return NULL; }
 
-/////Object/////////////////////////////////////////////////////////////////////////////////
-//
+			InsertInstance(__Chain, __Instance);
+		}
 
-//---面向对象Object基类-----------------------------------------------------------------------------------//
+		pNew = __New;
+	}
 
-struct Object
-{
-    CHAINDEF;
-};
-
-static void Equal(void* pParams)
-{
-	Object* pThis = ((ParamIn*)pParams)->pInst;
-	Object_Equal* pIn = ((ParamIn*)pParams)->pIn;
-
-	*pIn->pRet = ConvertToExactType(pThis->pChain, pThis) == pIn->pToCmpr;
-}
-
-static void ToString(void* pParams)
-{
-	Object* pThis = ((ParamIn*)pParams)->pInst;
-	Object_ToString* pIn = ((ParamIn*)pParams)->pIn;
-
-	printf("%p", ConvertToExactType(pThis->pChain, pThis));
-}
-
-//////////////////////////////////////////////////////////////////////////////////////
-//
-
-bool INVOKE(Object)(Object* pInst, char* pFuncName, void* pParams)
-{
-	DOINVOKE(pInst, pFuncName, pParams);
-}
-
-void* EXTEND(Object)(Object* pInst)
-{
-    DOEXTEND(pInst);
-}
-
-void DELETE(Object)(Object* pInst)
-{
-	Delete(pInst->pChain);
-}
-
-Object* CREATE(Object)()
-{
-	Object* pCreate = malloc(sizeof(Object));
-    if (!pCreate) { return NULL; }
-
-	MethodRing* pMethods = GenerateMethodRing();
-    if (!pMethods) { return NULL; }
-
-    pMethods = InsertMethod(pMethods, 2,
-        GenerateMethod(Equal, "Equal"),
-        GenerateMethod(ToString, "ToString"));
-	pCreate->pChain = InsertInstance(GenerateInstanceChain(), GenerateInstance(pCreate, "Object", NULL, pMethods));
-
-	return pCreate;
+	return pNew;
 }
