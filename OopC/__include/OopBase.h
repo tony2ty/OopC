@@ -34,6 +34,9 @@
 #define    __CONSTRUCTOR(theclass)                \
 						void* New_ ## theclass()  \
 
+#define        __INHERIT(theclass)                \
+                        New_ ## theclass          \
+
 #define         __METHOD(mthd)                    \
 						#mthd, mthd               \
 
