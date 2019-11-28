@@ -30,47 +30,47 @@
 
 #include "iniparser.h"
 
-struct IniWrapper_Fld
+typedef struct
 {
-	CHAINDECLARE;
-
     char* pIniFileName;
 
     dictionary* pDict;
-};
+} IniWrapper_Fld;
 
 ////////////////////////////////////////////////////////////////////
 //
 
-static void Init(void *_pThis, va_list vlArgs)
+static void IniWrapper_Init(void *_pThis, va_list* pvlArgs)
 {
 	IniWrapper* pThis = _pThis;
+    IniWrapper_Fld *pFld = pThis->Fld;
 
-	const char* pIniFileName = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pIniFileName = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
     size_t szTmp = strlen(pIniFileName);
-    pThis->pFld->pIniFileName = malloc(szTmp + 1);
-    if (pThis->pFld->pIniFileName == NULL)
+    pFld->pIniFileName = malloc(szTmp + 1);
+    if (pFld->pIniFileName == NULL)
     {
         *pRet = false;
         return;
     }
 
-    memcpy(pThis->pFld->pIniFileName, pIniFileName, szTmp + 1);
-    pThis->pFld->pDict = iniparser_load(pIniFileName);
+    memcpy(pFld->pIniFileName, pIniFileName, szTmp + 1);
+    pFld->pDict = iniparser_load(pIniFileName);
 
-    *pRet = pThis->pFld->pDict != NULL;
+    *pRet = pFld->pDict != NULL;
 }
 
-static void WriteIni(void *_pThis, va_list vlArgs)
+static void IniWrapper_WriteIni(void *_pThis, va_list* pvlArgs)
 {
 	IniWrapper* pThis = _pThis;
+    IniWrapper_Fld *pFld = pThis->Fld;
 
-	const char* pSection = va_arg(vlArgs, const char*);
-	const char* pKey = va_arg(vlArgs, const char*);
-	const char* pVal = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pSection = va_arg(*pvlArgs, const char*);
+	const char* pKey = va_arg(*pvlArgs, const char*);
+	const char* pVal = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
     //write value
     if (pSection != NULL && pKey != NULL)
@@ -90,7 +90,7 @@ static void WriteIni(void *_pThis, va_list vlArgs)
         memset(pBufEntry, 0, szLenKey);
         sprintf(pBufEntry, "%s:%s", pSection, pKey);
 
-        *pRet = 0 == iniparser_set(pThis->pFld->pDict, pBufEntry, pVal);
+        *pRet = 0 == iniparser_set(pFld->pDict, pBufEntry, pVal);
         free(pBufEntry);
 
         return;
@@ -99,21 +99,22 @@ static void WriteIni(void *_pThis, va_list vlArgs)
     //new section
     if (pSection != NULL && pKey == NULL)
     {
-        *pRet = 0 == iniparser_set(pThis->pFld->pDict, pSection, NULL);
+        *pRet = 0 == iniparser_set(pFld->pDict, pSection, NULL);
         return;
     }
 
     *pRet = false;
 }
 
-static void ReadIni(void *_pThis, va_list vlArgs)
+static void IniWrapper_ReadIni(void *_pThis, va_list* pvlArgs)
 {
 	IniWrapper* pThis = _pThis;
+    IniWrapper_Fld *pFld = pThis->Fld;
 
-	const char* pSection = va_arg(vlArgs, const char*);
-	const char* pKey = va_arg(vlArgs, const char*);
-	const char** ppRetVal = va_arg(vlArgs, const char**);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pSection = va_arg(*pvlArgs, const char*);
+	const char* pKey = va_arg(*pvlArgs, const char*);
+	const char** ppRetVal = va_arg(*pvlArgs, const char**);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
     size_t szLenKey = 0;
     char* pBufKey = NULL;
@@ -131,20 +132,21 @@ static void ReadIni(void *_pThis, va_list vlArgs)
     memset(pBufKey, 0, szLenKey);
     sprintf(pBufKey, "%s:%s", pSection, pKey);
 
-    *ppRetVal = iniparser_getstring(pThis->pFld->pDict, pBufKey, "");
+    *ppRetVal = iniparser_getstring(pFld->pDict, pBufKey, "");
     free(pBufKey);
 
     *pRet = true;
 }
 
-static void Save(void *_pThis, va_list vlArgs)
+static void IniWrapper_Save(void *_pThis, va_list* pvlArgs)
 {
 	IniWrapper* pThis = _pThis;
+    IniWrapper_Fld *pFld = pThis->Fld;
 
-	const char* pSaveAs = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pSaveAs = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
-    const char* pFileName = pThis->pFld->pIniFileName;
+    const char* pFileName = pFld->pIniFileName;
     if (pSaveAs != NULL)
     {
         pFileName = pSaveAs;
@@ -162,7 +164,7 @@ static void Save(void *_pThis, va_list vlArgs)
         return;
     }
 
-    iniparser_dump_ini(pThis->pFld->pDict, fp);
+    iniparser_dump_ini(pFld->pDict, fp);
     fclose(fp);
 
     *pRet = true;
@@ -171,38 +173,26 @@ static void Save(void *_pThis, va_list vlArgs)
 ////////////////////////////////////////////////////////////////////
 //
 
-static void  __CLEAR (IniWrapper)(void* pParams)
+static void  IniWrapper_Clear(void* pParams)
 {
-    IniWrapper* pInst = pParams;
+    IniWrapper* pSelf = pParams;
+    IniWrapper_Fld *pFld = pSelf->Fld;
 
-    free(pInst->pFld->pIniFileName);
+    free(pFld->pIniFileName);
 
-    iniparser_freedict(pInst->pFld->pDict);
+    iniparser_freedict(pFld->pDict);
 }
 
-static bool  __CALL  (IniWrapper)(IniWrapper* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(IniWrapper)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(IniWrapper)(IniWrapper* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-       void  __DEL   (IniWrapper)(IniWrapper* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-IniWrapper*  __NEW   (IniWrapper)()
-{
-	DONEW(pNew, IniWrapper, Object, __CLEAR(IniWrapper),
-		METHOD(Init)
-		METHOD(WriteIni)
-		METHOD(ReadIni)
-		METHOD(Save));
-
-	return pNew;
+    return __New(__TYPE(IniWrapper), sizeof(IniWrapper_Fld), IniWrapper_Clear, 4, 0,
+        //__METHOD(IniWrapper_Init),
+        //__METHOD(IniWrapper_WriteIni),
+        //__METHOD(IniWrapper_ReadIni),
+        //__METHOD(IniWrapper_Save));
+        "Init", IniWrapper_Init,
+        "WriteIni", IniWrapper_WriteIni,
+        "ReadIni", IniWrapper_ReadIni,
+        "Save", IniWrapper_Save);
 }
 

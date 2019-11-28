@@ -35,8 +35,9 @@
 /****************** IniWrapper ********************/
 /**************************************************/
 
-CLASSEXP(OOPUTIL_API, IniWrapper, Object);
-METHODDECLARE(
+__CLASS IniWrapper;
+OOPUTIL_API __CONSTRUCTOR(IniWrapper);
+__METHODDECLARE(
 	/* 
 	 * no file will result in initialization failure. */
 	Init:     const char* pIniFileName; bool* pRet;
