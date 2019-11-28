@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct ChartHistogram_Fld
-{
-	CHAINDECLARE;
-};
 
-////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
 	ChartHistogram* pThis = _pThis;
 
     printf("ÏÔÊ¾Öù×´Í¼.\n");
 }
 
-////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ChartHistogram)(ChartHistogram* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(ChartHistogram)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(ChartHistogram)(ChartHistogram* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(ChartHistogram)(ChartHistogram* pSelf)
-{
-	DODEL(pSelf, IChart);
-}
-
-ChartHistogram* __NEW(ChartHistogram)()
-{
-	DONEW(pNew, ChartHistogram, IChart, NULL,
-		METHOD(Display));
-
-	return pNew;
+	return __New(__TYPE(ChartHistogram), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(IChart));
 }

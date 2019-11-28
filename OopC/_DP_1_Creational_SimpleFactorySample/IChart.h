@@ -26,8 +26,9 @@
 
 #include <OopBase.h>
 
-CLASS(IChart, Object);
-METHODDECLARE(
-	ABSTRACT Display: -;)
+__CLASS IChart;
+__CONSTRUCTOR(IChart);
+__METHODDECLARE(
+	__ABSTRACT Display: -;)
 
 #endif // !ICHART_H__

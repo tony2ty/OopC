@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct ChartPie_Fld
-{
-	CHAINDECLARE;
-};
 
-////////////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
 	ChartPie* pThis = _pThis;
 
 	printf("ÏÔÊ¾±ý×´Í¼.\n");
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ChartPie)(ChartPie* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(ChartPie)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(ChartPie)(ChartPie* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(ChartPie)(ChartPie* pSelf)
-{
-	DODEL(pSelf, IChart);
-}
-
-ChartPie* __NEW(ChartPie)()
-{
-	DONEW(pNew, ChartPie, IChart, NULL,
-		METHOD(Display));
-
-	return pNew;
+	return __New(__TYPE(ChartPie), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(IChart));
 }

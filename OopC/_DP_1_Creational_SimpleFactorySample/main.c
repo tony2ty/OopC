@@ -27,13 +27,11 @@
 
 int main(int argc, char **argv)
 {
-    RLSLOCALMEMBRA();
-
-    IChart *pChart = FactoryChart_GetByName("histogram"); TORLS(DEL(IChart), pChart);
+    IChart *pChart = FactoryChart_GetByName("histogram");
 
 	pChart->Call(pChart, "Display");
 
-    RLSLOCALMEMKET();
+	pChart->Destroy(pChart);
 
     return 0;
 }

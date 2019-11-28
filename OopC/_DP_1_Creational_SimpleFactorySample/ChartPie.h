@@ -26,6 +26,7 @@
 
 #include "IChart.h"
 
-CLASS(ChartPie, IChart);
+__CLASS ChartPie __EXTEND IChart;
+__CONSTRUCTOR(ChartPie);
 
 #endif // !CHARTPIE_H__

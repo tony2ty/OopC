@@ -26,6 +26,7 @@
 
 #include "IChart.h"
 
-CLASS(ChartLine, IChart);
+__CLASS ChartLine __EXTEND IChart;
+__CONSTRUCTOR(ChartLine);
 
 #endif // !CHARTLINE_H__

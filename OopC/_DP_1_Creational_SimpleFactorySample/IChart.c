@@ -23,37 +23,8 @@
 
 #include "IChart.h"
 
-
-struct IChart_Fld
+__CONSTRUCTOR(IChart)
 {
-	CHAINDECLARE;
-};
-
-///////////////////////////////////////////////////////////////////////////
-//
-
-///////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(IChart)(IChart* pSelf, const char* pMethodName, ...)
-{
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(IChart)(IChart* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(IChart)(IChart* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-IChart* __NEW(IChart)()
-{
-	DONEW(pNew, IChart, Object, NULL,
-		AMETHOD(Display));
-
-	return pNew;
+	return __New(__TYPE(IChart), 0, NULL, 1, 0,
+		__METHODA(Display));
 }
