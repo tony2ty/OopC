@@ -30,20 +30,11 @@ static bool bHasBeenGenerated = false;
 //单例
 static ModelGenerator *pSingleton = NULL;
 
-struct ModelGenerator_Fld
-{
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-static void GetModel(void *_pThis, va_list vlArgs)
+static void GetModel(void *_pThis, va_list* pvlArgs)
 {
     ModelGenerator *pThis = _pThis;
 
-    int *pIntRetAsModel = va_arg(vlArgs, int *);
+    int *pIntRetAsModel = va_arg(*pvlArgs, int *);
 
     //Todo: 
     *pIntRetAsModel = 11;
@@ -53,7 +44,7 @@ static void GetModel(void *_pThis, va_list vlArgs)
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void __CLEAR(ModelGenerator)(void *pParams)
+static void Clear(void *pParams)
 {
     ModelGenerator *pSelf = pParams;
 
@@ -63,22 +54,7 @@ static void __CLEAR(ModelGenerator)(void *pParams)
     pSingleton = NULL;
 }
 
-static bool __CALL(ModelGenerator)(ModelGenerator *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(ModelGenerator)(ModelGenerator *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(ModelGenerator)(ModelGenerator *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-ModelGenerator *__NEW(ModelGenerator)()
+__CONSTRUCTOR(ModelGenerator)
 {
     //这里通过变量判断，
     //单例出现并发问题的情况就归结为
@@ -90,10 +66,8 @@ ModelGenerator *__NEW(ModelGenerator)()
     }
     bHasBeenGenerated = true;
 
-    DONEW(pNew, ModelGenerator, Object, __CLEAR(ModelGenerator),
-        METHOD(GetModel));
+	pSingleton = __New(__TYPE(ModelGenerator), 0, Clear, 1, 0,
+		__METHOD(GetModel));
 
-    pSingleton = pNew;
-
-    return pNew;
+	return pSingleton;
 }

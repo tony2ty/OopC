@@ -4,25 +4,16 @@
 
 int main(int argc, char **argv)
 {
-    RLSLOCALMEMBRA();
+    ModelGenerator *pGenerator = __NEW(ModelGenerator);
+    ModelGenerator *pGenerator2 = __NEW(ModelGenerator);
 
-    ModelGenerator *pGenerator = NEW(ModelGenerator); TORLS(DEL(ModelGenerator), pGenerator);
-    ModelGenerator *pGenerator2 = NEW(ModelGenerator); //TORLS(DEL(ModelGenerator), pGenerator2);//两次create均使用的相同单例，因此不能再次标记TORLS，可以取消注释运行试试
-
-    if (pGenerator == pGenerator2)
-    {
-        printf("The two Generator is the same.\n");
-    }
-    else
-    {
-        printf("The two Generator is not the same.\n");
-    }
-
+	printf("The two Generator is%sthe same.\n", (pGenerator == pGenerator2 ? " " : " not "));
     int nModel = -1;
     pGenerator->Call(pGenerator, "GetModel", &nModel);
     printf("The new model generated is %d.\n", nModel);
 
-    RLSLOCALMEMKET();
+	pGenerator->Destroy(pGenerator);
+	//pGenerator2->Destroy(pGenerator2);//!!!
 
     return 0;
 }

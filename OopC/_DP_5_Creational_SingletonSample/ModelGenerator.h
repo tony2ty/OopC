@@ -25,8 +25,9 @@
 
 #include <OopBase.h>
 
-CLASS(ModelGenerator, Object);
-METHODDECLARE(
+__CLASS ModelGenerator;
+__CONSTRUCTOR(ModelGenerator);
+__METHODDECLARE(
     GetModel: int *pIntRetAsModel;)
 
 #endif // !ModelGenerator_H__
