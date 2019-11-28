@@ -26,6 +26,7 @@
 
 #include "CalculatorBase.h"
 
-CLASS(CalculatorExtdCommon, CalculatorBase);
+__CLASS CalculatorExtdCommon __EXTEND CalculatorBase;
+__CONSTRUCTOR(CalculatorExtdCommon);
 
 #endif // !CALCULATOREXTDCOMMON_H__

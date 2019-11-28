@@ -26,11 +26,12 @@
 
 #include <OopBase.h>
 
-CLASS(CalculatorBase, Object);
-METHODDECLARE(
-    ABSTRACT Add:      double dblOpL; double dblOpR; double* pdblRet;
-    ABSTRACT Subtract: double dblOpL; double dblOpR; double* pdblRet;
-    ABSTRACT Multiply: double dblOpL; double dblOpR; double* pdblRet;
-    ABSTRACT Divide:   double dblOpL; double dblOpR; double* pdblRet;)
+__CLASS CalculatorBase;
+__CONSTRUCTOR(CalculatorBase);
+__METHODDECLARE(
+    __ABSTRACT Add:      double dblOpL; double dblOpR; double* pdblRet;
+    __ABSTRACT Subtract: double dblOpL; double dblOpR; double* pdblRet;
+	__ABSTRACT Multiply: double dblOpL; double dblOpR; double* pdblRet;
+	__ABSTRACT Divide:   double dblOpL; double dblOpR; double* pdblRet;)
 
 #endif // !CALCULATORBASE_H__

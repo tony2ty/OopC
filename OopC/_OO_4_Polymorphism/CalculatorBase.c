@@ -23,40 +23,11 @@
 
 #include "CalculatorBase.h"
 
-
-struct CalculatorBase_Fld
+__CONSTRUCTOR(CalculatorBase)
 {
-    CHAINDECLARE;
-};
-
-//////////////////////////////////////////////////////////////////
-//
-
-//////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CalculatorBase)(CalculatorBase *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CalculatorBase)(CalculatorBase *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CalculatorBase)(CalculatorBase *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-CalculatorBase *__NEW(CalculatorBase)()
-{
-    DONEW(pNew, CalculatorBase, Object, NULL,
-        AMETHOD(Add)
-        AMETHOD(Subtract)
-        AMETHOD(Multiply)
-        AMETHOD(Divide));
-
-    return pNew;
+	return __New(__TYPE(CalculatorBase), 0, NULL, 4, 0,
+		__METHODA(Add),
+		__METHODA(Subtract),
+		__METHODA(Multiply),
+		__METHODA(Divide));
 }

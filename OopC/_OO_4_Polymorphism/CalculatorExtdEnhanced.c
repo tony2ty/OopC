@@ -25,91 +25,64 @@
 
 #include <stdio.h>
 
-struct CalculatorExtdEnhanced_Fld
-{
-    CHAINDECLARE;
-};
-
-///////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Add(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Add(void *_pThis, va_list* pvlArgs)
 {
     CalculatorExtdEnhanced* pThis = _pThis;
 
-    double dblOpL = va_arg(vlArgs, double);
-    double dblOpR = va_arg(vlArgs, double);
-    double* pdblRet = va_arg(vlArgs, double*);
+    double dblOpL = va_arg(*pvlArgs, double);
+    double dblOpR = va_arg(*pvlArgs, double);
+    double* pdblRet = va_arg(*pvlArgs, double*);
 
     printf("Add operation using enhanced calculator.\n");
 
 	*pdblRet = dblOpL + dblOpR;
 }
 
-OVERRIDE static void Subtract(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Subtract(void *_pThis, va_list* pvlArgs)
 {
 	CalculatorExtdEnhanced* pThis = _pThis;
 
-    double dblOpL = va_arg(vlArgs, double);
-    double dblOpR = va_arg(vlArgs, double);
-    double* pdblRet = va_arg(vlArgs, double*);
+    double dblOpL = va_arg(*pvlArgs, double);
+    double dblOpR = va_arg(*pvlArgs, double);
+    double* pdblRet = va_arg(*pvlArgs, double*);
 
     printf("Subtract operation using enhanced calculator.\n");
 
 	*pdblRet = dblOpL - dblOpR;
 }
 
-OVERRIDE static void Multiply(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Multiply(void *_pThis, va_list* pvlArgs)
 {
 	CalculatorExtdEnhanced* pThis = _pThis;
 
-    double dblOpL = va_arg(vlArgs, double);
-    double dblOpR = va_arg(vlArgs, double);
-    double* pdblRet = va_arg(vlArgs, double*);
+    double dblOpL = va_arg(*pvlArgs, double);
+    double dblOpR = va_arg(*pvlArgs, double);
+    double* pdblRet = va_arg(*pvlArgs, double*);
 
     printf("multiply operation using enhanced calculator.\n");
 
 	*pdblRet = dblOpL * dblOpR;
 }
 
-OVERRIDE static void Divide(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Divide(void *_pThis, va_list* pvlArgs)
 {
 	CalculatorExtdEnhanced* pThis = _pThis;
 
-    double dblOpL = va_arg(vlArgs, double);
-    double dblOpR = va_arg(vlArgs, double);
-    double* pdblRet = va_arg(vlArgs, double*);
+    double dblOpL = va_arg(*pvlArgs, double);
+    double dblOpR = va_arg(*pvlArgs, double);
+    double* pdblRet = va_arg(*pvlArgs, double*);
 
     printf("divide operation using enhanced calculator.\n");
 
 	*pdblRet = dblOpL / dblOpR;// */0
 }
 
-///////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CalculatorExtdEnhanced)(CalculatorExtdEnhanced *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CalculatorExtdEnhanced)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CalculatorExtdEnhanced)(CalculatorExtdEnhanced *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CalculatorExtdEnhanced)(CalculatorExtdEnhanced *pSelf)
-{
-    DODEL(pSelf, CalculatorBase);
-}
-
-CalculatorExtdEnhanced *__NEW(CalculatorExtdEnhanced)()
-{
-    DONEW(pNew, CalculatorExtdEnhanced, CalculatorBase, NULL,
-        METHOD(Add)
-        METHOD(Subtract)
-        METHOD(Multiply)
-        METHOD(Divide));
-
-    return pNew;
+	return __New(__TYPE(CalculatorExtdEnhanced), 0, NULL, 4, 1,
+		__METHOD(Add),
+		__METHOD(Subtract),
+		__METHOD(Multiply),
+		__METHOD(Divide),
+		__INHERIT(CalculatorBase));
 }

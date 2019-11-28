@@ -28,12 +28,10 @@
 
 int main(int argc, char** argv)
 {
-    RLSLOCALMEMBRA();
-
 	CalculatorBase* pBase = NULL;
 	{
-        CalculatorExtdCommon* pCommon = NEW(CalculatorExtdCommon); TORLS(DEL(CalculatorExtdCommon), pCommon);
-		pBase = SWITCH(pCommon, CalculatorBase);
+        CalculatorExtdCommon* pCommon = __NEW(CalculatorExtdCommon);
+		pBase = __Cvt(pCommon, __TYPE(CalculatorBase));
 	}
 
 	double dblRet = 0;
@@ -46,11 +44,13 @@ int main(int argc, char** argv)
     pBase->Call(pBase, "Divide", 12.0, 10.0, &dblRet);
 	printf("12 / 10 = ? %f.\n", dblRet);
 
+	pBase->Destroy(pBase);
+
     printf("-----------------------------------------------------------\n");
 
 	{
-        CalculatorExtdEnhanced* pEnhanced = NEW(CalculatorExtdEnhanced); TORLS(DEL(CalculatorExtdEnhanced), pEnhanced);
-		pBase = SWITCH(pEnhanced, CalculatorBase);
+        CalculatorExtdEnhanced* pEnhanced = __NEW(CalculatorExtdEnhanced);
+		pBase = __Cvt(pEnhanced, __TYPE(CalculatorBase));
 	}
 
     pBase->Call(pBase, "Add", 10.0, 12.0, &dblRet);
@@ -62,6 +62,7 @@ int main(int argc, char** argv)
     pBase->Call(pBase, "Divide", 12.0, 10.0, &dblRet);
 	printf("12 / 10 = ? %f.\n", dblRet);
 
-    RLSLOCALMEMKET();
+	pBase->Destroy(pBase);
+
 	return 0;
 }
