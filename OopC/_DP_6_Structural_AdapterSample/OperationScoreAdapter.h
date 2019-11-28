@@ -25,6 +25,7 @@
 
 #include "IOperationScore.h"
 
-CLASS(OperationScoreAdapter, IOperationScore);
+__CLASS OperationScoreAdapter __EXTEND IOperationScore;
+__CONSTRUCTOR(OperationScoreAdapter);
 
 #endif // !OperationScoreAdapter_H__

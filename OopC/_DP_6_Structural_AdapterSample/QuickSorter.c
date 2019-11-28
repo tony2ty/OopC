@@ -25,15 +25,6 @@
 
 #include <stdlib.h>
 
-struct QuickSorter_Fld
-{
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
 /*
  * ±È½ÏÆ÷ */
 static int Comparer(const void *pL, const void *pR)
@@ -41,39 +32,19 @@ static int Comparer(const void *pL, const void *pR)
 	return *(int *)pL - *(int *)pR;
 }
 
-static void DoSort(void *_pThis, va_list vlArgs)
+static void DoSort(void *_pThis, va_list* pvlArgs)
 {
     QuickSorter *pThis = _pThis;
 
-    int *pArr = va_arg(vlArgs, int *);
-    size_t szLen = va_arg(vlArgs, size_t);
+    int *pArr = va_arg(*pvlArgs, int *);
+    size_t szLen = va_arg(*pvlArgs, size_t);
 
 	//Todo: 
 	qsort(pArr, szLen, sizeof(int), Comparer);
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(QuickSorter)(QuickSorter *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(QuickSorter)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(QuickSorter)(QuickSorter *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(QuickSorter)(QuickSorter *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-QuickSorter *__NEW(QuickSorter)()
-{
-    DONEW(pNew, QuickSorter, Object, NULL,
-        METHOD(DoSort));
-
-    return pNew;
+	return __New(__TYPE(QuickSorter), 0, NULL, 1, 0,
+		__METHOD(DoSort));
 }

@@ -25,8 +25,9 @@
 
 #include <OopBase.h>
 
-CLASS(BinarySearcher, Object);
-METHODDECLARE(
+__CLASS BinarySearcher;
+__CONSTRUCTOR(BinarySearcher);
+__METHODDECLARE(
     DoSearch: int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind;)
 
 #endif // !BinarySearcher_H__

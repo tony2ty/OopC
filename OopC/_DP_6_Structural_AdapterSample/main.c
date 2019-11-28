@@ -27,12 +27,10 @@
 
 int main(int argc, char **argv)
 {
-    RLSLOCALMEMBRA();
-
 	IOperationScore *pOprtScr = NULL;
 	{
-        OperationScoreAdapter *pAdapter = NEW(OperationScoreAdapter); TORLS(DEL(OperationScoreAdapter), pAdapter);
-		pOprtScr = SWITCH(pAdapter, IOperationScore);
+        OperationScoreAdapter *pAdapter = __NEW(OperationScoreAdapter);
+		pOprtScr = __Cvt(pAdapter, __TYPE(IOperationScore));
 	}
 
 	int arr[] = {4, 2, 10, 6, 8};
@@ -60,7 +58,7 @@ int main(int argc, char **argv)
     pOprtScr->Call(pOprtScr, "DoSearch", arr, szLen, 6, &nIndexFind);
 	printf("Index of 6 is: %d.\n", nIndexFind);
 
-    RLSLOCALMEMKET();
+	pOprtScr->Destroy(pOprtScr);
 
 	return 0;
 }

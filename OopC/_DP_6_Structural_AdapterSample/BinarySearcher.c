@@ -25,15 +25,6 @@
 
 #include <stdlib.h>
 
-struct BinarySearcher_Fld
-{
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
 /*
  * ±È½ÏÆ÷ */
 static int Comparer(const void *pL, const void *pR)
@@ -41,14 +32,14 @@ static int Comparer(const void *pL, const void *pR)
 	return *(int *)pL - *(int *)pR;
 }
 
-static void DoSearch(void *_pThis, va_list vlArgs)
+static void DoSearch(void *_pThis, va_list* pvlArgs)
 {
     BinarySearcher *pThis = _pThis;
 
-    int *pArrToSearch = va_arg(vlArgs, int *);
-    size_t szLen = va_arg(vlArgs, size_t);
-    int nKey = va_arg(vlArgs, int);
-    int *pRetIndexFind = va_arg(vlArgs, int *);
+    int *pArrToSearch = va_arg(*pvlArgs, int *);
+    size_t szLen = va_arg(*pvlArgs, size_t);
+    int nKey = va_arg(*pvlArgs, int);
+    int *pRetIndexFind = va_arg(*pvlArgs, int *);
 
 	//Todo: 
 	int *pFind = bsearch(&nKey, pArrToSearch, szLen, sizeof(int), Comparer);
@@ -62,28 +53,8 @@ static void DoSearch(void *_pThis, va_list vlArgs)
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(BinarySearcher)(BinarySearcher *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(BinarySearcher)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(BinarySearcher)(BinarySearcher *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(BinarySearcher)(BinarySearcher *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-BinarySearcher *__NEW(BinarySearcher)()
-{
-    DONEW(pNew, BinarySearcher, Object, NULL,
-        METHOD(DoSearch));
-
-    return pNew;
+	return __New(__TYPE(BinarySearcher), 0, NULL, 1, 0,
+		__METHOD(DoSearch));
 }

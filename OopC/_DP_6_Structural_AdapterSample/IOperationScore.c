@@ -24,39 +24,9 @@
 #include "IOperationScore.h"
 
 
-struct IOperationScore_Fld
+__CONSTRUCTOR(IOperationScore)
 {
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(IOperationScore)(IOperationScore *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(IOperationScore)(IOperationScore *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(IOperationScore)(IOperationScore *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-IOperationScore *__NEW(IOperationScore)()
-{
-    DONEW(pNew, IOperationScore, Object, NULL,
-        AMETHOD(DoSort)
-        AMETHOD(DoSearch));
-
-    return pNew;
+	return __New(__TYPE(IOperationScore), 0, NULL, 2, 0,
+		__METHODA(DoSort),
+		__METHODA(DoSearch));
 }

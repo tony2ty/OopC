@@ -25,9 +25,10 @@
 
 #include <OopBase.h>
 
-CLASS(IOperationScore, Object);
-METHODDECLARE(
-    DoSort: int *pArr; size_t szLen;
-    DoSearch: int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind;)
+__CLASS IOperationScore;
+__CONSTRUCTOR(IOperationScore);
+__METHODDECLARE(
+    __ABSTRACT DoSort: int *pArr; size_t szLen;
+    __ABSTRACT DoSearch: int *pArrToSearch; size_t szLen; int nKey; int *pRetIndexFind;)
 
 #endif // !IOperationScore_H__

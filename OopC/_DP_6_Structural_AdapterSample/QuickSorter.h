@@ -25,8 +25,9 @@
 
 #include <OopBase.h>
 
-CLASS(QuickSorter, Object);
-METHODDECLARE(
+__CLASS QuickSorter;
+__CONSTRUCTOR(QuickSorter);
+__METHODDECLARE(
     DoSort: int *pArr; size_t szLen;)
 
 #endif // !QuickSorter_H__
