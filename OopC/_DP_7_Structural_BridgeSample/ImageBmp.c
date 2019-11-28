@@ -25,50 +25,22 @@
 
 #include <stdio.h>
 
-struct ImageBmp_Fld
-{
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void ParseFile(void *_pThis, va_list vlArgs)
+__OVERRIDE static void ParseFile(void *_pThis, va_list* pvlArgs)
 {
     ImageBmp *pThis = _pThis;
 
-    const char *pFileName = va_arg(vlArgs, const char *);
+    const char *pFileName = va_arg(*pvlArgs, const char *);
 
 	//Todo: 
     printf("½âÎöBmp¸ñÊ½Í¼Æ¬ %s\n", pFileName);
-    Matrix *pMat = NEW(Matrix);
-    SUPER(pThis, "DoPaint", pMat);
-    DEL(Matrix)(pMat);
+    Matrix *pMat = __NEW(Matrix);
+	__Spr(pThis, "DoPaint", pMat);
+	pMat->Destroy(pMat);
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ImageBmp)(ImageBmp *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(ImageBmp)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(ImageBmp)(ImageBmp *pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(ImageBmp)(ImageBmp *pSelf)
-{
-	DODEL(pSelf, IImage);
-}
-
-ImageBmp *__NEW(ImageBmp)()
-{
-	DONEW(pNew, ImageBmp, IImage, NULL,
-		METHOD(ParseFile));
-
-	return pNew;
+	return __New(__TYPE(ImageBmp), 0, NULL, 1, 1,
+		__METHOD(ParseFile),
+		__INHERIT(IImage));
 }

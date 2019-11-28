@@ -25,6 +25,7 @@
 
 #include "IOprtSys.h"
 
-CLASS(OprtSysLinux, IOprtSys);
+__CLASS OprtSysLinux __EXTEND IOprtSys;
+__CONSTRUCTOR(OprtSysLinux);
 
 #endif // !OprtSysLinux_H__

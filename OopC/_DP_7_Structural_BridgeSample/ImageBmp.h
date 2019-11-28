@@ -25,6 +25,7 @@
 
 #include "IImage.h"
 
-CLASS(ImageBmp, IImage);
+__CLASS ImageBmp __EXTEND IImage;
+__CONSTRUCTOR(ImageBmp);
 
 #endif // !ImageBmp_H__

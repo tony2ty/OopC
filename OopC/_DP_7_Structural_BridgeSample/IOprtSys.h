@@ -26,7 +26,8 @@
 #include <OopBase.h>
 #include "Matrix.h"
 
-CLASS(IOprtSys, Object);
-METHODDECLARE(
-    ABSTRACT DoPaint: Matrix * pMat;)
+__CLASS IOprtSys;
+__CONSTRUCTOR(IOprtSys);
+__METHODDECLARE(
+    __ABSTRACT DoPaint: Matrix * pMat;)
 #endif // !IOprtSys_H__

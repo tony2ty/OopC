@@ -25,6 +25,7 @@
 
 #include "IImage.h"
 
-CLASS(ImagePng, IImage);
+__CLASS ImagePng __EXTEND IImage;
+__CONSTRUCTOR(ImagePng);
 
 #endif // !ImagePng_H__

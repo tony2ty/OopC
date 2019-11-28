@@ -24,38 +24,7 @@
 #include "Matrix.h"
 
 
-struct Matrix_Fld
+__CONSTRUCTOR(Matrix)
 {
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(Matrix)(Matrix *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(Matrix)(Matrix *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(Matrix)(Matrix *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-Matrix *__NEW(Matrix)()
-{
-	DONEW(pNew, Matrix, Object, NULL
-        );
-
-	return pNew;
+	return __New(__TYPE(Matrix), 0, NULL, 0, 0);
 }

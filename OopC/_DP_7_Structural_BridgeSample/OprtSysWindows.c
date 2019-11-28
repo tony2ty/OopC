@@ -25,16 +25,8 @@
 
 #include <stdio.h>
 
-struct OprtSysWindows_Fld
-{
-    CHAINDECLARE;
 
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void DoPaint(void *_pThis, va_list vlArgs)
+__OVERRIDE static void DoPaint(void *_pThis, va_list* pvlArgs)
 {
 	OprtSysWindows *pThis = _pThis;
 
@@ -42,29 +34,10 @@ OVERRIDE static void DoPaint(void *_pThis, va_list vlArgs)
     printf("在Windows操作系统中显示图像.\n");
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(OprtSysWindows)(OprtSysWindows *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(OprtSysWindows)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(OprtSysWindows)(OprtSysWindows *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(OprtSysWindows)(OprtSysWindows *pSelf)
-{
-    DODEL(pSelf, IOprtSys);
-}
-
-OprtSysWindows *__NEW(OprtSysWindows)()
-{
-    DONEW(pNew, OprtSysWindows, IOprtSys, NULL,
-        METHOD(DoPaint));
-
-    return pNew;
+	return __New(__TYPE(OprtSysWindows), 0, NULL, 1, 1,
+		__METHOD(DoPaint),
+		__INHERIT(IOprtSys));
 }
 

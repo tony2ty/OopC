@@ -25,16 +25,8 @@
 
 #include <stdio.h>
 
-struct OprtSysLinux_Fld
-{
-    CHAINDECLARE;
 
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void DoPaint(void *_pThis, va_list vlArgs)
+__OVERRIDE static void DoPaint(void *_pThis, va_list* pvlArgs)
 {
     OprtSysLinux *pThis = _pThis;
 
@@ -42,28 +34,9 @@ OVERRIDE static void DoPaint(void *_pThis, va_list vlArgs)
     printf("在Linux操作系统中显示图像.\n");
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(OprtSysLinux)(OprtSysLinux *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(OprtSysLinux)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(OprtSysLinux)(OprtSysLinux *pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(OprtSysLinux)(OprtSysLinux *pSelf)
-{
-	DODEL(pSelf, IOprtSys);
-}
-
-OprtSysLinux *__NEW(OprtSysLinux)()
-{
-	DONEW(pNew, OprtSysLinux, IOprtSys, NULL,
-		METHOD(DoPaint));
-
-	return pNew;
+	return __New(__TYPE(OprtSysLinux), 0, NULL, 1, 1,
+		__METHOD(DoPaint),
+		__INHERIT(IOprtSys));
 }

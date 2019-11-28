@@ -24,72 +24,55 @@
 #include "IImage.h"
 
 
-struct IImage_Fld
+typedef struct
 {
-    CHAINDECLARE;
-
 	IOprtSys * pOS;
-};
+} Fld;
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void DoPaint(void *_pThis, va_list vlArgs)
+static void DoPaint(void *_pThis, va_list* pvlArgs)
 {
     IImage *pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-    Matrix * pMat = va_arg(vlArgs, Matrix *);
+    Matrix * pMat = va_arg(*pvlArgs, Matrix *);
 
 	//Todo: 
-    pThis->pFld->pOS->Call(pThis->pFld->pOS, "DoPaint", pMat);
+    pFld->pOS->Call(pFld->pOS, "DoPaint", pMat);
 }
-static void SetOprtSys(void *_pThis, va_list vlArgs)
+
+static void SetOprtSys(void *_pThis, va_list* pvlArgs)
 {
 	IImage *pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-    IOprtSys *pOS = va_arg(vlArgs, IOprtSys *);
+    IOprtSys *pOS = va_arg(*pvlArgs, IOprtSys *);
 
 	//Todo: 
-    pThis->pFld->pOS = pOS;
+    pFld->pOS = pOS;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 
-static void __CLEAR(IImage)(void *pParams)
+static void Clear(void *pParams)
 {
     IImage *pSelf = pParams;
+	Fld* pFld = pSelf->Fld;
 
-    if (pSelf->pFld->pOS)
+    if (pFld->pOS)
     {
-        DEL(IOprtSys)(pSelf->pFld->pOS);
+		pFld->pOS->Destroy(pFld->pOS);
     }
-    pSelf->pFld->pOS = NULL;
+    pFld->pOS = NULL;
 }
 
-static bool __CALL(IImage)(IImage *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(IImage)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(IImage)(IImage *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(IImage)(IImage *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-IImage *__NEW(IImage)()
-{
-	DONEW(pNew, IImage, Object, __CLEAR(IImage),
-		METHOD(DoPaint)
-		METHOD(SetOprtSys)
-		AMETHOD(ParseFile));
-
-    pNew->pFld->pOS = NULL;
-
-	return pNew;
+	return __New(__TYPE(IImage), sizeof(Fld), Clear, 3, 0,
+		__METHOD(DoPaint),
+		__METHOD(SetOprtSys),
+		__METHODA(ParseFile));
 }

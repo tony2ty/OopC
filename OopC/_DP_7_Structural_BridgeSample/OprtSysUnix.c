@@ -25,16 +25,8 @@
 
 #include <stdio.h>
 
-struct OprtSysUnix_Fld
-{
-    CHAINDECLARE;
 
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void DoPaint(void *_pThis, va_list vlArgs)
+__OVERRIDE static void DoPaint(void *_pThis, va_list* pvlArgs)
 {
 	OprtSysUnix *pThis = _pThis;
 
@@ -42,28 +34,9 @@ OVERRIDE static void DoPaint(void *_pThis, va_list vlArgs)
     printf("在Unix操作系统中显示图像.\n");
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(OprtSysUnix)(OprtSysUnix *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(OprtSysUnix)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(OprtSysUnix)(OprtSysUnix *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(OprtSysUnix)(OprtSysUnix *pSelf)
-{
-    DODEL(pSelf, IOprtSys);
-}
-
-OprtSysUnix *__NEW(OprtSysUnix)()
-{
-    DONEW(pNew, OprtSysUnix, IOprtSys, NULL,
-        METHOD(DoPaint));
-
-    return pNew;
+	return __New(__TYPE(OprtSysUnix), 0, NULL, 1, 1,
+		__METHOD(DoPaint),
+		__INHERIT(IOprtSys));
 }

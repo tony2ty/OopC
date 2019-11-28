@@ -27,10 +27,11 @@
 #include "Matrix.h"
 #include "IOprtSys.h"
 
-CLASS(IImage, Object);
-METHODDECLARE(
+__CLASS IImage;
+__CONSTRUCTOR(IImage);
+__METHODDECLARE(
     DoPaint: Matrix * pMat;
     SetOprtSys: IOprtSys *pOS;
-    ABSTRACT ParseFile: const char *pFileName;)
+    __ABSTRACT ParseFile: const char *pFileName;)
 
 #endif // !IImage_H__

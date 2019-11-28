@@ -33,27 +33,25 @@
 
 int main(int argc, char **argv)
 {
-    RLSLOCALMEMBRA();
-
     IImage *pImage = NULL;
     {
-        //ImageBmp *pBmp = CREATE(ImageBmp)(); TORLS(DELETE(ImageBmp), pBmp);
-        //pImage = SWITCH(pBmp, ImageBmp, IImage);//Bmp
-        //ImageGif *pGif = CREATE(ImageGif)(); TORLS(DELETE(ImageGif), pGif);
-        //pImage = SWITCH(pGif, ImageGif, IImage);//Gif
-        ImageJpg *pJpg = NEW(ImageJpg); TORLS(DEL(ImageJpg), pJpg);
-        pImage = SWITCH(pJpg, IImage);//Jpg
-        //ImagePng *pPng = CREATE(ImagePng)(); TORLS(DELETE(ImagePng), pPng);
-        //pImage = SWITCH(pPng, ImagePng, IImage);//Png
+        //ImageBmp *pBmp = __NEW(ImageBmp);
+        //pImage = __Cvt(pBmp, __TYPE(IImage));//Bmp
+        //ImageGif *pGif = __NEW(ImageGif);
+        //pImage = __Cvt(pGif, __TYPE(IImage));//Gif
+        ImageJpg *pJpg = __NEW(ImageJpg);
+        pImage = __Cvt(pJpg, __TYPE(IImage));//Jpg
+        //ImagePng *pPng = __NEW(ImagePng);
+        //pImage = __Cvt(pPng, __TYPE(IImage));//Png
 
         IOprtSys *pOS = NULL;
         {
-            //OprtSysLinux *pLinux = CREATE(OprtSysLinux)();
-            //pOS = SWITCH(pLinux, OprtSysLinux, IOprtSys);//Linux
-            OprtSysUnix *pUnix = NEW(OprtSysUnix); //TORLS(DELETE(OprtSysUnix), pUnix);//pOS实例作为pImage的一部分注入，pImage销毁时随之自动销毁，不需要额外销毁。可以取消注释试试
-            pOS = SWITCH(pUnix, IOprtSys);//Unix
-            //OprtSysWindows *pWindows = CREATE(OprtSysWindows)();
-            //pOS = SWITCH(pWindows, OprtSysWindows, IOprtSys);//Windows
+            //OprtSysLinux *pLinux = __NEW(OprtSysLinux);
+            //pOS = __Cvt(pLinux, __TYPE(IOprtSys));//Linux
+            OprtSysUnix *pUnix = __NEW(OprtSysUnix);
+            pOS = __Cvt(pUnix, __TYPE(IOprtSys));//Unix
+            //OprtSysWindows *pWindows = __NEW(OprtSysWindows);
+            //pOS = __Cvt(pWindows, __TYPE(IOprtSys));//Windows
         }
 
         pImage->Call(pImage, "SetOprtSys", pOS);
@@ -61,7 +59,7 @@ int main(int argc, char **argv)
 
     pImage->Call(pImage, "ParseFile", "中国地图");
 
-    RLSLOCALMEMKET();
+	pImage->Destroy(pImage);
 
     return 0;
 }

@@ -24,38 +24,8 @@
 #include "IOprtSys.h"
 
 
-struct IOprtSys_Fld
+__CONSTRUCTOR(IOprtSys)
 {
-    CHAINDECLARE;
-
-};
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(IOprtSys)(IOprtSys *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(IOprtSys)(IOprtSys *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(IOprtSys)(IOprtSys *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-IOprtSys *__NEW(IOprtSys)()
-{
-	DONEW(pNew, IOprtSys, Object, NULL,
-		AMETHOD(DoPaint));
-
-	return pNew;
+	return __New(__TYPE(IOprtSys), 0, NULL, 1, 0,
+		__METHODA(DoPaint));
 }
