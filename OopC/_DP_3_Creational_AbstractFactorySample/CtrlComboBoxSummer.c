@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct CtrlComboBoxSummer_Fld
-{
-    CHAINDECLARE;
-};
 
-//////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
     CtrlComboBoxSummer *pThis = _pThis;
 
     printf("显示蓝色边框组合框.\n");
 }
 
-//////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CtrlComboBoxSummer)(CtrlComboBoxSummer *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CtrlComboBoxSummer)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CtrlComboBoxSummer)(CtrlComboBoxSummer *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CtrlComboBoxSummer)(CtrlComboBoxSummer *pSelf)
-{
-    DODEL(pSelf, ICtrlComboBox);
-}
-
-CtrlComboBoxSummer *__NEW(CtrlComboBoxSummer)()
-{
-    DONEW(pNew, CtrlComboBoxSummer, ICtrlComboBox, NULL,
-        METHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(CtrlComboBoxSummer), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(ICtrlComboBox));
 }

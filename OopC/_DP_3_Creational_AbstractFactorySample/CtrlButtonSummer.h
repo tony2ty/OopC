@@ -26,6 +26,7 @@
 
 #include "ICtrlButton.h"
 
-CLASS(CtrlButtonSummer, ICtrlButton);
+__CLASS CtrlButtonSummer __EXTEND ICtrlButton;
+__CONSTRUCTOR(CtrlButtonSummer);
 
 #endif // !CTRLBUTTONSUMMER_H__

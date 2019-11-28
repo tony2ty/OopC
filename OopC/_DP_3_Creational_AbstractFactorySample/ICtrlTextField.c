@@ -24,36 +24,8 @@
 #include "ICtrlTextField.h"
 
 
-struct ICtrlTextField_Fld
+__CONSTRUCTOR(ICtrlTextField)
 {
-    CHAINDECLARE;
-};
-
-////////////////////////////////////////////////////////////////////
-//
-
-///////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ICtrlTextField)(ICtrlTextField *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(ICtrlTextField)(ICtrlTextField *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(ICtrlTextField)(ICtrlTextField *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-ICtrlTextField *__NEW(ICtrlTextField)()
-{
-    DONEW(pNew, ICtrlTextField, Object, NULL,
-        AMETHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(ICtrlTextField), 0, NULL, 1, 0,
+		__METHODA(Display));
 }

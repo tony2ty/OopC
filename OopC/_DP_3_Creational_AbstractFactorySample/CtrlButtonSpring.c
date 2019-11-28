@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct CtrlButtonSpring_Fld
-{
-    CHAINDECLARE;
-};
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
     CtrlButtonSpring *pThis = _pThis;
 
     printf("ÏÔÊ¾Ç³ÂÌÉ«°´Å¥¡£\n");
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CtrlButtonSpring)(CtrlButtonSpring *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CtrlButtonSpring)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CtrlButtonSpring)(CtrlButtonSpring *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CtrlButtonSpring)(CtrlButtonSpring *pSelf)
-{
-    DODEL(pSelf, ICtrlButton);
-}
-
-CtrlButtonSpring *__NEW(CtrlButtonSpring)()
-{
-    DONEW(pNew, CtrlButtonSpring, ICtrlButton, NULL,
-        METHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(CtrlButtonSpring), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(ICtrlButton));
 }

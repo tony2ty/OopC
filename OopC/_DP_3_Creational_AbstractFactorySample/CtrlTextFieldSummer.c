@@ -25,43 +25,16 @@
 
 #include <stdio.h>
 
-struct CtrlTextFieldSummer_Fld
-{
-    CHAINDECLARE;
-};
-
-/////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
     CtrlTextFieldSummer *pThis = _pThis;
 
     printf("显示蓝色边框文本框。\n");
 }
 
-/////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CtrlTextFieldSummer)(CtrlTextFieldSummer *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CtrlTextFieldSummer)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CtrlTextFieldSummer)(CtrlTextFieldSummer *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CtrlTextFieldSummer)(CtrlTextFieldSummer *pSelf)
-{
-    DODEL(pSelf, ICtrlTextField);
-}
-
-CtrlTextFieldSummer *__NEW(CtrlTextFieldSummer)()
-{
-    DONEW(pNew, CtrlTextFieldSummer, ICtrlTextField, NULL,
-        METHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(CtrlTextFieldSummer), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(ICtrlTextField));
 }

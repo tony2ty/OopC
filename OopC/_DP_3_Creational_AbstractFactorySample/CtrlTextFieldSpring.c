@@ -25,43 +25,16 @@
 
 #include <stdio.h>
 
-struct CtrlTextFieldSpring_Fld
-{
-    CHAINDECLARE;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
     CtrlTextFieldSpring *pThis = _pThis;
 
     printf("显示绿色边框文本框。\n");
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CtrlTextFieldSpring)(CtrlTextFieldSpring *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CtrlTextFieldSpring)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CtrlTextFieldSpring)(CtrlTextFieldSpring *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CtrlTextFieldSpring)(CtrlTextFieldSpring *pSelf)
-{
-    DODEL(pSelf, ICtrlTextField);
-}
-
-CtrlTextFieldSpring *__NEW(CtrlTextFieldSpring)()
-{
-    DONEW(pNew, CtrlTextFieldSpring, ICtrlTextField, NULL,
-        METHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(CtrlTextFieldSpring), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(ICtrlTextField));
 }

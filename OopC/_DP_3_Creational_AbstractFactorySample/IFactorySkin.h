@@ -30,10 +30,11 @@
 #include "ICtrlTextField.h"
 #include "ICtrlComboBox.h"
 
-CLASS(IFactorySkin, Object);
-METHODDECLARE(
-    ABSTRACT CreateButton : ICtrlButton * *ppButton;
-    ABSTRACT CreateTextField : ICtrlTextField * *pTextField;
-    ABSTRACT CreateComboBox : ICtrlComboBox * *ppComboBox;)
+__CLASS IFactorySkin;
+__CONSTRUCTOR(IFactorySkin);
+__METHODDECLARE(
+    __ABSTRACT CreateButton : ICtrlButton * *ppButton;
+    __ABSTRACT CreateTextField : ICtrlTextField * *pTextField;
+	__ABSTRACT CreateComboBox : ICtrlComboBox * *ppComboBox;)
 
 #endif // !IFACTORYSKIN_H__

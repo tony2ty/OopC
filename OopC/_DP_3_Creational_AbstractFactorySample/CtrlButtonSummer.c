@@ -25,43 +25,18 @@
 
 #include <stdio.h>
 
-struct CtrlButtonSummer_Fld
-{
-    CHAINDECLARE;
-};
 
-/////////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
     CtrlButtonSummer *pThis = _pThis;
 
     printf("ÏÔÊ¾Ç³À¶É«°´Å¥¡£\n");
 }
 
-/////////////////////////////////////////////////////////////////////////////
-//
 
-static bool __CALL(CtrlButtonSummer)(CtrlButtonSummer *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CtrlButtonSummer)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CtrlButtonSummer)(CtrlButtonSummer *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CtrlButtonSummer)(CtrlButtonSummer *pSelf)
-{
-    DODEL(pSelf, ICtrlButton);
-}
-
-CtrlButtonSummer *__NEW(CtrlButtonSummer)()
-{
-    DONEW(pNew, CtrlButtonSummer, ICtrlButton, NULL,
-        METHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(CtrlButtonSummer), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(ICtrlButton));
 }

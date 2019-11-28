@@ -24,38 +24,10 @@
 #include "IFactorySkin.h"
 
 
-struct IFactorySkin_Fld
+__CONSTRUCTOR(IFactorySkin)
 {
-    CHAINDECLARE;
-};
-
-///////////////////////////////////////////////////////////////////////////
-//
-
-///////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(IFactorySkin)(IFactorySkin *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(IFactorySkin)(IFactorySkin *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(IFactorySkin)(IFactorySkin *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-IFactorySkin *__NEW(IFactorySkin)()
-{
-    DONEW(pNew, IFactorySkin, Object, NULL,
-        AMETHOD(CreateButton)
-        AMETHOD(CreateTextField)
-        AMETHOD(CreateComboBox));
-
-    return pNew;
+	return __New(__TYPE(IFactorySkin), 0, NULL, 3, 0,
+		__METHODA(CreateButton),
+		__METHODA(CreateTextField),
+		__METHODA(CreateComboBox));
 }

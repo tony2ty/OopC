@@ -26,6 +26,7 @@
 
 #include "ICtrlTextField.h"
 
-CLASS(CtrlTextFieldSpring, ICtrlTextField);
+__CLASS CtrlTextFieldSpring __EXTEND ICtrlTextField;
+__CONSTRUCTOR(CtrlTextFieldSpring);
 
 #endif // !CTRLTEXTFIELDSPRING_H__

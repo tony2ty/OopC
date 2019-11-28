@@ -26,6 +26,7 @@
 
 #include "ICtrlButton.h"
 
-CLASS(CtrlButtonSpring, ICtrlButton);
+__CLASS CtrlButtonSpring __EXTEND ICtrlButton;
+__CONSTRUCTOR(CtrlButtonSpring);
 
 #endif // !CTRLBUTTONSPRING_H__

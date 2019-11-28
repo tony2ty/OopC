@@ -27,68 +27,42 @@
 #include "CtrlTextFieldSummer.h"
 #include "CtrlComboBoxSummer.h"
 
-struct FactorySkinSummer_Fld
-{
-    CHAINDECLARE;
-};
 
-////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void CreateButton(void *_pThis, va_list vlArgs)
+__OVERRIDE static void CreateButton(void *_pThis, va_list* pvlArgs)
 {
     FactorySkinSummer *pThis = _pThis;
 
-    ICtrlButton **ppButton = va_arg(vlArgs, ICtrlButton **);
+    ICtrlButton **ppButton = va_arg(*pvlArgs, ICtrlButton **);
 
-    CtrlButtonSummer *pButton = NEW(CtrlButtonSummer);
-    *ppButton = SWITCH(pButton, ICtrlButton);
+    CtrlButtonSummer *pButton = __NEW(CtrlButtonSummer);
+    *ppButton = __Cvt(pButton, __TYPE(ICtrlButton));
 }
 
-OVERRIDE static void CreateTextField(void *_pThis, va_list vlArgs)
+__OVERRIDE static void CreateTextField(void *_pThis, va_list* pvlArgs)
 {
     FactorySkinSummer *pThis = _pThis;
 
-    ICtrlTextField **ppTextField = va_arg(vlArgs, ICtrlTextField **);
+    ICtrlTextField **ppTextField = va_arg(*pvlArgs, ICtrlTextField **);
 
-    CtrlTextFieldSummer *pTextField = NEW(CtrlTextFieldSummer);
-    *ppTextField = SWITCH(pTextField, ICtrlTextField);
+    CtrlTextFieldSummer *pTextField = __NEW(CtrlTextFieldSummer);
+    *ppTextField = __Cvt(pTextField, __TYPE(ICtrlTextField));
 }
 
-OVERRIDE static void CreateComboBox(void *_pThis, va_list vlArgs)
+__OVERRIDE static void CreateComboBox(void *_pThis, va_list* pvlArgs)
 {
     FactorySkinSummer *pThis = _pThis;
 
-    ICtrlComboBox **ppComboBox = va_arg(vlArgs, ICtrlComboBox **);
+    ICtrlComboBox **ppComboBox = va_arg(*pvlArgs, ICtrlComboBox **);
 
-    CtrlComboBoxSummer *pComboBox = NEW(CtrlComboBoxSummer);
-    *ppComboBox = SWITCH(pComboBox, ICtrlComboBox);
+    CtrlComboBoxSummer *pComboBox = __NEW(CtrlComboBoxSummer);
+    *ppComboBox = __Cvt(pComboBox, __TYPE(ICtrlComboBox));
 }
 
-////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(FactorySkinSummer)(FactorySkinSummer *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(FactorySkinSummer)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(FactorySkinSummer)(FactorySkinSummer *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(FactorySkinSummer)(FactorySkinSummer *pSelf)
-{
-    DODEL(pSelf, IFactorySkin);
-}
-
-FactorySkinSummer *__NEW(FactorySkinSummer)()
-{
-    DONEW(pNew, FactorySkinSummer, IFactorySkin, NULL,
-        METHOD(CreateButton)
-        METHOD(CreateTextField)
-        METHOD(CreateComboBox));
-
-    return pNew;
+	return __New(__TYPE(FactorySkinSummer), 0, NULL, 3, 1,
+		__METHOD(CreateButton),
+		__METHOD(CreateTextField),
+		__METHOD(CreateComboBox),
+		__INHERIT(IFactorySkin));
 }

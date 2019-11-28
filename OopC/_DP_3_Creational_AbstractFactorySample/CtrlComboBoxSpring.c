@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct CtrlComboBoxSpring_Fld
-{
-    CHAINDECLARE;
-};
 
-//////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void Display(void *_pThis, va_list vlArgs)
+__OVERRIDE static void Display(void *_pThis, va_list* pvlArgs)
 {
     CtrlComboBoxSpring *pThis = _pThis;
 
     printf("显示绿色边框组合框.\n");
 }
 
-//////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(CtrlComboBoxSpring)(CtrlComboBoxSpring *pSelf, const char *pMethodName, ...)
+__CONSTRUCTOR(CtrlComboBoxSpring)
 {
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(CtrlComboBoxSpring)(CtrlComboBoxSpring *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(CtrlComboBoxSpring)(CtrlComboBoxSpring *pSelf)
-{
-    DODEL(pSelf, ICtrlComboBox);
-}
-
-CtrlComboBoxSpring *__NEW(CtrlComboBoxSpring)()
-{
-    DONEW(pNew, CtrlComboBoxSpring, ICtrlComboBox, NULL,
-        METHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(CtrlComboBoxSpring), 0, NULL, 1, 1,
+		__METHOD(Display),
+		__INHERIT(ICtrlComboBox));
 }

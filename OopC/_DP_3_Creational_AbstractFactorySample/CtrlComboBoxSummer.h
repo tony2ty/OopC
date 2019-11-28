@@ -26,6 +26,7 @@
 
 #include "ICtrlComboBox.h"
 
-CLASS(CtrlComboBoxSummer, ICtrlComboBox);
+__CLASS CtrlComboBoxSummer __EXTEND ICtrlComboBox;
+__CONSTRUCTOR(CtrlComboBoxSummer);
 
 #endif // !CTRLCOMBOBOXSUMMER_H__

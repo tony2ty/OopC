@@ -24,36 +24,8 @@
 #include "ICtrlComboBox.h"
 
 
-struct ICtrlComboBox_Fld
+__CONSTRUCTOR(ICtrlComboBox)
 {
-    CHAINDECLARE;
-};
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-
-///////////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ICtrlComboBox)(ICtrlComboBox *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(ICtrlComboBox)(ICtrlComboBox *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(ICtrlComboBox)(ICtrlComboBox *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-ICtrlComboBox *__NEW(ICtrlComboBox)()
-{
-    DONEW(pNew, ICtrlComboBox, Object, NULL,
-        AMETHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(ICtrlComboBox), 0, NULL, 1, 0,
+		__METHODA(Display));
 }

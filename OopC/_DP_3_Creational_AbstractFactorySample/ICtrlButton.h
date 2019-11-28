@@ -26,8 +26,9 @@
 
 #include <OopBase.h>
 
-CLASS(ICtrlButton, Object);
-METHODDECLARE(
-    ABSTRACT Display : -;)
+__CLASS ICtrlButton;
+__CONSTRUCTOR(ICtrlButton);
+__METHODDECLARE(
+    __ABSTRACT Display : -;)
 
 #endif // !ICTRLBUTTON_H__

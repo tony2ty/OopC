@@ -24,36 +24,8 @@
 #include "ICtrlButton.h"
 
 
-struct ICtrlButton_Fld
+__CONSTRUCTOR(ICtrlButton)
 {
-    CHAINDECLARE;
-};
-
-//////////////////////////////////////////////////////
-//
-
-///////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ICtrlButton)(ICtrlButton *pSelf, const char *pMethodName, ...)
-{
-    DOCALL(pSelf, pMethodName);
-}
-
-static void *__EXTEND(ICtrlButton)(ICtrlButton *pSelf)
-{
-    DOEXTEND(pSelf);
-}
-
-void __DEL(ICtrlButton)(ICtrlButton *pSelf)
-{
-    DODEL(pSelf, Object);
-}
-
-ICtrlButton *__NEW(ICtrlButton)()
-{
-    DONEW(pNew, ICtrlButton, Object, NULL,
-        AMETHOD(Display));
-
-    return pNew;
+	return __New(__TYPE(ICtrlButton), 0, NULL, 1, 0,
+		__METHODA(Display));
 }
