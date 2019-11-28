@@ -26,8 +26,9 @@
 
 #include <OopBase.h>
 
-CLASS(ILogger, Object);
-METHODDECLARE(
-	ABSTRACT WriteLog: -;)
+__CLASS ILogger;
+__CONSTRUCTOR(ILogger);
+__METHODDECLARE(
+	__ABSTRACT WriteLog: -;)
 
 #endif // !ILOGGER_H__

@@ -24,36 +24,8 @@
 #include "ILoggerFactory.h"
 
 
-struct ILoggerFactory_Fld
+__CONSTRUCTOR(ILoggerFactory)
 {
-	CHAINDECLARE;
-};
-
-////////////////////////////////////////////////////////////////////////
-//
-
-////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ILoggerFactory)(ILoggerFactory* pSelf, const char* pMethodName, ...)
-{
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(ILoggerFactory)(ILoggerFactory* pSelf, const char* pMethodName, ...)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(ILoggerFactory)(ILoggerFactory* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-ILoggerFactory* __NEW(ILoggerFactory)()
-{
-	DONEW(pNew, ILoggerFactory, Object, NULL,
-		AMETHOD(CreateLogger));
-
-	return pNew;
+	return __New(__TYPE(ILoggerFactory), 0, NULL, 1, 0,
+		__METHODA(CreateLogger));
 }

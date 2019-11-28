@@ -25,46 +25,20 @@
 
 #include "LoggerDatabase.h"
 
-struct LoggerFactoryDatabase_Fld
-{
-	CHAINDECLARE;
-};
 
-/////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void CreateLogger(void *_pThis, va_list vlArgs)
+__OVERRIDE static void CreateLogger(void *_pThis, va_list* pvlArgs)
 {
 	LoggerFactoryDatabase* pThis = _pThis;
 
-	ILogger** ppRet = va_arg(vlArgs, ILogger * *);
+	ILogger** ppRet = va_arg(*pvlArgs, ILogger * *);
 
-	LoggerDatabase* pLoggerDatabase = NEW(LoggerDatabase);
-	*ppRet = SWITCH(pLoggerDatabase, ILogger);
+	LoggerDatabase* pLoggerDatabase = __NEW(LoggerDatabase);
+	*ppRet = __Cvt(pLoggerDatabase, __TYPE(ILogger));
 }
 
-///////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(LoggerFactoryDatabase)(LoggerFactoryDatabase* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(LoggerFactoryDatabase)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(LoggerFactoryDatabase)(LoggerFactoryDatabase* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(LoggerFactoryDatabase)(LoggerFactoryDatabase* pSelf)
-{
-	DODEL(pSelf, ILoggerFactory);
-}
-
-LoggerFactoryDatabase* __NEW(LoggerFactoryDatabase)()
-{
-	DONEW(pNew, LoggerFactoryDatabase, ILoggerFactory, NULL,
-		METHOD(CreateLogger));
-
-	return pNew;
+	return __New(__TYPE(LoggerFactoryDatabase), 0, NULL, 1, 1,
+		__METHOD(CreateLogger),
+		__INHERIT(ILoggerFactory));
 }

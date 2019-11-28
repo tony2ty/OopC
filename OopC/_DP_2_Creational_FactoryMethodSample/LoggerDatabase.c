@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct LoggerDatabase_Fld
-{
-	CHAINDECLARE;
-};
 
-///////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void WriteLog(void *_pThis, va_list vlArgs)
+__OVERRIDE static void WriteLog(void *_pThis, va_list* pvlArgs)
 {
 	LoggerDatabase* pThis = _pThis;
 
 	printf("数据库日志记录。\n");
 }
 
-///////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(LoggerDatabase)(LoggerDatabase* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(LoggerDatabase)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(LoggerDatabase)(LoggerDatabase* pSelf, const char* pMethodName, ...)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(LoggerDatabase)(LoggerDatabase* pSelf)
-{
-	DODEL(pSelf, ILogger);
-}
-
-LoggerDatabase* __NEW(LoggerDatabase)()
-{
-	DONEW(pNew, LoggerDatabase, ILogger, NULL,
-		METHOD(WriteLog));
-
-	return pNew;
+	return __New(__TYPE(LoggerDatabase), 0, NULL, 1, 1,
+		__METHOD(WriteLog),
+		__INHERIT(ILogger));
 }

@@ -26,6 +26,7 @@
 
 #include "ILoggerFactory.h"
 
-CLASS(LoggerFactoryDatabase, ILoggerFactory);
+__CLASS LoggerFactoryDatabase __EXTEND ILoggerFactory;
+__CONSTRUCTOR(LoggerFactoryDatabase);
 
 #endif // !LOGGERFACTORYDATABASE_H__

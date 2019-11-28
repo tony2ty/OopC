@@ -24,36 +24,8 @@
 #include "ILogger.h"
 
 
-struct ILogger_Fld
+__CONSTRUCTOR(ILogger)
 {
-	CHAINDECLARE;
-};
-
-//////////////////////////////////////////////////////////
-//
-
-//////////////////////////////////////////////////////////
-//
-
-static bool __CALL(ILogger)(ILogger* pSelf, const char* pMethodName, ...)
-{
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(ILogger)(ILogger* pSelf, const char* pMethodName, ...)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(ILogger)(ILogger* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-ILogger* __NEW(ILogger)()
-{
-	DONEW(pNew, ILogger, Object, NULL,
-		AMETHOD(WriteLog));
-
-	return pNew;
+	return __New(__TYPE(ILogger), 0, NULL, 1, 0,
+		__METHODA(WriteLog));
 }

@@ -25,43 +25,17 @@
 
 #include <stdio.h>
 
-struct LoggerFile_Fld
-{
-	CHAINDECLARE;
-};
 
-//////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void WriteLog(void *_pThis, va_list vlArgs)
+__OVERRIDE static void WriteLog(void *_pThis, va_list* pvlArgs)
 {
 	LoggerFile* pThis = _pThis;
 
 	printf("文件日志记录.\n");
 }
 
-//////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(LoggerFile)(LoggerFile* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(LoggerFile)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(LoggerFile)(LoggerFile* pSelf, const char* pMethodName, ...)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(LoggerFile)(LoggerFile* pSelf)
-{
-	DODEL(pSelf, ILogger);
-}
-
-LoggerFile* __NEW(LoggerFile)()
-{
-	DONEW(pNew, LoggerFile, ILogger, NULL,
-		METHOD(WriteLog));
-
-	return pNew;
+	return __New(__TYPE(LoggerFile), 0, NULL, 1, 1,
+		__METHOD(WriteLog),
+		__INHERIT(ILogger));
 }

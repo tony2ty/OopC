@@ -27,26 +27,28 @@
 
 int main(int argc, char** argv)
 {
-    RLSLOCALMEMBRA();
-
 	ILogger* pLogger = NULL;
 	ILoggerFactory* pLoggerFactory = NULL;
 	
 	{
-		LoggerFactoryFile* pLoggerFactoryFile = NEW(LoggerFactoryFile); TORLS(DEL(LoggerFactoryFile), pLoggerFactoryFile);
-		pLoggerFactory = SWITCH(pLoggerFactoryFile, ILoggerFactory);
+		LoggerFactoryFile* pLoggerFactoryFile = __NEW(LoggerFactoryFile);
+		pLoggerFactory = __Cvt(pLoggerFactoryFile, __TYPE(ILoggerFactory));
 	}
-	pLoggerFactory->Call(pLoggerFactory, "CreateLogger", &pLogger); TORLS(DEL(ILogger), pLogger);
+	pLoggerFactory->Call(pLoggerFactory, "CreateLogger", &pLogger);
 	pLogger->Call(pLogger, "WriteLog");
+
+	pLoggerFactory->Destroy(pLoggerFactory);
+	pLogger->Destroy(pLogger);
 
 	{
-		LoggerFactoryDatabase* pLoggerFactoryDatabase = NEW(LoggerFactoryDatabase); TORLS(DEL(LoggerFactoryDatabase), pLoggerFactoryDatabase);
-		pLoggerFactory = SWITCH(pLoggerFactoryDatabase, ILoggerFactory);
+		LoggerFactoryDatabase* pLoggerFactoryDatabase = __NEW(LoggerFactoryDatabase);
+		pLoggerFactory = __Cvt(pLoggerFactoryDatabase, __TYPE(ILoggerFactory));
 	}
-	pLoggerFactory->Call(pLoggerFactory, "CreateLogger", &pLogger); TORLS(DEL(ILoggerFactory), pLogger);
+	pLoggerFactory->Call(pLoggerFactory, "CreateLogger", &pLogger);
 	pLogger->Call(pLogger, "WriteLog");
 
-    RLSLOCALMEMKET();
+	pLoggerFactory->Destroy(pLoggerFactory);
+	pLogger->Destroy(pLogger);
 
 	return 0;
 }

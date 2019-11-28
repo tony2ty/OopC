@@ -26,6 +26,7 @@
 
 #include "ILogger.h"
 
-CLASS(LoggerDatabase, ILogger);
+__CLASS LoggerDatabase __EXTEND ILogger;
+__CONSTRUCTOR(LoggerDatabase);
 
 #endif // !LOGGERDATABASE_H__

@@ -25,46 +25,20 @@
 
 #include "LoggerFile.h"
 
-struct LoggerFactoryFile_Fld
-{
-	CHAINDECLARE;
-};
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-OVERRIDE static void CreateLogger(void *_pThis, va_list vlArgs)
+__OVERRIDE static void CreateLogger(void *_pThis, va_list* pvlArgs)
 {
 	LoggerFactoryFile* pThis = _pThis;
 
-	ILogger** ppRet = va_arg(vlArgs, ILogger * *);
+	ILogger** ppRet = va_arg(*pvlArgs, ILogger * *);
 
-	LoggerFile* pLoggerFile = NEW(LoggerFile);
-	*ppRet = SWITCH(pLoggerFile, ILogger);
+	LoggerFile* pLoggerFile = __NEW(LoggerFile);
+	*ppRet = __Cvt(pLoggerFile, __TYPE(ILogger));
 }
 
-/////////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(LoggerFactoryFile)(LoggerFactoryFile* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(LoggerFactoryFile)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(LoggerFactoryFile)(LoggerFactoryFile* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(LoggerFactoryFile)(LoggerFactoryFile* pSelf)
-{
-	DODEL(pSelf, ILoggerFactory);
-}
-
-LoggerFactoryFile* __NEW(LoggerFactoryFile)()
-{
-	DONEW(pNew, LoggerFactoryFile, ILoggerFactory, NULL,
-		METHOD(CreateLogger));
-
-	return pNew;
+	return __New(__TYPE(LoggerFactoryFile), 0, NULL, 1, 1,
+		__METHOD(CreateLogger),
+		__INHERIT(ILoggerFactory));
 }

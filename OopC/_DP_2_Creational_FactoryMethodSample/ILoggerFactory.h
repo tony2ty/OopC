@@ -27,8 +27,9 @@
 #include <OopBase.h>
 #include "ILogger.h"
 
-CLASS(ILoggerFactory, Object);
-METHODDECLARE(
-	ABSTRACT CreateLogger: ILogger * *ppRet;)
+__CLASS ILoggerFactory;
+__CONSTRUCTOR(ILoggerFactory);
+__METHODDECLARE(
+	__ABSTRACT CreateLogger: ILogger * *ppRet;)
 
 #endif // !ILOGGERFACTORY_H__
