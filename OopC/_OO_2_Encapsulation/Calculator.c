@@ -23,13 +23,12 @@
 
 #include "Calculator.h"
 
-typedef struct Fld Fld;
-struct Fld
+typedef struct
 {
     double dblOperandL;
     double dblOperandR;
     double dblResult;
-};
+} Fld;
 
 static void Input(void *_pThis, va_list* pvlArgs)
 {
