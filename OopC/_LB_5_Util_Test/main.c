@@ -5,9 +5,7 @@
 
 int main(int argc, char **argv)
 {
-    RLSLOCALMEMBRA();
-
-	IniWrapper* pIni = NEW(IniWrapper); TORLS(DEL(IniWrapper), pIni);
+	IniWrapper* pIni = __NEW(IniWrapper);
 
     bool bRet = false;
 	pIni->Call(pIni, "Init", "./my.ini", &bRet);
@@ -18,8 +16,6 @@ int main(int argc, char **argv)
 	pIni->Call(pIni, "ReadIni", "firstsec", "firstkey", &pVal, &bRet);
 	printf("The val of firstkey in firstsec is : %s.\n", pVal);
 	pIni->Call(pIni, "Save", NULL, &bRet);
-
-    RLSLOCALMEMKET();
     
     return 0;
 }
