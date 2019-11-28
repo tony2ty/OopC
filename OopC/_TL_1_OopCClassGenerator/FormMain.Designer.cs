@@ -92,9 +92,9 @@
             // 
             this.TxtBxPathHeader.Location = new System.Drawing.Point(138, 87);
             this.TxtBxPathHeader.Name = "TxtBxPathHeader";
+            this.TxtBxPathHeader.ReadOnly = true;
             this.TxtBxPathHeader.Size = new System.Drawing.Size(653, 23);
             this.TxtBxPathHeader.TabIndex = 1;
-            this.TxtBxPathHeader.Leave += new System.EventHandler(this.TxtBxPath_Leave);
             // 
             // BtnGenPath
             // 
@@ -120,9 +120,9 @@
             // 
             this.TxtBxPathSource.Location = new System.Drawing.Point(138, 115);
             this.TxtBxPathSource.Name = "TxtBxPathSource";
+            this.TxtBxPathSource.ReadOnly = true;
             this.TxtBxPathSource.Size = new System.Drawing.Size(653, 23);
             this.TxtBxPathSource.TabIndex = 2;
-            this.TxtBxPathSource.Leave += new System.EventHandler(this.TxtBxPath_Leave);
             // 
             // label4
             // 
@@ -170,11 +170,13 @@
             // 
             // TxtBxInheritFrom
             // 
+            this.TxtBxInheritFrom.BackColor = System.Drawing.SystemColors.Info;
             this.TxtBxInheritFrom.Location = new System.Drawing.Point(103, 188);
             this.TxtBxInheritFrom.Name = "TxtBxInheritFrom";
+            this.TxtBxInheritFrom.ReadOnly = true;
             this.TxtBxInheritFrom.Size = new System.Drawing.Size(219, 23);
             this.TxtBxInheritFrom.TabIndex = 4;
-            this.TxtBxInheritFrom.Leave += new System.EventHandler(this.TxtBxInheritFrom_Leave);
+            this.TxtBxInheritFrom.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtBxInheritFrom_MouseDoubleClick);
             // 
             // DgvVariables
             // 
@@ -307,6 +309,7 @@
             this.TxtBxLicense.BackColor = System.Drawing.SystemColors.Info;
             this.TxtBxLicense.Location = new System.Drawing.Point(427, 159);
             this.TxtBxLicense.Name = "TxtBxLicense";
+            this.TxtBxLicense.ReadOnly = true;
             this.TxtBxLicense.Size = new System.Drawing.Size(219, 23);
             this.TxtBxLicense.TabIndex = 6;
             this.TxtBxLicense.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtBxLicense_MouseDoubleClick);

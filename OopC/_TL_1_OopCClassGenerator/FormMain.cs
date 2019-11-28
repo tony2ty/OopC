@@ -21,7 +21,6 @@ namespace _TL_1_OopCClassGenerator
             InitializeComponent();
             
             this.ActiveControl = this.BtnGenPath;
-            this.TxtBxInheritFrom.Text = "Object";
             this._TokenOptChar = new List<char>(new char[] { '_' });
             for (char c = 'a'; c <= 'z'; c++)
             {
@@ -312,37 +311,6 @@ namespace _TL_1_OopCClassGenerator
             }
         }
 
-        private void TxtBxPath_Leave(object sender, EventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            textBox.Text = textBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(textBox.Text))
-            {
-                return;
-            }
-
-            if (!Directory.Exists(textBox.Text))
-            {
-                if (MessageBox.Show("指定的路径不存在，是否创建该路径?", "路径不存在", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(textBox.Text);
-                        return;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("无法创建指定的路径，请检查该路径是否正确，或者是否过长。");
-                    }
-                }
-
-                //else
-                //error when create directory
-                textBox.Focus();
-            }
-        }
-
         private void TxtBxClassName_Leave(object sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -359,53 +327,10 @@ namespace _TL_1_OopCClassGenerator
                 textBox.Focus();
             }
         }
-
-        private void TxtBxInheritFrom_Leave(object sender, EventArgs e)
+        
+        private void TxtBxInheritFrom_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            textBox.Text = textBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(textBox.Text))
-            {
-                MessageBox.Show("继承的类类型名称的不能为空!");
-                textBox.Focus();
-            }
-
-            if (!this.IsValidToken(textBox.Text))
-            {
-                MessageBox.Show("不符合命名规则!");
-                textBox.Focus();
-            }
-        }
-
-        private void TxtBxCreateParam_Leave(object sender, EventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            textBox.Text = textBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(textBox.Text))
-            {
-                return;
-            }
-
-            string[] strTokens = textBox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> lstTokens = new List<string>(strTokens);
-            for (int i = lstTokens.Count - 1; i >= 0; i--)
-            {
-                if (lstTokens[i].Equals(","))
-                {
-                    lstTokens.RemoveAt(i);
-                }
-            }
             
-            foreach (string token in lstTokens)
-            {
-                if (!this.IsValidToken(token))
-                {
-                    textBox.Focus();
-                    break;
-                }
-            }
         }
 
         private void TxtBxLicense_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -414,6 +339,8 @@ namespace _TL_1_OopCClassGenerator
             frmLicenseInputer.LicenseContent = this.TxtBxLicense.Text;
             frmLicenseInputer.ShowDialog();
             this.TxtBxLicense.Text = frmLicenseInputer.LicenseContent;
+
+            //this.TxtBxLicense.Text = this.TxtBxLicense.Text.Trim().Replace("\r\n", "\r\n//");
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)

@@ -54,12 +54,6 @@
     <Compile Include="FormCellContent.Designer.cs">
       <DependentUpon>FormCellContent.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCreateParams.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormCreateParams.Designer.cs">
-      <DependentUpon>FormCreateParams.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormLicense.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,9 +70,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormCellContent.resx">
       <DependentUpon>FormCellContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormCreateParams.resx">
-      <DependentUpon>FormCreateParams.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormLicense.resx">
       <DependentUpon>FormLicense.cs</DependentUpon>
