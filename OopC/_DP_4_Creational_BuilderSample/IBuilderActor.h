@@ -28,16 +28,17 @@
 
 #include "Actor.h"
 
-CLASS(IBuilderActor, Object);
-METHODDECLARE(
-	ABSTRACT BuildType : bool *pRet;
-	ABSTRACT BuildGender : bool* pRet;
-	ABSTRACT BuildFace : bool* pRet;
-	ABSTRACT BuildCostume : bool* pRet;
-	ABSTRACT BuildHairStyle : bool* pRet;
+__CLASS IBuilderActor;
+__CONSTRUCTOR(IBuilderActor);
+__METHODDECLARE(
+	__ABSTRACT BuildType : bool *pRet;
+	__ABSTRACT BuildGender : bool* pRet;
+	__ABSTRACT BuildFace : bool* pRet;
+	__ABSTRACT BuildCostume : bool* pRet;
+	__ABSTRACT BuildHairStyle : bool* pRet;
 	/*
 	 * ppActor: 返回创建好的演员对象 */
-	ABSTRACT CreateActor : Actor **ppActor;)
+	__ABSTRACT CreateActor : Actor **ppActor;)
 
 #endif // !IBUILDERACTOR_H__
 

@@ -26,6 +26,7 @@
 
 #include "IBuilderActor.h"
 
-CLASS(BuilderDevil, IBuilderActor);
+__CLASS BuilderDevil __EXTEND IBuilderActor;
+__CONSTRUCTOR(BuilderDevil);
 
 #endif // !BUILDERDEVIL_H__

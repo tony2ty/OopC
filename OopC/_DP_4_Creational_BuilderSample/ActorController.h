@@ -29,8 +29,9 @@
 #include "Actor.h"
 #include "IBuilderActor.h"
 
-CLASS(ActorController, Object);
-METHODDECLARE(
+__CLASS ActorController;
+__CONSTRUCTOR(ActorController);
+__METHODDECLARE(
 	Construct: Actor * *ppRet; IBuilderActor* pBuilder; bool* pRet;)
 
 #endif // !ACTORCONTROLLER_H__

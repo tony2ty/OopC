@@ -26,8 +26,9 @@
 
 #include <OopBase.h>
 
-CLASS(Actor, Object);
-METHODDECLARE(
+__CLASS Actor;
+__CONSTRUCTOR(Actor);
+__METHODDECLARE(
 	/*
 	 * pType: 演员类型，null结尾的字符串
 	 * pRet:  设值情况

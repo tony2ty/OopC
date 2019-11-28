@@ -24,104 +24,94 @@
 #include "BuilderHero.h"
 
 
-struct BuilderHero_Fld
+typedef struct
 {
-	CHAINDECLARE;
-
 	Actor *pActor;
-};
+} Fld;
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-OVERRIDE static void BuildType(void *_pThis, va_list vlArgs)
+__OVERRIDE static void BuildType(void *_pThis, va_list* pvlArgs)
 {
 	BuilderHero* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	bool* pRet = va_arg(vlArgs, bool*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	const char* pTmp = "Ó¢ÐÛ";
-	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetType", pTmp, pRet);
+	pFld->pActor->Call(pFld->pActor, "SetType", pTmp, pRet);
 }
 
-OVERRIDE static void BuildGender(void *_pThis, va_list vlArgs)
+__OVERRIDE static void BuildGender(void *_pThis, va_list* pvlArgs)
 {
 	BuilderHero* pThis = pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	bool* pRet = va_arg(vlArgs, bool*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	const char* pTmp = "ÄÐ";
-	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetGender", pTmp, pRet);
+	pFld->pActor->Call(pFld->pActor, "SetGender", pTmp, pRet);
 }
 
-OVERRIDE static void BuildFace(void *_pThis, va_list vlArgs)
+__OVERRIDE static void BuildFace(void *_pThis, va_list* pvlArgs)
 {
 	BuilderHero* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	bool* pRet = va_arg(vlArgs, bool*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	const char* pTmp = "Ó¢¿¡";
-	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetFace", pTmp, pRet);
+	pFld->pActor->Call(pFld->pActor, "SetFace", pTmp, pRet);
 }
 
-OVERRIDE static void BuildCostume(void *_pThis, va_list vlArgs)
+__OVERRIDE static void BuildCostume(void *_pThis, va_list* pvlArgs)
 {
 	BuilderHero* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	bool* pRet = va_arg(vlArgs, bool*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	const char* pTmp = "¿ø¼×";
-	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetCostume", pTmp, pRet);
+	pFld->pActor->Call(pFld->pActor, "SetCostume", pTmp, pRet);
 }
 
-OVERRIDE static void BuildHairStyle(void *_pThis, va_list vlArgs)
+__OVERRIDE static void BuildHairStyle(void *_pThis, va_list* pvlArgs)
 {
 	BuilderHero* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	bool* pRet = va_arg(vlArgs, bool*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	const char* pTmp = "Æ®ÒÝ";
-	pThis->pFld->pActor->Call(pThis->pFld->pActor, "SetHairStyle", pTmp, pRet);
+	pFld->pActor->Call(pFld->pActor, "SetHairStyle", pTmp, pRet);
 }
 
-OVERRIDE static void CreateActor(void *_pThis, va_list vlArgs)
+__OVERRIDE static void CreateActor(void *_pThis, va_list* pvlArgs)
 {
 	BuilderHero* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	Actor** ppRet = va_arg(vlArgs, Actor * *);
+	Actor** ppRet = va_arg(*pvlArgs, Actor * *);
 
-	*ppRet = pThis->pFld->pActor;
+	*ppRet = pFld->pActor;
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-static bool __CALL(BuilderHero)(BuilderHero* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(BuilderHero)
 {
-	DOCALL(pSelf, pMethodName);
-}
+	BuilderHero *pNew = __New(__TYPE(BuilderHero), sizeof(Fld), NULL, 6, 1,
+		__METHOD(BuildType),
+		__METHOD(BuildGender),
+		__METHOD(BuildCostume),
+		__METHOD(BuildHairStyle),
+		__METHOD(CreateActor),
+		__INHERIT(IBuilderActor));
 
-static void* __EXTEND(BuilderHero)(BuilderHero* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(BuilderHero)(BuilderHero* pSelf)
-{
-	DODEL(pSelf, IBuilderActor);
-}
-
-BuilderHero* __NEW(BuilderHero)()
-{
-	DONEW(pNew, BuilderHero, IBuilderActor, NULL,
-		METHOD(BuildType)
-		METHOD(BuildGender)
-		METHOD(BuildFace)
-		METHOD(BuildCostume)
-		METHOD(BuildHairStyle)
-		METHOD(CreateActor));
-
-	pNew->pFld->pActor = NEW(Actor);
+	Fld* pFld = pNew->Fld;
+	pFld->pActor = __NEW(Actor);
 
 	return pNew;
 }

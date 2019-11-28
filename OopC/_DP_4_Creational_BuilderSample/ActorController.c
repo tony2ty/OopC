@@ -24,21 +24,13 @@
 #include "ActorController.h"
 
 
-struct ActorController_Fld
-{
-	CHAINDECLARE;
-};
-
-////////////////////////////////////////////////////////////////////////////
-//
-
-static void Construct(void *_pThis, va_list vlArgs)
+static void Construct(void *_pThis, va_list* pvlArgs)
 {
 	ActorController* pThis = _pThis;
 
-	Actor** ppActor = va_arg(vlArgs, Actor * *);
-	IBuilderActor* pBuilder = va_arg(vlArgs, IBuilderActor*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	Actor** ppActor = va_arg(*pvlArgs, Actor * *);
+	IBuilderActor* pBuilder = va_arg(*pvlArgs, IBuilderActor*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	bool bTmp = false;
 	pBuilder->Call(pBuilder, "BuildType", &bTmp);
@@ -78,25 +70,8 @@ static void Construct(void *_pThis, va_list vlArgs)
 ////////////////////////////////////////////////////////////////////////////
 //
 
-static bool __CALL(ActorController)(ActorController* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(ActorController)
 {
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(ActorController)(ActorController* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(ActorController)(ActorController* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-ActorController* __NEW(ActorController)()
-{
-	DONEW(pNew, ActorController, Object, NULL,
-		METHOD(Construct));
-
-	return pNew;
+	return __New(__TYPE(ActorController), 0, NULL, 1, 0,
+		__METHOD(Construct));
 }

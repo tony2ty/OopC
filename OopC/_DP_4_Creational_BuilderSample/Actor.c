@@ -24,263 +24,263 @@
 #include "Actor.h"
 
 #include <string.h>
+#include <stdlib.h>
 
-struct Actor_Fld
+
+typedef struct
 {
-	CHAINDECLARE;
-
 	char *pType;
 	char *pGender;
 	char *pFace;
 	char *pCostume;
 	char *pHairStyle;
-};
+} Fld;
 
 ///////////////////////////////////////////////////////////////////////
 //
 
-static void SetType(void *_pThis, va_list vlArgs)
+static void SetType(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	const char* pType = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pType = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	size_t szLen = strlen(pType) + 1;
-	if (strlen(pThis->pFld->pType) + 1 < szLen)
+	if (strlen(pFld->pType) + 1 < szLen)
 	{
-		free(pThis->pFld->pType);
-		pThis->pFld->pType = malloc(szLen);
-		if (!pThis->pFld->pType)
+		free(pFld->pType);
+		pFld->pType = malloc(szLen);
+		if (!pFld->pType)
 		{
 			*pRet = false;
 			return;
 		}
 	}
-	memcpy(pThis->pFld->pType, pType, szLen);
+	memcpy(pFld->pType, pType, szLen);
 	*pRet = true;
 }
 
-static void GetType(void *_pThis, va_list vlArgs)
+static void GetType(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	char** ppType = va_arg(vlArgs, char**);
-	bool* pRet = va_arg(vlArgs, bool*);
+	char** ppType = va_arg(*pvlArgs, char**);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
-	size_t szLen = strlen(pThis->pFld->pType) + 1;
+	size_t szLen = strlen(pFld->pType) + 1;
 	if (*ppType || !(*ppType = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
 	}
-	memcpy(*ppType, pThis->pFld->pType, szLen);
+	memcpy(*ppType, pFld->pType, szLen);
 	*pRet = true;
 }
 
-static void SetGender(void *_pThis, va_list vlArgs)
+static void SetGender(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	const char* pGender = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pGender = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	size_t szLen = strlen(pGender) + 1;
-	if (strlen(pThis->pFld->pGender) + 1 < szLen)
+	if (strlen(pFld->pGender) + 1 < szLen)
 	{
-		free(pThis->pFld->pGender);
-		pThis->pFld->pGender = malloc(szLen);
-		if (!pThis->pFld->pGender)
+		free(pFld->pGender);
+		pFld->pGender = malloc(szLen);
+		if (!pFld->pGender)
 		{
 			*pRet = false;
 			return;
 		}
 	}
-	memcpy(pThis->pFld->pGender, pGender, szLen);
+	memcpy(pFld->pGender, pGender, szLen);
 	*pRet = true;
 }
 
-static void GetGender(void *_pThis, va_list vlArgs)
+static void GetGender(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	char** ppGender = va_arg(vlArgs, char**);
-	bool* pRet = va_arg(vlArgs, bool*);
+	char** ppGender = va_arg(*pvlArgs, char**);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
-	size_t szLen = strlen(pThis->pFld->pGender) + 1;
+	size_t szLen = strlen(pFld->pGender) + 1;
 	if (*ppGender || !(*ppGender = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
 	}
-	memcpy(*ppGender, pThis->pFld->pGender, szLen);
+	memcpy(*ppGender, pFld->pGender, szLen);
 	*pRet = true;
 }
 
-static void SetFace(void *_pThis, va_list vlArgs)
+static void SetFace(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	const char* pFace = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pFace = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	size_t szLen = strlen(pFace) + 1;
-	if (strlen(pThis->pFld->pFace) + 1 < szLen)
+	if (strlen(pFld->pFace) + 1 < szLen)
 	{
-		free(pThis->pFld->pFace);
-		pThis->pFld->pFace = malloc(szLen);
-		if (!pThis->pFld->pFace)
+		free(pFld->pFace);
+		pFld->pFace = malloc(szLen);
+		if (!pFld->pFace)
 		{
 			*pRet = false;
 			return;
 		}
 	}
-	memcpy(pThis->pFld->pFace, pFace, szLen);
+	memcpy(pFld->pFace, pFace, szLen);
 	*pRet = true;
 }
 
-static void GetFace(void *_pThis, va_list vlArgs)
+static void GetFace(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	char** ppFace = va_arg(vlArgs, char**);
-	bool* pRet = va_arg(vlArgs, bool*);
+	char** ppFace = va_arg(*pvlArgs, char**);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
-	size_t szLen = strlen(pThis->pFld->pFace) + 1;
+	size_t szLen = strlen(pFld->pFace) + 1;
 	if (*ppFace || !(*ppFace = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
 	}
-	memcpy(*ppFace, pThis->pFld->pFace, szLen);
+	memcpy(*ppFace, pFld->pFace, szLen);
 	*pRet = true;
 }
 
-static void SetCostume(void *_pThis, va_list vlArgs)
+static void SetCostume(void *_pThis, va_list* pvlArgs)
 {
 	Actor *pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	const char* pCostume = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pCostume = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	size_t szLen = strlen(pCostume) + 1;
-	if (strlen(pThis->pFld->pCostume) + 1 < szLen)
+	if (strlen(pFld->pCostume) + 1 < szLen)
 	{
-		free(pThis->pFld->pCostume);
-		pThis->pFld->pCostume = malloc(szLen);
-		if (!pThis->pFld->pCostume)
+		free(pFld->pCostume);
+		pFld->pCostume = malloc(szLen);
+		if (!pFld->pCostume)
 		{
 			*pRet = false;
 			return;
 		}
 	}
-	memcpy(pThis->pFld->pCostume, pCostume, szLen);
+	memcpy(pFld->pCostume, pCostume, szLen);
 	*pRet = true;
 }
 
-static void GetCostume(void *_pThis, va_list vlArgs)
+static void GetCostume(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	char** ppCostume = va_arg(vlArgs, char**);
-	bool* pRet = va_arg(vlArgs, bool*);
+	char** ppCostume = va_arg(*pvlArgs, char**);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
-	size_t szLen = strlen(pThis->pFld->pCostume) + 1;
+	size_t szLen = strlen(pFld->pCostume) + 1;
 	if (*ppCostume || !(*ppCostume = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
 	}
-	memcpy(*ppCostume, pThis->pFld->pCostume, szLen);
+	memcpy(*ppCostume, pFld->pCostume, szLen);
 	*pRet = true;
 }
 
-static void SetHairStyle(void *_pThis, va_list vlArgs)
+static void SetHairStyle(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	const char* pHairStyle = va_arg(vlArgs, const char*);
-	bool* pRet = va_arg(vlArgs, bool*);
+	const char* pHairStyle = va_arg(*pvlArgs, const char*);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
 	size_t szLen = strlen(pHairStyle) + 1;
-	if (strlen(pThis->pFld->pHairStyle) + 1 < szLen)
+	if (strlen(pFld->pHairStyle) + 1 < szLen)
 	{
-		free(pThis->pFld->pHairStyle);
-		pThis->pFld->pHairStyle = malloc(szLen);
-		if (!pThis->pFld->pHairStyle)
+		free(pFld->pHairStyle);
+		pFld->pHairStyle = malloc(szLen);
+		if (!pFld->pHairStyle)
 		{
 			*pRet = false;
 			return;
 		}
 	}
-	memcpy(pThis->pFld->pHairStyle, pHairStyle, szLen);
+	memcpy(pFld->pHairStyle, pHairStyle, szLen);
 	*pRet = true;
 }
 
-static void GetHairStyle(void *_pThis, va_list vlArgs)
+static void GetHairStyle(void *_pThis, va_list* pvlArgs)
 {
 	Actor* pThis = _pThis;
+	Fld* pFld = pThis->Fld;
 
-	char** ppHairStyle = va_arg(vlArgs, char**);
-	bool* pRet = va_arg(vlArgs, bool*);
+	char** ppHairStyle = va_arg(*pvlArgs, char**);
+	bool* pRet = va_arg(*pvlArgs, bool*);
 
-	size_t szLen = strlen(pThis->pFld->pHairStyle) + 1;
+	size_t szLen = strlen(pFld->pHairStyle) + 1;
 	if (*ppHairStyle || !(*ppHairStyle = malloc(szLen)))
 	{
 		*pRet = false;
 		return;
 	}
-	memcpy(*ppHairStyle, pThis->pFld->pHairStyle, szLen);
+	memcpy(*ppHairStyle, pFld->pHairStyle, szLen);
 	*pRet = true;
 }
 
 /////////////////////////////////////////////////////////////////////////
 //
 
-static void __CLEAR(Actor)(void* pParams)
+static void Clear(void* pParams)
 {
 	Actor* pSelf = pParams;
-	free(pSelf->pFld->pType);
-	free(pSelf->pFld->pGender);
-	free(pSelf->pFld->pFace);
-	free(pSelf->pFld->pCostume);
-	free(pSelf->pFld->pHairStyle);
+	Fld* pFld = pSelf->Fld;
+	free(pFld->pType);
+	free(pFld->pGender);
+	free(pFld->pFace);
+	free(pFld->pCostume);
+	free(pFld->pHairStyle);
 }
 
-static bool __CALL(Actor)(Actor* pSelf, const char* pMethodName, ...)
+__CONSTRUCTOR(Actor)
 {
-	DOCALL(pSelf, pMethodName);
-}
+	Actor *pNew = __New(__TYPE(Actor), sizeof(Fld), Clear, 10, 0,
+		__METHOD(SetType),
+		__METHOD(GetType),
+		__METHOD(SetGender),
+		__METHOD(GetGender),
+		__METHOD(SetFace),
+		__METHOD(GetFace),
+		__METHOD(SetCostume),
+		__METHOD(GetCostume),
+		__METHOD(SetHairStyle),
+		__METHOD(GetHairStyle));
 
-static void* __EXTEND(Actor)(Actor* pSelf)
-{
-	DOEXTEND(pSelf);
-}
+	Fld* pFld = pNew->Fld;
 
-void __DEL(Actor)(Actor* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-Actor* __NEW(Actor)()
-{
-	DONEW(pNew, Actor, Object, __CLEAR(Actor),
-		METHOD(SetType)
-		METHOD(GetType)
-		METHOD(SetGender)
-		METHOD(GetGender)
-		METHOD(SetFace)
-		METHOD(GetFace)
-		METHOD(SetCostume)
-		METHOD(GetCostume)
-		METHOD(SetHairStyle)
-		METHOD(GetHairStyle));
-
-	pNew->pFld->pType = NULL;
-	pNew->pFld->pGender = NULL;
-	pNew->pFld->pFace = NULL;
-	pNew->pFld->pCostume = NULL;
-	pNew->pFld->pHairStyle = NULL;
+	char* pTmp = "OK";
+	size_t szLen = strlen(pTmp) + 1;
+	pFld->pType = malloc(szLen); memcpy(pFld->pType, pTmp, szLen);
+	pFld->pGender = malloc(szLen); memcpy(pFld->pGender, pTmp, szLen);
+	pFld->pFace = malloc(szLen); memcpy(pFld->pFace, pTmp, szLen);
+	pFld->pCostume = malloc(szLen); memcpy(pFld->pCostume, pTmp, szLen);
+	pFld->pHairStyle = malloc(szLen); memcpy(pFld->pHairStyle, pTmp, szLen);
 
 	return pNew;
 }

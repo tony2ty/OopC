@@ -24,41 +24,13 @@
 #include "IBuilderActor.h"
 
 
-struct IBuilderActor_Fld
+__CONSTRUCTOR(IBuilderActor)
 {
-	CHAINDECLARE;
-};
-
-////////////////////////////////////////////////////////////////////
-//
-
-////////////////////////////////////////////////////////////////////
-//
-
-static bool __CALL(IBuilderActor)(IBuilderActor* pSelf, const char* pMethodName, ...)
-{
-	DOCALL(pSelf, pMethodName);
-}
-
-static void* __EXTEND(IBuilderActor)(IBuilderActor* pSelf)
-{
-	DOEXTEND(pSelf);
-}
-
-void __DEL(IBuilderActor)(IBuilderActor* pSelf)
-{
-	DODEL(pSelf, Object);
-}
-
-IBuilderActor* __NEW(IBuilderActor)()
-{
-	DONEW(pNew, IBuilderActor, Object, NULL,
-		AMETHOD(BuildType)
-		AMETHOD(BuildGender)
-		AMETHOD(BuildFace)
-		AMETHOD(BuildCostume)
-		AMETHOD(BuildHairStyle)
-		AMETHOD(CreateActor));
-
-	return pNew;
+	return __New(__TYPE(IBuilderActor), 0, NULL, 6, 0,
+		__METHODA(BuildType),
+		__METHODA(BuildGender),
+		__METHODA(BuildFace),
+		__METHODA(BuildCostume),
+		__METHODA(BuildHairStyle),
+		__METHODA(CreateActor));
 }
