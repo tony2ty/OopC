@@ -54,6 +54,12 @@
     <Compile Include="FormCellContent.Designer.cs">
       <DependentUpon>FormCellContent.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormInherit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormInherit.Designer.cs">
+      <DependentUpon>FormInherit.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormLicense.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormCellContent.resx">
       <DependentUpon>FormCellContent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormInherit.resx">
+      <DependentUpon>FormInherit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormLicense.resx">
       <DependentUpon>FormLicense.cs</DependentUpon>

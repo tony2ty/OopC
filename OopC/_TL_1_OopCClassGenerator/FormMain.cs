@@ -330,7 +330,15 @@ namespace _TL_1_OopCClassGenerator
         
         private void TxtBxInheritFrom_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            
+            TextBox textBox = sender as TextBox;
+            if (textBox.Tag == null)
+            {
+                textBox.Tag = new FormInherit();
+            }
+
+            FormInherit formInherit = textBox.Tag as FormInherit;
+            formInherit.ShowDialog();
+            textBox.Text = "<Super class>";
         }
 
         private void TxtBxLicense_MouseDoubleClick(object sender, MouseEventArgs e)
