@@ -14,19 +14,22 @@ namespace _TL_1_OopCClassGenerator
 {
     public partial class FormMain : Form
     {
+        /// <summary>
+        /// valid char set
+        /// </summary>
         private List<char> _TokenOptChar;
 
         public FormMain()
         {
             InitializeComponent();
             
-            this.ActiveControl = this.BtnGenPath;
+            //this.ActiveControl = this.BtnGenPath;
             this._TokenOptChar = new List<char>(new char[] { '_' });
             for (char c = 'a'; c <= 'z'; c++)
             {
                 this._TokenOptChar.Add(c);
             }
-            for (char c = 'A';  c <= 'Z'; c++)
+            for (char c = 'A'; c <= 'Z'; c++)
             {
                 this._TokenOptChar.Add(c);
             }
@@ -34,6 +37,9 @@ namespace _TL_1_OopCClassGenerator
             {
                 this._TokenOptChar.Add(c);
             }
+
+            this.TxtBxLicense.Tag = new FormLicense();
+            this.TxtBxInheritFrom.Tag = new FormInherit();
             
             this.BtnAddVariable.Tag = this.DgvVariables;
             this.BtnAddFunc.Tag = this.DgvFunctions;
@@ -331,11 +337,6 @@ namespace _TL_1_OopCClassGenerator
         private void TxtBxInheritFrom_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             TextBox textBox = sender as TextBox;
-            if (textBox.Tag == null)
-            {
-                textBox.Tag = new FormInherit();
-            }
-
             FormInherit formInherit = textBox.Tag as FormInherit;
             formInherit.ShowDialog();
             textBox.Text = "<Super class>";
@@ -343,12 +344,11 @@ namespace _TL_1_OopCClassGenerator
 
         private void TxtBxLicense_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            FormLicense frmLicenseInputer = new FormLicense();
-            frmLicenseInputer.LicenseContent = this.TxtBxLicense.Text;
-            frmLicenseInputer.ShowDialog();
-            this.TxtBxLicense.Text = frmLicenseInputer.LicenseContent;
-
-            //this.TxtBxLicense.Text = this.TxtBxLicense.Text.Trim().Replace("\r\n", "\r\n//");
+            TextBox textBox = sender as TextBox;
+            FormLicense formLicense = textBox.Tag as FormLicense;
+            formLicense.LicenseContent = textBox.Text;
+            formLicense.ShowDialog();
+            textBox.Text = formLicense.LicenseContent;
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)

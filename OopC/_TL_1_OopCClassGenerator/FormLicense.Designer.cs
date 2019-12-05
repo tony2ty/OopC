@@ -34,6 +34,7 @@
             // 
             // TxtBxLicense
             // 
+            this.TxtBxLicense.BackColor = System.Drawing.SystemColors.Info;
             this.TxtBxLicense.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtBxLicense.Location = new System.Drawing.Point(0, 0);
             this.TxtBxLicense.Multiline = true;
